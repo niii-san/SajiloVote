@@ -5,5 +5,5 @@ export const Route = createFileRoute("/signup")({
 })
 
 function RouteComponent() {
-  return <div>Hello "/signup"!</div>
+  return <div className="min-h-[800px]">Hello "/signup"!</div>
 }
