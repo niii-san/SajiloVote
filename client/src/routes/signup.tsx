@@ -18,7 +18,7 @@ const signupSchema = yup
             .required("Email address is required"),
         password: yup
             .string()
-            .min(8)
+            .min(8, "Password must be at least 8 characters long")
             .max(16, "Password should be less than 16 characters")
             .required("Password is required"),
         confirmPassword: yup
@@ -41,14 +41,11 @@ function RouteComponent() {
 
     return (
         <div className="min-h-[800px] ">
-            <div className="w-[500px] mx-auto mt-32">
-                <h1 className="text-center text-2xl font-bold">
-                    Get started with Vote-Niverse
+            <div className="w-[500px] rounded-md py-5 bg-white mx-auto mt-32">
+                <h1 className="flex justify-center items-center gap-x-1 text-2xl font-bold">
+                    Get started with <p className="text-primary">Who Wins</p>
                 </h1>
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col  mt-16 h-[500px]"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-12">
                     <div
                         id="names"
                         className="flex mx-auto gap-x-2 justify-between w-[80%]"
@@ -113,17 +110,17 @@ function RouteComponent() {
 
                     <div id="submitButton" className="w-[80%] mx-auto">
                         <Button
-                            variant="outline"
+                            variant="filled"
                             type="submit"
-                            className="w-full border border-black  py-2 rounded-lg text-white mt-10"
+                            className=" mt-12"
                         >
                             Get started
                         </Button>
                     </div>
                     <div className="w-[80%] mx-auto flex justify-center mt-4">
-                        <p>Already have a account?</p>{" "}
+                        <p>Already have an account?</p>{" "}
                         <p className="ml-2 hover:underline cursor-pointer">
-                            <Link to={"/login"}>Login here</Link>
+                            <Link to={"/login"} className="text-primary font-bold">Login here</Link>
                         </p>
                     </div>
                 </form>
