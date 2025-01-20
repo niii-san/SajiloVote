@@ -41,7 +41,10 @@ function RouteComponent() {
 
     return (
         <div className="min-h-[800px] ">
-            <div className="w-[500px] rounded-md py-5 bg-white mx-auto mt-32">
+            <div className="bg-primary text-background w-[150px] h-[100px]">
+                LOGO
+            </div>
+            <div className="w-[500px] rounded-md py-5 bg-white mx-auto mt-2">
                 <h1 className="flex justify-center items-center gap-x-1 text-2xl font-bold">
                     Get started with <p className="text-primary">Who Wins</p>
                 </h1>
