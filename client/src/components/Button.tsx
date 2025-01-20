@@ -22,11 +22,12 @@ const Button = ({
     ...props
 }: ButtonProps) => {
     const baseStyle =
-        "w-full py-2 border-2 border-primary rounded-lg text-background text-base flex justify-center items-center cursor-pointer transition ease-in-out duration-300";
+        "w-full py-2 border-2 border-primary rounded-lg text-background text-base flex justify-center items-center cursor-pointer transition ease-in-out duration-250";
 
     const ButtonVariants = {
-        outline: "text-dark_text hover:bg-primary hover:bg-opacity-20",
-        filled: "bg-primary hover:bg-opacity-80 ",
+        outline:
+            "text-dark_text hover:bg-primary hover:bg-opacity-20 hover:border-opacity-20",
+        filled: "bg-primary hover:bg-opacity-80 hover:border-opacity-80",
     };
 
     const disabledStyle =

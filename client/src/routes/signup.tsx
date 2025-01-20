@@ -52,7 +52,11 @@ function RouteComponent() {
                     >
                         <div id="firstNameBody">
                             <Label htmlFor="firstName">First name</Label>
-                            <Input type="text" {...register("firstName")} />
+                            <Input
+                                type="text"
+                                {...register("firstName")}
+                                placeholder="John"
+                            />
                             {errors.firstName && (
                                 <p className="text-red-600 text-sm">
                                     {errors.firstName.message}
@@ -62,7 +66,11 @@ function RouteComponent() {
 
                         <div id="lastNameBody">
                             <Label htmlFor="lastName">Last name</Label>
-                            <Input type="text" {...register("lastName")} />
+                            <Input
+                                type="text"
+                                {...register("lastName")}
+                                placeholder="Doe"
+                            />
                             {errors.lastName && (
                                 <p className="text-red-600 text-sm">
                                     {errors.lastName.message}
@@ -73,7 +81,11 @@ function RouteComponent() {
                     <div id="otherFields" className="w-[80%] mx-auto">
                         <div id="emailBody" className="mt-5">
                             <Label htmlFor="email">Email</Label>
-                            <Input type="text" {...register("email")} />
+                            <Input
+                                type="text"
+                                {...register("email")}
+                                placeholder="xyz@mail.com"
+                            />
                             {errors.email && (
                                 <p className="text-red-600 text-sm">
                                     {errors.email.message}
@@ -120,7 +132,12 @@ function RouteComponent() {
                     <div className="w-[80%] mx-auto flex justify-center mt-4">
                         <p>Already have an account?</p>{" "}
                         <p className="ml-2 hover:underline cursor-pointer">
-                            <Link to={"/login"} className="text-primary font-bold">Login here</Link>
+                            <Link
+                                to={"/login"}
+                                className="text-primary font-bold"
+                            >
+                                Login here
+                            </Link>
                         </p>
                     </div>
                 </form>

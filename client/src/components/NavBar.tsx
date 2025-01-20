@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
 
 function NavBar() {
-    const activeNavItemStyling = "text-red-500";
+    const activeNavItemStyling = "text-primary font-bold";
     const inactiveNavItemStyling = "text-black";
     return (
-        <div className="bg-green-500 h-[60px] flex justify-evenly items-center">
+        <div className="bg-secondary rounded-b-xl max-w-[400px] mx-auto h-[60px] flex justify-evenly items-center">
             <Link to="/">
                 {({ isActive }) => {
                     return (
