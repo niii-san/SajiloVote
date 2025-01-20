@@ -8,27 +8,31 @@ export const Route = createFileRoute("/signup")({
     component: RouteComponent,
 });
 
-const signupSchema = yup
-    .object({
-        firstName: yup.string().trim().required("First name is required"),
-        lastName: yup.string().trim().required("Last name is required"),
-        email: yup
-            .string()
-            .email("Invalid email format")
-            .required("Email address is required"),
-        password: yup
-            .string()
-            .min(8, "Password must be at least 8 characters long")
-            .max(16, "Password should be less than 16 characters")
-            .required("Password is required"),
-        confirmPassword: yup
-            .string()
-            .oneOf([yup.ref("password")], "Confirm password did not matched"),
-    })
-    .required();
-type FormData = yup.InferType<typeof signupSchema>;
-
 function RouteComponent() {
+    const signupSchema = yup
+        .object({
+            firstName: yup.string().trim().required("First name is required"),
+            lastName: yup.string().trim().required("Last name is required"),
+            email: yup
+                .string()
+                .email("Invalid email format")
+                .required("Email address is required"),
+            password: yup
+                .string()
+                .min(8, "Password must be at least 8 characters long")
+                .max(16, "Password should be less than 16 characters")
+                .required("Password is required"),
+            confirmPassword: yup
+                .string()
+                .oneOf(
+                    [yup.ref("password")],
+                    "Confirm password did not matched",
+                ),
+        })
+        .required();
+
+    type FormData = yup.InferType<typeof signupSchema>;
+
     const {
         register,
         handleSubmit,
