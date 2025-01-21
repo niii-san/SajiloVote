@@ -13,10 +13,10 @@
     "license": "ISC",
     "author": "Nishan Bista",
     "type": "module",
-    "main": "src/index.js",
+    "main": "./src/server.js",
     "scripts": {
         "dev": "",
-        "start": "",
+        "start": "node dist/server.js",
         "build": "npx tsc"
     },
     "devDependencies": {

@@ -12,29 +12,12 @@
         "skipDefaultLibCheck": true /* Skip type checking .d.ts files that are included with TypeScript. */,
         "outDir": "./dist",
         "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-        "baseUrl": "./src",
-        "paths": {
-            "@controllers/*": [
-                "controllers/*"
-            ],
-            "@middlewares/*": [
-                "middlewares/*"
-            ],
-            "@routes/*": [
-                "routes/*"
-            ],
-            "@db/*": [
-                "db/*"
-            ],
-            "@utils/*": [
-                "utils/*"
-            ]
-        }
+        "baseUrl": "."
     },
     "include": [
         "src/**/*.ts"
     ],
-    "exclue": [
+    "exclude": [
         "node_modules"
     ]
 }
