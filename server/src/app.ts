@@ -1,13 +1,29 @@
 import express, { Response, Request } from "express";
 import { responseErrorHandler } from "./utils/ErrorResponse.js";
+import cors, { CorsOptions } from "cors";
+import cookieParser from "cookie-parser";
 
 export const app = express();
+
+/*
+ * Setups
+ */
+
+const corsOptions: CorsOptions = {
+    credentials: true,
+    origin: process.env.CLIENT_URL,
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(cookieParser());
 
 /*
  * Routes
  */
 
-// Default Route
+// Home Route
 app.get("/", async (req: Request, res: Response) => {
     const requestData = {
         request_from: {
