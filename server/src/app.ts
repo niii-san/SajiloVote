@@ -35,5 +35,8 @@ app.get("/", async (req: Request, res: Response) => {
     res.status(200).json(requestData);
 });
 
+import { authRouter } from "./routes/auth.route.js";
+app.use("/api/v1/auth", authRouter);
+
 // NOTE: Error response handler always at last after all route
 app.use(responseErrorHandler);

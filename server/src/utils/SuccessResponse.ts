@@ -1,9 +1,8 @@
-import { ApiResponse, Reason } from "./ApiResponse.types";
+import { ApiResponse } from "./ApiResponse.types";
 
 export class SuccessfulResponse<T> implements ApiResponse<T> {
     public status_code: number;
     public success: boolean;
-    public reason: Reason;
     public is_authenticated: boolean;
     public message: string;
     public data: T | null;
@@ -22,7 +21,6 @@ export class SuccessfulResponse<T> implements ApiResponse<T> {
     ) {
         this.status_code = status_code;
         this.success = true;
-        this.reason = null;
         this.is_authenticated = is_authenticated;
         this.message = message;
         this.data = data;
