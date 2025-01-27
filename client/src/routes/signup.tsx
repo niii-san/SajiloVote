@@ -45,109 +45,114 @@ function RouteComponent() {
 
     return (
         <div className="min-h-[800px] ">
+            {/*
             <div className="bg-primary text-background w-[150px] h-[100px]">
                 LOGO
-            </div>
-            <div className="w-[500px] rounded-md py-5 bg-white mx-auto mt-2">
-                <h1 className="flex justify-center items-center gap-x-1 text-2xl font-bold">
-                    Get started with <p className="text-primary">Who Wins</p>
-                </h1>
-                <form onSubmit={handleSubmit(onSubmit)} className="mt-12">
-                    <div
-                        id="names"
-                        className="flex mx-auto gap-x-2 justify-between w-[80%]"
+            </div>*/}
+            <div className="w-[1000px] h-[600px] mx-auto mt-36 flex justify-start">
+                <div className="bg-primary w-[55%] h-full">something</div>
+                <div className="w-[45%] rounded-r-md py-5 bg-white ">
+                    <h1 className="flex justify-center items-center gap-x-1 text-2xl font-bold">
+                        Get started with{" "}
+                        <p className="text-primary">Who Wins</p>
+                    </h1>
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="mt-12 px-5"
                     >
-                        <div id="firstNameBody">
-                            <Label htmlFor="firstName">First name</Label>
-                            <Input
-                                type="text"
-                                {...register("firstName")}
-                                placeholder="John"
-                            />
-                            {errors.firstName && (
-                                <p className="text-red-600 text-sm">
-                                    {errors.firstName.message}
-                                </p>
-                            )}
-                        </div>
-
-                        <div id="lastNameBody">
-                            <Label htmlFor="lastName">Last name</Label>
-                            <Input
-                                type="text"
-                                {...register("lastName")}
-                                placeholder="Doe"
-                            />
-                            {errors.lastName && (
-                                <p className="text-red-600 text-sm">
-                                    {errors.lastName.message}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-                    <div id="otherFields" className="w-[80%] mx-auto">
-                        <div id="emailBody" className="mt-5">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                type="text"
-                                {...register("email")}
-                                placeholder="xyz@mail.com"
-                            />
-                            {errors.email && (
-                                <p className="text-red-600 text-sm">
-                                    {errors.email.message}
-                                </p>
-                            )}
-                        </div>
-
-                        <div id="passwordBody" className="mt-5">
-                            <Label htmlFor="password">Password</Label>
-                            <Input type="text" {...register("password")} />
-                            {errors.password && (
-                                <p className="text-red-600 text-sm">
-                                    {errors.password.message}
-                                </p>
-                            )}
-                        </div>
-
-                        <div id="confirmPassword" className="mt-5">
-                            <Label htmlFor="confirmPassword">
-                                Confirm Password
-                            </Label>
-                            <Input
-                                id="confirmPassword"
-                                type="text"
-                                {...register("confirmPassword")}
-                            />
-                            {errors.confirmPassword && (
-                                <p className="text-red-600 text-sm">
-                                    {errors.confirmPassword.message}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div id="submitButton" className="w-[80%] mx-auto">
-                        <Button
-                            variant="filled"
-                            type="submit"
-                            className=" mt-12"
+                        <div
+                            id="names"
+                            className="flex mx-auto gap-2 justify-between  "
                         >
-                            Get started
-                        </Button>
-                    </div>
-                    <div className="w-[80%] mx-auto flex justify-center mt-4">
-                        <p>Already have an account?</p>{" "}
-                        <p className="ml-2 hover:underline cursor-pointer">
-                            <Link
-                                to={"/login"}
-                                className="text-primary font-bold"
+                            <div id="firstNameBody">
+                                <Label htmlFor="firstName">First name</Label>
+                                <Input
+                                    type="text"
+                                    {...register("firstName")}
+                                    placeholder="John"
+                                />
+                                <p className="h-[14px] text-red-600 text-sm">
+                                    {errors.firstName &&
+                                        errors.firstName.message}
+                                </p>
+                            </div>
+
+                            <div id="lastNameBody">
+                                <Label htmlFor="lastName">Last name</Label>
+                                <Input
+                                    type="text"
+                                    {...register("lastName")}
+                                    placeholder="Doe"
+                                />
+                                <p className="h-[14px] text-red-600 text-sm">
+                                    {errors.lastName && errors.lastName.message}
+                                </p>
+                            </div>
+                        </div>
+                        <div id="otherFields" className="mx-auto">
+                            <div id="emailBody" className="mt-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    type="text"
+                                    {...register("email")}
+                                    placeholder="xyz@mail.com"
+                                    id="email"
+                                />
+                                <p className="h-[14px] text-red-600 text-sm">
+                                    {errors.email && errors.email.message}
+                                </p>
+                            </div>
+
+                            <div id="passwordBody" className="mt-2">
+                                <Label htmlFor="password">Password</Label>
+                                <Input
+                                    type="text"
+                                    id="password"
+                                    {...register("password")}
+                                />
+                                <p className="h-[14px] text-red-600 text-sm">
+                                    {errors.password && errors.password.message}
+                                </p>
+                            </div>
+
+                            <div id="confirmPassword" className="mt-2">
+                                <Label htmlFor="confirmPassword">
+                                    Confirm Password
+                                </Label>
+                                <Input
+                                    id="confirmPassword"
+                                    type="text"
+                                    {...register("confirmPassword")}
+                                />
+                                <p className="h-[14px] text-red-600 text-sm">
+                                    {errors.confirmPassword &&
+                                        errors.confirmPassword.message}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="submitButton" className="">
+                            <Button
+                                variant="filled"
+                                type="submit"
+                                className=" mt-8"
                             >
-                                Login here
-                            </Link>
-                        </p>
-                    </div>
-                </form>
+                                Get started
+                            </Button>
+                        </div>
+                        <div className="w-[80%] mx-auto flex justify-center mt-4">
+                            <p>Already have an account?</p>{" "}
+                            <p className="ml-2 hover:underline cursor-pointer">
+                                <Link
+                                    to={"/login"}
+                                    className="text-primary font-bold"
+                                >
+                                    Login here
+                                </Link>
+                            </p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );
