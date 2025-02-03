@@ -38,5 +38,5 @@ app.get("/", async (req: Request, res: Response) => {
 import { authRouter } from "./routes/auth.route.js";
 app.use("/api/v1/auth", authRouter);
 
-// NOTE: Error response handler always at last after all route
+// Error response handler always at last after all route
 app.use(responseErrorHandler);
