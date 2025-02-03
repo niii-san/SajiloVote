@@ -1,33 +1,47 @@
-import { sequelize } from "../db/index.js";
-import { DataTypes } from "sequelize";
+import {
+    DataTypes,
+    Model,
+    InferAttributes,
+    InferCreationAttributes,
+    CreationOptional
+} from "@sequelize/core";
+import {
+    Attribute,
+    NotNull,
+    PrimaryKey,
+    AutoIncrement,
+    Default,
+} from "@sequelize/core/decorators-legacy";
 
-export const User = sequelize.define(
-    "User",
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        firstName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        lastName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        refreshToken: {
-            type: DataTypes.STRING,
-        },
-    },
-    { timestamps: true, updatedAt: "updateTimestamp" },
-);
+export class User extends Model<
+    InferAttributes<User>,
+    InferCreationAttributes<User>
+> {
+    @Attribute(DataTypes.INTEGER)
+    @PrimaryKey
+    @AutoIncrement
+    declare id: CreationOptional<number>;
+
+    @Attribute(DataTypes.STRING)
+    @NotNull
+    declare first_name: string;
+
+    @Attribute(DataTypes.STRING)
+    @NotNull
+    declare last_name: string;
+
+    @Attribute(DataTypes.STRING)
+    @NotNull
+    declare email: string;
+
+    @Attribute(DataTypes.STRING)
+    @NotNull
+    declare password: string;
+
+    @Attribute(DataTypes.STRING)
+    declare refresh_token: CreationOptional<string>;
+
+    @Attribute(DataTypes.DATE)
+    @Default(DataTypes.NOW)
+    declare created_at: CreationOptional<Date>;
+}

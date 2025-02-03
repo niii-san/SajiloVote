@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ApiResponse, Reason } from "./ApiResponse.types";
+import type { ApiResponse, Reason } from "../types/index.js";
 
 export class ErrorResponse<T> extends Error implements ApiResponse<T> {
     public status_code: number;
@@ -45,7 +45,12 @@ export const responseErrorHandler = (
         res.status(err.status_code).json(err.toJSON());
     } else {
         res.status(500).json(
-            new ErrorResponse(500, "server_error", false, err.message),
+            new ErrorResponse(
+                500,
+                "server_error",
+                false,
+                `INTERNAL SERVER ERROR... ${err.message}`,
+            ),
         );
     }
     return next();

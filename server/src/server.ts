@@ -11,7 +11,7 @@ connectDB()
             console.log(`EXPRESS ERROR: ${error}`);
         });
         app.listen(PORT, () => {
-            console.log(`server running on PORT: ${PORT}`);
+            console.log(`Server running on PORT: ${PORT}`);
         });
     })
     .catch((err) => {

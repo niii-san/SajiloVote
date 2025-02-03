@@ -1,4 +1,4 @@
-import { ApiResponse } from "./ApiResponse.types";
+import { ApiResponse } from "../types/index.js";
 
 export class SuccessfulResponse<T> implements ApiResponse<T> {
     public status_code: number;

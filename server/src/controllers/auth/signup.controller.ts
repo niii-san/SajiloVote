@@ -4,14 +4,16 @@ import {
     SuccessfulResponse,
 } from "../../utils/index.js";
 import { Request, Response } from "express";
+import { User } from "../../models/index.js";
+import type { UserType } from "../../types/index.js";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
-    const firstName: string = (req.body.firstName ?? "").trim();
-    const lastName: string = (req.body.lastName ?? "").trim();
+    const first_name: string = (req.body.first_name ?? "").trim();
+    const last_name: string = (req.body.last_name ?? "").trim();
     const email: string = (req.body.email ?? "").trim().toLowerCase();
     const password: string = req.body.password ?? "";
 
-    if (!firstName) {
+    if (!first_name) {
         throw new ErrorResponse(
             400,
             "client_error",
@@ -20,7 +22,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
-    if (!lastName) {
+    if (!last_name) {
         throw new ErrorResponse(
             400,
             "client_error",
@@ -56,14 +58,16 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
+    const user = await User.create({ first_name, last_name, email, password });
+
     return res
-        .status(200)
+        .status(201)
         .json(
-            new SuccessfulResponse<null>(
-                200,
+            new SuccessfulResponse<UserType>(
+                201,
                 false,
                 "User creation, TEST PASSED",
-                null,
+                user,
             ),
         );
 });

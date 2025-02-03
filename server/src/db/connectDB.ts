@@ -1,17 +1,34 @@
-import { Sequelize } from "sequelize";
-import { dbConfig } from "../config/index.js";
+import { Sequelize, importModels } from "@sequelize/core";
+import { PostgresDialect } from "@sequelize/postgres";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-export const sequelize = new Sequelize(dbConfig);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+export const sequelize = new Sequelize({
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: "localhost",
+    dialect: PostgresDialect,
+    models: await importModels(resolve(__dirname + "/../models/**/*.model.{ts,js}")),
+});
 
 export async function connectDB() {
     try {
         await sequelize.authenticate();
+        console.log("Database connected successfully!");
+
         if (process.env.RUNTIME === "dev") {
-            await sequelize.sync({ force: true, alter: true });
-            console.log("Tables synced");
+            console.log("Development mode: Syncing tables with alter.");
+            await sequelize.sync({ alter: true });
+        } else {
+            await sequelize.sync();
         }
-        Promise.resolve();
+
+        return Promise.resolve();
     } catch (error) {
-        Promise.reject(error);
+        console.error("Database connection failed:", error);
+        return Promise.reject(error);
     }
 }
