@@ -6,10 +6,11 @@ import {
 import { Request, Response } from "express";
 import { User } from "../../models/index.js";
 import type { UserType } from "../../types/index.js";
+import { log } from "node:console";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
-    const first_name: string = (req.body.first_name ?? "").trim();
-    const last_name: string = (req.body.last_name ?? "").trim();
+    const first_name: string = (req.body.first_name ?? "").trim().toLowerCase();
+    const last_name: string = (req.body.last_name ?? "").trim().toLowerCase();
     const email: string = (req.body.email ?? "").trim().toLowerCase();
     const password: string = req.body.password ?? "";
 
@@ -52,9 +53,20 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     if (password.length < 8) {
         throw new ErrorResponse(
             400,
-            "client_error",
+            "invalid_payload",
             false,
             "password must be 8 characters or longer!",
+        );
+    }
+
+    const alreadyUserExists = await User.findOne({ where: { email: email } });
+
+    if (alreadyUserExists) {
+        throw new ErrorResponse(
+            409,
+            "already_exists",
+            false,
+            "user with this email address already exists",
         );
     }
 
@@ -66,7 +78,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
             new SuccessfulResponse<UserType>(
                 201,
                 false,
-                "User creation, TEST PASSED",
+                "account created",
                 user,
             ),
         );

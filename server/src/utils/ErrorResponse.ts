@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import type { ApiResponse, Reason } from "../types/index.js";
 
-export class ErrorResponse<T> extends Error implements ApiResponse<T> {
+export class ErrorResponse extends Error implements ApiResponse {
     public status_code: number;
     public success: boolean;
     public reason: Reason;
     public is_authenticated: boolean;
     public message: string;
-    public data: T | null;
 
     constructor(
         status_code: number,
@@ -21,7 +20,6 @@ export class ErrorResponse<T> extends Error implements ApiResponse<T> {
         this.reason = reason;
         this.is_authenticated = is_authenticated;
         this.message = message;
-        this.data = null;
     }
     public toJSON() {
         return {
@@ -30,7 +28,6 @@ export class ErrorResponse<T> extends Error implements ApiResponse<T> {
             reason: this.reason,
             is_authenticated: this.is_authenticated,
             message: this.message,
-            data: this.data,
         };
     }
 }
