@@ -3,6 +3,7 @@ import {
     asyncHandler,
     ErrorResponse,
     generateAccessToken,
+    generateRefreshToken,
     SuccessfulResponse,
 } from "../../utils/index.js";
 import { Request, Response } from "express";
@@ -52,18 +53,19 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
-    //TODO: send tokens
-    const accessToken = "";
-    const refreshToken = "";
-    return res
-        .status(200)
-        .json(
-            new SuccessfulResponse<{
-                access_token: string;
-                refresh_token: string;
-            }>(200, true, "login successful", {
-                access_token: accessToken,
-                refresh_token: refreshToken,
-            }),
-        );
+    const accessToken = await generateAccessToken(user.id);
+    const refreshToken = await generateRefreshToken(user.id);
+    user.refresh_token=refreshToken;
+    await user.save()
+
+
+    return res.status(200).json(
+        new SuccessfulResponse<{
+            access_token: string;
+            refresh_token: string;
+        }>(200, true, "login successful", {
+            access_token: accessToken,
+            refresh_token: refreshToken,
+        }),
+    );
 });

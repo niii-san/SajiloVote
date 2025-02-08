@@ -43,7 +43,7 @@ export class User extends Model<
     @NotNull
     declare password: string;
 
-    @Attribute(DataTypes.STRING)
+    @Attribute(DataTypes.TEXT)
     declare refresh_token: CreationOptional<string>;
 
     @CreatedAt
