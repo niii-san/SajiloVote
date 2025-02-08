@@ -5,7 +5,8 @@ import {
 } from "../../utils/index.js";
 import { Request, Response } from "express";
 import { User } from "../../models/index.js";
-import { UserType, PublicUserType } from "../../types/index.js";
+import { PublicUserType } from "../../types/index.js";
+import bcrypt from "bcrypt";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
     const first_name: string = (req.body.first_name ?? "").trim().toLowerCase();
@@ -68,8 +69,14 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
             "user with this email address already exists",
         );
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({ first_name, last_name, email, password });
+    const user = await User.create({
+        first_name,
+        last_name,
+        email,
+        password: hashedPassword,
+    });
 
     return res.status(201).json(
         new SuccessfulResponse<PublicUserType>(201, false, "account created", {
@@ -78,6 +85,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
             last_name: user.last_name,
             email: user.email,
             created_at: user.created_at,
+            updated_at: user.updated_at,
         }),
     );
 });

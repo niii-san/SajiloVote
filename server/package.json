@@ -20,6 +20,7 @@
         "build": "npx tsc"
     },
     "devDependencies": {
+        "@types/bcrypt": "^5.0.2",
         "@types/cookie-parser": "^1.4.8",
         "@types/cors": "^2.8.17",
         "@types/express": "^5.0.0",
@@ -32,6 +33,7 @@
     "dependencies": {
         "@sequelize/core": "^7.0.0-alpha.44",
         "@sequelize/postgres": "^7.0.0-alpha.44",
+        "bcrypt": "^5.1.1",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
         "dotenv": "^16.4.7",

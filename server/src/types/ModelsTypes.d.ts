@@ -8,4 +8,5 @@ export interface PublicUserType {
     last_name?: string;
     email?: string;
     created_at?: Date;
+    updated_at?: Date;
 }
