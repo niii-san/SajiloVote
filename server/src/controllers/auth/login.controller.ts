@@ -6,7 +6,7 @@ import {
     SuccessfulResponse,
 } from "../../utils/index.js";
 import { Request, Response } from "express";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
     const email: string = (req.body.email ?? "").trim().toLowerCase();
@@ -40,28 +40,30 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
             "user not found with this email address",
         );
     }
-    console.log({
-    inputPassword: password,
-    storedPassword: user.password,
-    passwordMatched: await bcrypt.compare(password, user.password),
-});
 
-    const passwordMatched = await bcrypt.compare(password,user.password)
+    const passwordMatched = await bcrypt.compare(password, user.password);
 
-    if(!passwordMatched){
-        throw new ErrorResponse(400,"client_error",false,"invalid credentials")
+    if (!passwordMatched) {
+        throw new ErrorResponse(
+            400,
+            "client_error",
+            false,
+            "invalid credentials",
+        );
     }
 
-
-    const token=""
+    //TODO: send tokens
+    const accessToken = "";
+    const refreshToken = "";
     return res
         .status(200)
         .json(
-            new SuccessfulResponse<{ token: string }>(
-                200,
-                false,
-                "Test passed",
-                { token: token },
-            ),
+            new SuccessfulResponse<{
+                access_token: string;
+                refresh_token: string;
+            }>(200, true, "login successful", {
+                access_token: accessToken,
+                refresh_token: refreshToken,
+            }),
         );
 });
