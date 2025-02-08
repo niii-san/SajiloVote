@@ -2,9 +2,10 @@ export type Reason =
     | "server_error"
     | "client_error"
     | "auth_error"
+    | "unauthorized"
     | "not_found"
-    | "invalid_payload"
     | "not_allowed"
+    | "invalid_payload"
     | "already_exists"
     | null
     | undefined;

@@ -55,17 +55,20 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
     const accessToken = await generateAccessToken(user.id);
     const refreshToken = await generateRefreshToken(user.id);
-    user.refresh_token=refreshToken;
-    await user.save()
+    user.refresh_token = refreshToken;
+    await user.save();
 
-
-    return res.status(200).json(
-        new SuccessfulResponse<{
-            access_token: string;
-            refresh_token: string;
-        }>(200, true, "login successful", {
-            access_token: accessToken,
-            refresh_token: refreshToken,
-        }),
-    );
+    return res
+        .cookie("access_token", accessToken)
+        .cookie("refresh_token", refreshToken)
+        .status(200)
+        .json(
+            new SuccessfulResponse<{
+                access_token: string;
+                refresh_token: string;
+            }>(200, true, "login successful", {
+                access_token: accessToken,
+                refresh_token: refreshToken,
+            }),
+        );
 });
