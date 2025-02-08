@@ -39,7 +39,7 @@ export class User extends Model<
     @NotNull
     declare email: string;
 
-    @Attribute(DataTypes.STRING)
+    @Attribute(DataTypes.STRING(255))
     @NotNull
     declare password: string;
 
@@ -55,9 +55,7 @@ export class User extends Model<
     @BeforeSave
     static async hashPassword(user: User) {
         if (user.changed("password")) {
-            user.password = await bcrypt.hash(user.password, 10);
-        } else {
-            return;
+            user.password = await bcrypt.hash(user.password, 8);
         }
     }
 }

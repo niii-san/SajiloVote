@@ -7,6 +7,7 @@ import { Request, Response } from "express";
 import { User } from "../../models/index.js";
 import { PublicUserType } from "../../types/index.js";
 import bcrypt from "bcrypt";
+import { log } from "console";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
     const first_name: string = (req.body.first_name ?? "").trim().toLowerCase();
@@ -59,6 +60,15 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
+    if (password.length > 24) {
+        throw new ErrorResponse(
+            400,
+            "invalid_payload",
+            false,
+            "password too long, only allowed upto 24 characters",
+        );
+    }
+
     const alreadyUserExists = await User.findOne({ where: { email: email } });
 
     if (alreadyUserExists) {
@@ -69,13 +79,12 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
             "user with this email address already exists",
         );
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
         first_name,
         last_name,
         email,
-        password: hashedPassword,
+        password,
     });
 
     return res.status(201).json(
