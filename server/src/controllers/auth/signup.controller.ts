@@ -5,8 +5,7 @@ import {
 } from "../../utils/index.js";
 import { Request, Response } from "express";
 import { User } from "../../models/index.js";
-import type { UserType } from "../../types/index.js";
-import { log } from "node:console";
+import { UserType, PublicUserType } from "../../types/index.js";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
     const first_name: string = (req.body.first_name ?? "").trim().toLowerCase();
@@ -72,14 +71,13 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
 
     const user = await User.create({ first_name, last_name, email, password });
 
-    return res
-        .status(201)
-        .json(
-            new SuccessfulResponse<UserType>(
-                201,
-                false,
-                "account created",
-                user,
-            ),
-        );
+    return res.status(201).json(
+        new SuccessfulResponse<PublicUserType>(201, false, "account created", {
+            id: user.id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            created_at: user.created_at,
+        }),
+    );
 });
