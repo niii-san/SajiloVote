@@ -2,6 +2,7 @@ export type Reason =
     | "server_error"
     | "client_error"
     | "auth_error"
+    | "not_found"
     | "invalid_payload"
     | "not_allowed"
     | "already_exists"

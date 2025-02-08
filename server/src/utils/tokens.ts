@@ -1,10 +1,56 @@
+import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
-const generateAccessToken = async (userId: number): Promise<string | null> => {
+export const generateAccessToken = async (userId: number): Promise<string> => {
     const user = await User.findByPk(userId);
+
     if (!user) {
-        return null;
+        throw new Error("user not found to generate token");
     }
 
-    return "s";
+    const secret = process.env.AUTH_ACCESS_TOKEN_SECRET_KEY;
+
+    if (!secret) {
+        throw new Error("could not load secret or not found");
+    }
+
+    const token = jwt.sign(
+        {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            created_at: user.created_at,
+        },
+        secret,
+        { expiresIn: "1m" },
+    );
+
+    return token;
+};
+
+export const generateRefreshToken = async (userId: number): Promise<string> => {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+        throw new Error("user not found to generate token");
+    }
+
+    const secret = process.env.AUTH_REFRESH_TOKEN_SECRET_KEY;
+
+    if (!secret) {
+        throw new Error("could not load secret or not found");
+    }
+
+    const token = jwt.sign(
+        {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            created_at: user.created_at,
+        },
+        secret,
+        { expiresIn: "3m" },
+    );
+
+    return token;
 };
