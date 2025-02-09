@@ -12,7 +12,9 @@
         "alwaysStrict": true /* Ensure 'use strict' is always emitted. */,
         "skipDefaultLibCheck": true /* Skip type checking .d.ts files that are included with TypeScript. */,
         "outDir": "./dist",
-        "skipLibCheck": true /* Skip type checking all .d.ts files. */
+        "skipLibCheck": true ,/* Skip type checking all .d.ts files. */
+        "typeRoots":["./types","./node_modules/@types"],
+        "types":["node","express"]
     },
     "include": [
         "src/**/*.ts"

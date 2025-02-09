@@ -3,7 +3,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ErrorResponse } from "../utils/ErrorResponse.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
-import type { UserType } from "../types/ModelsTypes.js";
 
 export const authenticate = asyncHandler(
     async (req: Request, _: Response, next: NextFunction) => {
@@ -30,9 +29,6 @@ export const authenticate = asyncHandler(
             const user = await User.findByPk(decoded.id, {
                 attributes: { exclude: ["password", "refresh_token"] },
             });
-
-            //TODO:custom type for user
-            // @ts-ignore
             req.user = user;
             next();
         } catch (err: any) {
