@@ -1,6 +1,6 @@
 import { ApiResponse } from "../types/index.js";
 
-export class SuccessfulResponse<T> implements ApiResponse<T> {
+export class SuccessResponse<T> implements ApiResponse<T> {
     public status_code: number;
     public success: boolean;
     public is_authenticated: boolean;

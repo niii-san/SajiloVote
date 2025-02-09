@@ -1,13 +1,11 @@
 import {
     asyncHandler,
     ErrorResponse,
-    SuccessfulResponse,
+    SuccessResponse,
 } from "../../utils/index.js";
 import { Request, Response } from "express";
 import { User } from "../../models/index.js";
 import { PublicUserType } from "../../types/index.js";
-import bcrypt from "bcrypt";
-import { log } from "console";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
     const first_name: string = (req.body.first_name ?? "").trim().toLowerCase();
@@ -88,7 +86,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     });
 
     return res.status(201).json(
-        new SuccessfulResponse<PublicUserType>(201, false, "account created", {
+        new SuccessResponse<PublicUserType>(201, false, "account created", {
             id: user.id,
             first_name: user.first_name,
             last_name: user.last_name,

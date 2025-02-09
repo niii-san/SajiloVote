@@ -4,7 +4,7 @@ import {
     ErrorResponse,
     generateAccessToken,
     generateRefreshToken,
-    SuccessfulResponse,
+    SuccessResponse,
 } from "../../utils/index.js";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
@@ -63,7 +63,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
         .cookie("refresh_token", refreshToken)
         .status(200)
         .json(
-            new SuccessfulResponse<{
+            new SuccessResponse<{
                 access_token: string;
                 refresh_token: string;
             }>(200, true, "login successful", {
