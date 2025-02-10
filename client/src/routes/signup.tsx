@@ -57,7 +57,7 @@ function RouteComponent() {
         };
 
         try {
-            await api.post("/auth/signup", payload);
+            await api.post("/api/v1/auth/signup", payload);
             toast.success("Signed up successfully, Proceed to login");
             reset();
             navigate({ to: "/login" });

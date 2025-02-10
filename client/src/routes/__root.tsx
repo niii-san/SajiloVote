@@ -11,15 +11,11 @@ export const Route = createRootRoute({
         const [loading, setLoading] = useState<boolean>(false);
         const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
         const login = useAuthStore((state) => state.login);
-        // const { isLoggedIn, login } = useAuthStore((state) => ({
-        //     isLoggedIn: state.isLoggedIn,
-        //     login: state.login,
-        // }));
 
         const verify = async () => {
             setLoading(true);
             try {
-                const response = await api.get("/auth/verify-token");
+                const response = await api.get("/api/v1/auth/verify-token");
                 if (response.data?.success && response.data?.is_authenticated) {
                     login();
                 }

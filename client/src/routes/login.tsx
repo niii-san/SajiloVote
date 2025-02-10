@@ -45,7 +45,7 @@ function RouteComponent() {
         };
 
         try {
-            await api.post("/auth/login", payload);
+            await api.post("/api/v1/auth/login", payload);
             navigate({ to: "/" });
             login();
         } catch (error: any) {

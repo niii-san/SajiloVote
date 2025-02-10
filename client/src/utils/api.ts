@@ -24,7 +24,7 @@ api.interceptors.response.use(
 async function refreshAccessToken() {
     try {
         await axios.post(
-            `${import.meta.env.VITE_API_ENDPOINT}/auth/refresh-token`,
+            `${import.meta.env.VITE_API_ENDPOINT}/api/v1/auth/refresh-token`,
             {},
             { withCredentials: true },
         );
