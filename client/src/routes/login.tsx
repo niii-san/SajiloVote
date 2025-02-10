@@ -14,7 +14,7 @@ export const Route = createFileRoute("/login")({
 function RouteComponent() {
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
-    const setUserData = useAuthStore((state) => state.setUserData);
+
     const [loading, setLoading] = useState<boolean>(false);
     const [resErr, setResErr] = useState<string | null>(null);
 
@@ -48,7 +48,6 @@ function RouteComponent() {
             await api.post("/auth/login", payload);
             navigate({ to: "/" });
             login();
-            setUserData()
         } catch (error: any) {
             setResErr(error.response?.data?.message);
             console.error(error);
