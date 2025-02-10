@@ -1,13 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
-import { Input, Label, Button } from "../../components"
+import { Input, Label, Button } from "../../../components"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { useState } from "react"
-import { api } from "../../utils"
-import { useAuthStore } from "../../stores"
+import { api } from "../../../utils"
+import { useAuthStore } from "../../../stores"
 
-export const Route = createFileRoute("/(auth)/login")({
+export const Route = createFileRoute("/_layout/(auth)/login")({
   component: RouteComponent,
 })
 
