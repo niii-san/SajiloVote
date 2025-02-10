@@ -58,9 +58,14 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     user.refresh_token = refreshToken;
     await user.save();
 
+    const cookieOptions = {
+        secure: true,
+        httpOnly: true,
+    };
+
     return res
-        .cookie("access_token", accessToken)
-        .cookie("refresh_token", refreshToken)
+        .cookie("access_token", accessToken, cookieOptions)
+        .cookie("refresh_token", refreshToken, cookieOptions)
         .status(200)
         .json(
             new SuccessResponse<{

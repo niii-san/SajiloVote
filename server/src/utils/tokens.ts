@@ -23,7 +23,7 @@ export const generateAccessToken = async (userId: number): Promise<string> => {
             created_at: user.created_at,
         },
         secret,
-        { expiresIn: "1m" },
+        { expiresIn: "2m" },
     );
 
     return token;
@@ -45,13 +45,10 @@ export const generateRefreshToken = async (userId: number): Promise<string> => {
     const token = jwt.sign(
         {
             id: user.id,
-            first_name: user.first_name,
-            last_name: user.last_name,
             email: user.email,
-            created_at: user.created_at,
         },
         secret,
-        { expiresIn: "3m" },
+        { expiresIn: "5m" },
     );
 
     return token;
