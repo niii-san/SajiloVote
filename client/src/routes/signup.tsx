@@ -1,14 +1,20 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, Label, Input } from "../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { api } from "../utils";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export const Route = createFileRoute("/signup")({
     component: RouteComponent,
 });
 
 function RouteComponent() {
+    const navigate = useNavigate();
+    const [signing, setSigning] = useState<boolean>(false);
+    const [resErr, setResErr] = useState<string | null>(null);
     const signupSchema = yup
         .object({
             firstName: yup.string().trim().required("First name is required"),
@@ -36,19 +42,34 @@ function RouteComponent() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<FormData>({ resolver: yupResolver(signupSchema) });
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+        if (resErr) setResErr(null);
+        setSigning(true);
+        const payload = {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            email: data.email,
+            password: data.password,
+        };
+
+        try {
+            await api.post("/auth/signup", payload);
+            toast.success("Signed up successfully, Proceed to login");
+            reset();
+            navigate({ to: "/login" });
+        } catch (error: any) {
+            setResErr(error?.response?.data?.message);
+        } finally {
+            setSigning(false);
+        }
     };
 
     return (
         <div className="min-h-[800px] ">
-            {/*
-            <div className="bg-primary text-background w-[150px] h-[100px]">
-                LOGO
-            </div>*/}
             <div className="w-[1000px] h-[600px] mx-auto mt-36 flex justify-start">
                 <div className="bg-primary w-[55%] h-full">something</div>
                 <div className="w-[45%] rounded-r-md py-5 bg-white ">
@@ -129,10 +150,17 @@ function RouteComponent() {
                                         errors.confirmPassword.message}
                                 </p>
                             </div>
+                            {resErr && (
+                                <p className="h-[14px] text-red-600 text-sm">
+                                    {resErr}
+                                </p>
+                            )}
                         </div>
 
                         <div id="submitButton" className="">
                             <Button
+                                loading={signing}
+                                disabled={signing}
                                 variant="filled"
                                 type="submit"
                                 className=" mt-8"
