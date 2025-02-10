@@ -34,12 +34,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     const user = await User.findOne({ where: { email: email } });
 
     if (!user) {
-        throw new ErrorResponse(
-            404,
-            "not_found",
-            false,
-            "user not found with this email address",
-        );
+        throw new ErrorResponse(404, "not_found", false, "invalid credentials");
     }
 
     const passwordMatched = await bcrypt.compare(password, user.password);

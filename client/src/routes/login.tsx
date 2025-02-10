@@ -3,12 +3,18 @@ import { Input, Label, Button } from "../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
+import { api } from "../utils";
 
 export const Route = createFileRoute("/login")({
     component: RouteComponent,
 });
 
 function RouteComponent() {
+    const navigate = useNavigate()
+    const [loading, setLoading] = useState<boolean>(false);
+    const [resErr, setResErr] = useState<string | null>(null);
+
     const signupSchema = yup
         .object({
             email: yup
@@ -27,8 +33,25 @@ function RouteComponent() {
         formState: { errors },
     } = useForm<FormData>({ resolver: yupResolver(signupSchema) });
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+        if (resErr) setResErr(null);
+        setLoading(true);
+        const payload = {
+            email: data.email,
+            password: data.password,
+        };
+
+        try {
+             await api.post("/auth/login",payload)
+            navigate({to:"/"})
+            //TODO: handle user state and load user data
+
+        } catch (error: any) {
+            setResErr(error.response?.data?.message);
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -66,6 +89,11 @@ function RouteComponent() {
                                     {errors.password.message}
                                 </p>
                             )}
+
+                            {resErr && (
+                                <p className="text-red-600 text-sm">{resErr}</p>
+                            )}
+
                             <p className="mt-2 text-right text-sm text-primary font-bold cursor-pointer hover:opacity-80">
                                 Forgot password?
                             </p>
@@ -74,6 +102,8 @@ function RouteComponent() {
 
                     <div id="loginButton" className="mx-auto">
                         <Button
+                            loading={loading}
+                            disabled={loading}
                             variant="filled"
                             type="submit"
                             className=" mt-8"
