@@ -11,14 +11,14 @@ type Actions = {
     setUserData: () => void;
 };
 
-export const useAuth = create<State & Actions>((set) => ({
+export const useAuthStore = create<State & Actions>((set) => ({
     isLoggedIn: false,
     userData: null,
     login: () => {
         set({ isLoggedIn: true });
     },
     logout: () => {
-        set({ isLoggedIn: false });
+        set({ isLoggedIn: false, userData: null });
     },
     setUserData: () => {},
 }));

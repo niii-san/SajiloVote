@@ -1,2 +1,2 @@
-import { useAuth } from "./auth.store";
-export { useAuth };
+import { useAuthStore } from "./AuthStore";
+export { useAuthStore };

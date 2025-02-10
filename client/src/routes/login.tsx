@@ -5,13 +5,16 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import { api } from "../utils";
+import { useAuthStore } from "../stores";
 
 export const Route = createFileRoute("/login")({
     component: RouteComponent,
 });
 
 function RouteComponent() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const login = useAuthStore((state) => state.login);
+    const setUserData = useAuthStore((state) => state.setUserData);
     const [loading, setLoading] = useState<boolean>(false);
     const [resErr, setResErr] = useState<string | null>(null);
 
@@ -42,10 +45,10 @@ function RouteComponent() {
         };
 
         try {
-             await api.post("/auth/login",payload)
-            navigate({to:"/"})
-            //TODO: handle user state and load user data
-
+            await api.post("/auth/login", payload);
+            navigate({ to: "/" });
+            login();
+            setUserData()
         } catch (error: any) {
             setResErr(error.response?.data?.message);
             console.error(error);
@@ -55,7 +58,7 @@ function RouteComponent() {
     };
 
     return (
-        <div className="min-h-[800px] ">
+        <div className="min-h-screen">
             <div className="bg-primary text-background w-[150px] h-[100px]">
                 LOGO
             </div>
