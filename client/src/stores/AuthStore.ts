@@ -22,5 +22,5 @@ export const useAuthStore = create<State & Actions>((set, get) => ({
     logout: () => {
         set({ isLoggedIn: false, userData: null });
     },
-    setUserData: () => {},
+    setUserData: () => { },
 }));

@@ -11,27 +11,47 @@
 // Import Routes
 
 import { Route as rootRoute } from "./routes/__root"
-import { Route as SignupImport } from "./routes/signup"
-import { Route as LoginImport } from "./routes/login"
+import { Route as AuthenticatedImport } from "./routes/_authenticated"
 import { Route as IndexImport } from "./routes/index"
+import { Route as AuthenticatedProfileImport } from "./routes/_authenticated/profile"
+import { Route as AuthenticatedDashboardImport } from "./routes/_authenticated/dashboard"
+import { Route as authSignupImport } from "./routes/(auth)/signup"
+import { Route as authLoginImport } from "./routes/(auth)/login"
 
 // Create/Update Routes
 
-const SignupRoute = SignupImport.update({
-  id: "/signup",
-  path: "/signup",
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LoginRoute = LoginImport.update({
-  id: "/login",
-  path: "/login",
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: "/_authenticated",
   getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: "/",
   path: "/",
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
+  id: "/profile",
+  path: "/profile",
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedDashboardRoute = AuthenticatedDashboardImport.update({
+  id: "/dashboard",
+  path: "/dashboard",
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const authSignupRoute = authSignupImport.update({
+  id: "/(auth)/signup",
+  path: "/signup",
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authLoginRoute = authLoginImport.update({
+  id: "/(auth)/login",
+  path: "/login",
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -46,63 +66,116 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    "/login": {
-      id: "/login"
-      path: "/login"
-      fullPath: "/login"
-      preLoaderRoute: typeof LoginImport
+    "/_authenticated": {
+      id: "/_authenticated"
+      path: ""
+      fullPath: ""
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
-    "/signup": {
-      id: "/signup"
+    "/(auth)/login": {
+      id: "/(auth)/login"
+      path: "/login"
+      fullPath: "/login"
+      preLoaderRoute: typeof authLoginImport
+      parentRoute: typeof rootRoute
+    }
+    "/(auth)/signup": {
+      id: "/(auth)/signup"
       path: "/signup"
       fullPath: "/signup"
-      preLoaderRoute: typeof SignupImport
+      preLoaderRoute: typeof authSignupImport
       parentRoute: typeof rootRoute
+    }
+    "/_authenticated/dashboard": {
+      id: "/_authenticated/dashboard"
+      path: "/dashboard"
+      fullPath: "/dashboard"
+      preLoaderRoute: typeof AuthenticatedDashboardImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    "/_authenticated/profile": {
+      id: "/_authenticated/profile"
+      path: "/profile"
+      fullPath: "/profile"
+      preLoaderRoute: typeof AuthenticatedProfileImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
-  "/login": typeof LoginRoute
-  "/signup": typeof SignupRoute
+  "": typeof AuthenticatedRouteWithChildren
+  "/login": typeof authLoginRoute
+  "/signup": typeof authSignupRoute
+  "/dashboard": typeof AuthenticatedDashboardRoute
+  "/profile": typeof AuthenticatedProfileRoute
 }
 
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
-  "/login": typeof LoginRoute
-  "/signup": typeof SignupRoute
+  "": typeof AuthenticatedRouteWithChildren
+  "/login": typeof authLoginRoute
+  "/signup": typeof authSignupRoute
+  "/dashboard": typeof AuthenticatedDashboardRoute
+  "/profile": typeof AuthenticatedProfileRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   "/": typeof IndexRoute
-  "/login": typeof LoginRoute
-  "/signup": typeof SignupRoute
+  "/_authenticated": typeof AuthenticatedRouteWithChildren
+  "/(auth)/login": typeof authLoginRoute
+  "/(auth)/signup": typeof authSignupRoute
+  "/_authenticated/dashboard": typeof AuthenticatedDashboardRoute
+  "/_authenticated/profile": typeof AuthenticatedProfileRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/" | "/login" | "/signup"
+  fullPaths: "/" | "" | "/login" | "/signup" | "/dashboard" | "/profile"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/login" | "/signup"
-  id: "__root__" | "/" | "/login" | "/signup"
+  to: "/" | "" | "/login" | "/signup" | "/dashboard" | "/profile"
+  id:
+    | "__root__"
+    | "/"
+    | "/_authenticated"
+    | "/(auth)/login"
+    | "/(auth)/signup"
+    | "/_authenticated/dashboard"
+    | "/_authenticated/profile"
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LoginRoute: typeof LoginRoute
-  SignupRoute: typeof SignupRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  authLoginRoute: typeof authLoginRoute
+  authSignupRoute: typeof authSignupRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LoginRoute: LoginRoute,
-  SignupRoute: SignupRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  authLoginRoute: authLoginRoute,
+  authSignupRoute: authSignupRoute,
 }
 
 export const routeTree = rootRoute
@@ -116,18 +189,34 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/login",
-        "/signup"
+        "/_authenticated",
+        "/(auth)/login",
+        "/(auth)/signup"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/login": {
-      "filePath": "login.tsx"
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/dashboard",
+        "/_authenticated/profile"
+      ]
     },
-    "/signup": {
-      "filePath": "signup.tsx"
+    "/(auth)/login": {
+      "filePath": "(auth)/login.tsx"
+    },
+    "/(auth)/signup": {
+      "filePath": "(auth)/signup.tsx"
+    },
+    "/_authenticated/dashboard": {
+      "filePath": "_authenticated/dashboard.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/profile": {
+      "filePath": "_authenticated/profile.tsx",
+      "parent": "/_authenticated"
     }
   }
 }

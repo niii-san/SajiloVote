@@ -44,6 +44,32 @@ function NavBar() {
                     );
                 }}
             </Link>
+            <Link to="/dashboard">
+                {({ isActive }) => {
+                    return (
+                        <>
+                            <span
+                                className={`${isActive ? activeNavItemStyling : inactiveNavItemStyling}`}
+                            >
+                                dashboard
+                            </span>
+                        </>
+                    );
+                }}
+            </Link>
+            <Link to="/profile">
+                {({ isActive }) => {
+                    return (
+                        <>
+                            <span
+                                className={`${isActive ? activeNavItemStyling : inactiveNavItemStyling}`}
+                            >
+                                profile
+                            </span>
+                        </>
+                    );
+                }}
+            </Link>
         </div>
     );
 }

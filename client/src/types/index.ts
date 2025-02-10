@@ -1,2 +1,3 @@
 import { User } from "./User.type";
-export type { User };
+import { AuthStoreType } from "./StoreTypes";
+export type { User, AuthStoreType };

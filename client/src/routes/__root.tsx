@@ -1,12 +1,17 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { NavBar, Footer, Loader } from "../components";
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "../stores";
 import { useEffect, useState } from "react";
 import { api } from "../utils";
+import { AuthStoreType } from "../types";
 
-export const Route = createRootRoute({
+type RouterContext = {
+    AuthStore: AuthStoreType;
+};
+
+export const Route = createRootRouteWithContext<RouterContext>()({
     component: () => {
         const [loading, setLoading] = useState<boolean>(false);
         const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
