@@ -8,6 +8,7 @@ import {
 } from "../../utils/index.js";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import { cookieOptions } from "../../constants.js";
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
     const email: string = (req.body.email ?? "").trim().toLowerCase();
@@ -52,11 +53,6 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     const refreshToken = await generateRefreshToken(user.id);
     user.refresh_token = refreshToken;
     await user.save();
-
-    const cookieOptions = {
-        secure: true,
-        httpOnly: true,
-    };
 
     return res
         .cookie("access_token", accessToken, cookieOptions)
