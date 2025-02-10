@@ -40,7 +40,7 @@ export const authenticate = asyncHandler(
                     "token expired",
                 );
             }
-            throw new ErrorResponse(401, "auth_error", false, "invalid token");
+            throw new ErrorResponse(400, "auth_error", false, "invalid token");
         }
     },
 );

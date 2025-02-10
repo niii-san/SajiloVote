@@ -24,7 +24,7 @@ export const refreshAccessToken = asyncHandler(
 
         if (!refreshToken) {
             throw new ErrorResponse(
-                400,
+                401,
                 "client_error",
                 false,
                 "refresh token is required",
@@ -75,7 +75,7 @@ export const refreshAccessToken = asyncHandler(
                 );
             }
             throw new ErrorResponse(
-                400,
+                401,
                 "auth_error",
                 false,
                 "invalid refresh token",
