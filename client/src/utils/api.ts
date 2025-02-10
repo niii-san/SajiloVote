@@ -9,12 +9,13 @@ api.interceptors.response.use(
     (response) => response,
     async function (error: AxiosError | any) {
         const originalRequest = error.config;
-        if (
-            error.response?.status === 401 &&
-            error.response?.data?.message == "token expired"
-        ) {
-            await refreshAccessToken();
-            return api(originalRequest);
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            try {
+                await refreshAccessToken();
+                return api(originalRequest);
+            } catch (refreshError: any) {
+                return Promise.reject(refreshError);
+            }
         }
         return Promise.reject(error);
     },
@@ -27,8 +28,10 @@ async function refreshAccessToken() {
             {},
             { withCredentials: true },
         );
-        console.log("accesss token refreshed");
-    } catch (error: any) {
-        toast.error("Session expired");
+    } catch (refreshError: any) {
+        if (refreshError.response.status === 401) {
+            toast.error("Session expired");
+        }
+        return Promise.reject(refreshError);
     }
 }

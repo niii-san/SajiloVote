@@ -67,19 +67,30 @@ export const refreshAccessToken = asyncHandler(
                 );
         } catch (error: any) {
             if (error?.message == "jwt expired") {
-                throw new ErrorResponse(
-                    401,
-                    "auth_error",
-                    false,
-                    "refresh token expired",
-                );
+                return res
+                    .clearCookie("access_token")
+                    .clearCookie("refresh_token)")
+                    .status(401)
+                    .json(
+                        new ErrorResponse(
+                            401,
+                            "auth_error",
+                            false,
+                            "refresh token expired",
+                        ).toJSON(),
+                    );
             }
-            throw new ErrorResponse(
-                401,
-                "auth_error",
-                false,
-                "invalid refresh token",
-            );
+            res.clearCookie("access_token")
+                .clearCookie("refresh_token")
+                .status(401)
+                .json(
+                    new ErrorResponse(
+                        401,
+                        "auth_error",
+                        false,
+                        "invalid refresh token",
+                    ).toJSON(),
+                );
         }
     },
 );
