@@ -38,10 +38,21 @@ function RouteComponent() {
 
     return (
         <>
-            <NavBar />
             <Toaster />
-            {loading ? <Loader /> : <Outlet />}
-            <Footer />
+            {loading ? (
+                <Loader />
+            ) : isLoggedIn ? (
+                <div className="flex">
+                    <NavBar />
+                    <Outlet />
+                </div>
+            ) : (
+                <>
+                    <NavBar />
+                    <Outlet />
+                </>
+            )}
+            {!isLoggedIn && <Footer />}
             <TanStackRouterDevtools />
         </>
     );
