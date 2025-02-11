@@ -159,8 +159,8 @@ function NavBar() {
                                                 className={cn(
                                                     "transition-opacity",
                                                     isSidebarMinimized
-                                                        ? "opacity-0 md:group-hover:opacity-100 md:group-hover:visible absolute left-full ml-4 bg-gray-300 px-4 py-2 rounded-lg shadow-lg text-sm whitespace-nowrap text-black"
-                                                        : "opacity-100 ",
+                                                        ? "hidden"
+                                                        : "block",
                                                 )}
                                             >
                                                 {item.label}
