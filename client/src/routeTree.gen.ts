@@ -15,9 +15,7 @@ import { Route as LayoutImport } from "./routes/_layout"
 import { Route as LayoutIndexImport } from "./routes/_layout/index"
 import { Route as LayoutAuthenticatedImport } from "./routes/_layout/_authenticated"
 import { Route as LayoutAuthenticatedSettingsImport } from "./routes/_layout/_authenticated/settings"
-import { Route as LayoutAuthenticatedProfileImport } from "./routes/_layout/_authenticated/profile"
 import { Route as LayoutAuthenticatedEventsImport } from "./routes/_layout/_authenticated/events"
-import { Route as LayoutAuthenticatedDashboardImport } from "./routes/_layout/_authenticated/dashboard"
 import { Route as LayoutauthSignupImport } from "./routes/_layout/(auth)/signup"
 import { Route as LayoutauthLogoutImport } from "./routes/_layout/(auth)/logout"
 import { Route as LayoutauthLoginImport } from "./routes/_layout/(auth)/login"
@@ -47,26 +45,11 @@ const LayoutAuthenticatedSettingsRoute =
     getParentRoute: () => LayoutAuthenticatedRoute,
   } as any)
 
-const LayoutAuthenticatedProfileRoute = LayoutAuthenticatedProfileImport.update(
-  {
-    id: "/profile",
-    path: "/profile",
-    getParentRoute: () => LayoutAuthenticatedRoute,
-  } as any,
-)
-
 const LayoutAuthenticatedEventsRoute = LayoutAuthenticatedEventsImport.update({
   id: "/events",
   path: "/events",
   getParentRoute: () => LayoutAuthenticatedRoute,
 } as any)
-
-const LayoutAuthenticatedDashboardRoute =
-  LayoutAuthenticatedDashboardImport.update({
-    id: "/dashboard",
-    path: "/dashboard",
-    getParentRoute: () => LayoutAuthenticatedRoute,
-  } as any)
 
 const LayoutauthSignupRoute = LayoutauthSignupImport.update({
   id: "/(auth)/signup",
@@ -132,25 +115,11 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutauthSignupImport
       parentRoute: typeof LayoutImport
     }
-    "/_layout/_authenticated/dashboard": {
-      id: "/_layout/_authenticated/dashboard"
-      path: "/dashboard"
-      fullPath: "/dashboard"
-      preLoaderRoute: typeof LayoutAuthenticatedDashboardImport
-      parentRoute: typeof LayoutAuthenticatedImport
-    }
     "/_layout/_authenticated/events": {
       id: "/_layout/_authenticated/events"
       path: "/events"
       fullPath: "/events"
       preLoaderRoute: typeof LayoutAuthenticatedEventsImport
-      parentRoute: typeof LayoutAuthenticatedImport
-    }
-    "/_layout/_authenticated/profile": {
-      id: "/_layout/_authenticated/profile"
-      path: "/profile"
-      fullPath: "/profile"
-      preLoaderRoute: typeof LayoutAuthenticatedProfileImport
       parentRoute: typeof LayoutAuthenticatedImport
     }
     "/_layout/_authenticated/settings": {
@@ -166,16 +135,12 @@ declare module "@tanstack/react-router" {
 // Create and export the route tree
 
 interface LayoutAuthenticatedRouteChildren {
-  LayoutAuthenticatedDashboardRoute: typeof LayoutAuthenticatedDashboardRoute
   LayoutAuthenticatedEventsRoute: typeof LayoutAuthenticatedEventsRoute
-  LayoutAuthenticatedProfileRoute: typeof LayoutAuthenticatedProfileRoute
   LayoutAuthenticatedSettingsRoute: typeof LayoutAuthenticatedSettingsRoute
 }
 
 const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
-  LayoutAuthenticatedDashboardRoute: LayoutAuthenticatedDashboardRoute,
   LayoutAuthenticatedEventsRoute: LayoutAuthenticatedEventsRoute,
-  LayoutAuthenticatedProfileRoute: LayoutAuthenticatedProfileRoute,
   LayoutAuthenticatedSettingsRoute: LayoutAuthenticatedSettingsRoute,
 }
 
@@ -207,9 +172,7 @@ export interface FileRoutesByFullPath {
   "/login": typeof LayoutauthLoginRoute
   "/logout": typeof LayoutauthLogoutRoute
   "/signup": typeof LayoutauthSignupRoute
-  "/dashboard": typeof LayoutAuthenticatedDashboardRoute
   "/events": typeof LayoutAuthenticatedEventsRoute
-  "/profile": typeof LayoutAuthenticatedProfileRoute
   "/settings": typeof LayoutAuthenticatedSettingsRoute
 }
 
@@ -219,9 +182,7 @@ export interface FileRoutesByTo {
   "/login": typeof LayoutauthLoginRoute
   "/logout": typeof LayoutauthLogoutRoute
   "/signup": typeof LayoutauthSignupRoute
-  "/dashboard": typeof LayoutAuthenticatedDashboardRoute
   "/events": typeof LayoutAuthenticatedEventsRoute
-  "/profile": typeof LayoutAuthenticatedProfileRoute
   "/settings": typeof LayoutAuthenticatedSettingsRoute
 }
 
@@ -233,9 +194,7 @@ export interface FileRoutesById {
   "/_layout/(auth)/login": typeof LayoutauthLoginRoute
   "/_layout/(auth)/logout": typeof LayoutauthLogoutRoute
   "/_layout/(auth)/signup": typeof LayoutauthSignupRoute
-  "/_layout/_authenticated/dashboard": typeof LayoutAuthenticatedDashboardRoute
   "/_layout/_authenticated/events": typeof LayoutAuthenticatedEventsRoute
-  "/_layout/_authenticated/profile": typeof LayoutAuthenticatedProfileRoute
   "/_layout/_authenticated/settings": typeof LayoutAuthenticatedSettingsRoute
 }
 
@@ -247,21 +206,10 @@ export interface FileRouteTypes {
     | "/login"
     | "/logout"
     | "/signup"
-    | "/dashboard"
     | "/events"
-    | "/profile"
     | "/settings"
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | ""
-    | "/"
-    | "/login"
-    | "/logout"
-    | "/signup"
-    | "/dashboard"
-    | "/events"
-    | "/profile"
-    | "/settings"
+  to: "" | "/" | "/login" | "/logout" | "/signup" | "/events" | "/settings"
   id:
     | "__root__"
     | "/_layout"
@@ -270,9 +218,7 @@ export interface FileRouteTypes {
     | "/_layout/(auth)/login"
     | "/_layout/(auth)/logout"
     | "/_layout/(auth)/signup"
-    | "/_layout/_authenticated/dashboard"
     | "/_layout/_authenticated/events"
-    | "/_layout/_authenticated/profile"
     | "/_layout/_authenticated/settings"
   fileRoutesById: FileRoutesById
 }
@@ -312,9 +258,7 @@ export const routeTree = rootRoute
       "filePath": "_layout/_authenticated.tsx",
       "parent": "/_layout",
       "children": [
-        "/_layout/_authenticated/dashboard",
         "/_layout/_authenticated/events",
-        "/_layout/_authenticated/profile",
         "/_layout/_authenticated/settings"
       ]
     },
@@ -334,16 +278,8 @@ export const routeTree = rootRoute
       "filePath": "_layout/(auth)/signup.tsx",
       "parent": "/_layout"
     },
-    "/_layout/_authenticated/dashboard": {
-      "filePath": "_layout/_authenticated/dashboard.tsx",
-      "parent": "/_layout/_authenticated"
-    },
     "/_layout/_authenticated/events": {
       "filePath": "_layout/_authenticated/events.tsx",
-      "parent": "/_layout/_authenticated"
-    },
-    "/_layout/_authenticated/profile": {
-      "filePath": "_layout/_authenticated/profile.tsx",
       "parent": "/_layout/_authenticated"
     },
     "/_layout/_authenticated/settings": {

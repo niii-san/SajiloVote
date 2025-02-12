@@ -1,7 +1,7 @@
 
 function Loader() {
   return (
-    <div className='h-screen bg-black'>Loading....</div>
+    <div className='h-screen w-screen bg-black'>Loading....</div>
   )
 }
 

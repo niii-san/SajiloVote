@@ -14,9 +14,9 @@ function RouteComponent() {
     const logoutFn = async () => {
         try {
             await api.get("/api/v1/auth/logout");
-            toast.success("logged out");
+            toast.success("Logged out");
         } catch (error) {
-            console.error("logout failed: ", error);
+            toast.error("Loggout failed");
         }
     };
     useEffect(() => {

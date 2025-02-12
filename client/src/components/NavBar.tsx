@@ -5,7 +5,6 @@ import { cn } from "../lib/utils";
 import { GiVote } from "react-icons/gi";
 import {
     FiHome,
-    FiUser,
     FiSettings,
     FiLogOut,
     FiMenu,

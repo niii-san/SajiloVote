@@ -56,11 +56,11 @@ function RouteComponent() {
             setLoading(false);
         }
     };
-    useEffect(()=>{
-    if(isLoggedIn){
-        navigate({to:"/dashboard"})
-    }
-    },[])
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate({ to: "/" });
+        }
+    }, []);
 
     return (
         <div className="min-h-screen">
