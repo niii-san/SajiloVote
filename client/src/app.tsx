@@ -6,7 +6,13 @@ const router = createRouter({ routeTree, context: { AuthStore: undefined! } });
 
 function App() {
     const AuthStore = useAuthStore();
-    return <RouterProvider router={router} context={{ AuthStore }} />;
+    return (
+        <RouterProvider
+            router={router}
+            context={{ AuthStore }}
+            defaultPreloadDelay={0}
+        />
+    );
 }
 
 export default App;

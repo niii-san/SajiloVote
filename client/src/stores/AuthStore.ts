@@ -27,6 +27,7 @@ export const useAuthStore = create<State & Actions>((set, get) => ({
         set({ isLoggedIn: false, userData: null });
     },
     setUserData: async () => {},
+
     verify: async () => {
         set({ verifyLoading: true });
         console.log("runned verify token fn");
@@ -37,12 +38,10 @@ export const useAuthStore = create<State & Actions>((set, get) => ({
             } else {
                 set({ isLoggedIn: false });
             }
-        } catch (error) {
+        } catch (_) {
             set({ isLoggedIn: false });
         } finally {
             set({ verifyLoading: false });
         }
-
-        return true;
     },
 }));
