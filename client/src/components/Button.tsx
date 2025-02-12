@@ -27,7 +27,7 @@ const Button = ({
     const ButtonVariants = {
         outline:
             "text-dark_text hover:bg-primary hover:bg-opacity-20 hover:border-opacity-20",
-        filled: "bg-primary hover:bg-opacity-80 hover:border-opacity-80",
+        filled: "bg-primary hover:bg-primary/95",
     };
 
     const disabledStyle =
@@ -45,7 +45,7 @@ const Button = ({
             e.preventDefault();
             return;
         }
-        onClick?.(); // Only call the onClick if not disabled/loading
+        onClick?.(); // only call the onClick if not disabled/loading
     };
 
     return (

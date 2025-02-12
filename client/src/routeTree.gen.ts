@@ -14,9 +14,12 @@ import { Route as rootRoute } from "./routes/__root"
 import { Route as LayoutImport } from "./routes/_layout"
 import { Route as LayoutIndexImport } from "./routes/_layout/index"
 import { Route as LayoutAuthenticatedImport } from "./routes/_layout/_authenticated"
+import { Route as LayoutAuthenticatedSettingsImport } from "./routes/_layout/_authenticated/settings"
 import { Route as LayoutAuthenticatedProfileImport } from "./routes/_layout/_authenticated/profile"
+import { Route as LayoutAuthenticatedEventsImport } from "./routes/_layout/_authenticated/events"
 import { Route as LayoutAuthenticatedDashboardImport } from "./routes/_layout/_authenticated/dashboard"
 import { Route as LayoutauthSignupImport } from "./routes/_layout/(auth)/signup"
+import { Route as LayoutauthLogoutImport } from "./routes/_layout/(auth)/logout"
 import { Route as LayoutauthLoginImport } from "./routes/_layout/(auth)/login"
 
 // Create/Update Routes
@@ -37,6 +40,13 @@ const LayoutAuthenticatedRoute = LayoutAuthenticatedImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutAuthenticatedSettingsRoute =
+  LayoutAuthenticatedSettingsImport.update({
+    id: "/settings",
+    path: "/settings",
+    getParentRoute: () => LayoutAuthenticatedRoute,
+  } as any)
+
 const LayoutAuthenticatedProfileRoute = LayoutAuthenticatedProfileImport.update(
   {
     id: "/profile",
@@ -44,6 +54,12 @@ const LayoutAuthenticatedProfileRoute = LayoutAuthenticatedProfileImport.update(
     getParentRoute: () => LayoutAuthenticatedRoute,
   } as any,
 )
+
+const LayoutAuthenticatedEventsRoute = LayoutAuthenticatedEventsImport.update({
+  id: "/events",
+  path: "/events",
+  getParentRoute: () => LayoutAuthenticatedRoute,
+} as any)
 
 const LayoutAuthenticatedDashboardRoute =
   LayoutAuthenticatedDashboardImport.update({
@@ -55,6 +71,12 @@ const LayoutAuthenticatedDashboardRoute =
 const LayoutauthSignupRoute = LayoutauthSignupImport.update({
   id: "/(auth)/signup",
   path: "/signup",
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutauthLogoutRoute = LayoutauthLogoutImport.update({
+  id: "/(auth)/logout",
+  path: "/logout",
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -96,6 +118,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutauthLoginImport
       parentRoute: typeof LayoutImport
     }
+    "/_layout/(auth)/logout": {
+      id: "/_layout/(auth)/logout"
+      path: "/logout"
+      fullPath: "/logout"
+      preLoaderRoute: typeof LayoutauthLogoutImport
+      parentRoute: typeof LayoutImport
+    }
     "/_layout/(auth)/signup": {
       id: "/_layout/(auth)/signup"
       path: "/signup"
@@ -110,11 +139,25 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutAuthenticatedDashboardImport
       parentRoute: typeof LayoutAuthenticatedImport
     }
+    "/_layout/_authenticated/events": {
+      id: "/_layout/_authenticated/events"
+      path: "/events"
+      fullPath: "/events"
+      preLoaderRoute: typeof LayoutAuthenticatedEventsImport
+      parentRoute: typeof LayoutAuthenticatedImport
+    }
     "/_layout/_authenticated/profile": {
       id: "/_layout/_authenticated/profile"
       path: "/profile"
       fullPath: "/profile"
       preLoaderRoute: typeof LayoutAuthenticatedProfileImport
+      parentRoute: typeof LayoutAuthenticatedImport
+    }
+    "/_layout/_authenticated/settings": {
+      id: "/_layout/_authenticated/settings"
+      path: "/settings"
+      fullPath: "/settings"
+      preLoaderRoute: typeof LayoutAuthenticatedSettingsImport
       parentRoute: typeof LayoutAuthenticatedImport
     }
   }
@@ -124,12 +167,16 @@ declare module "@tanstack/react-router" {
 
 interface LayoutAuthenticatedRouteChildren {
   LayoutAuthenticatedDashboardRoute: typeof LayoutAuthenticatedDashboardRoute
+  LayoutAuthenticatedEventsRoute: typeof LayoutAuthenticatedEventsRoute
   LayoutAuthenticatedProfileRoute: typeof LayoutAuthenticatedProfileRoute
+  LayoutAuthenticatedSettingsRoute: typeof LayoutAuthenticatedSettingsRoute
 }
 
 const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
   LayoutAuthenticatedDashboardRoute: LayoutAuthenticatedDashboardRoute,
+  LayoutAuthenticatedEventsRoute: LayoutAuthenticatedEventsRoute,
   LayoutAuthenticatedProfileRoute: LayoutAuthenticatedProfileRoute,
+  LayoutAuthenticatedSettingsRoute: LayoutAuthenticatedSettingsRoute,
 }
 
 const LayoutAuthenticatedRouteWithChildren =
@@ -139,6 +186,7 @@ interface LayoutRouteChildren {
   LayoutAuthenticatedRoute: typeof LayoutAuthenticatedRouteWithChildren
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutauthLoginRoute: typeof LayoutauthLoginRoute
+  LayoutauthLogoutRoute: typeof LayoutauthLogoutRoute
   LayoutauthSignupRoute: typeof LayoutauthSignupRoute
 }
 
@@ -146,6 +194,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAuthenticatedRoute: LayoutAuthenticatedRouteWithChildren,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutauthLoginRoute: LayoutauthLoginRoute,
+  LayoutauthLogoutRoute: LayoutauthLogoutRoute,
   LayoutauthSignupRoute: LayoutauthSignupRoute,
 }
 
@@ -156,18 +205,24 @@ export interface FileRoutesByFullPath {
   "": typeof LayoutAuthenticatedRouteWithChildren
   "/": typeof LayoutIndexRoute
   "/login": typeof LayoutauthLoginRoute
+  "/logout": typeof LayoutauthLogoutRoute
   "/signup": typeof LayoutauthSignupRoute
   "/dashboard": typeof LayoutAuthenticatedDashboardRoute
+  "/events": typeof LayoutAuthenticatedEventsRoute
   "/profile": typeof LayoutAuthenticatedProfileRoute
+  "/settings": typeof LayoutAuthenticatedSettingsRoute
 }
 
 export interface FileRoutesByTo {
   "": typeof LayoutAuthenticatedRouteWithChildren
   "/": typeof LayoutIndexRoute
   "/login": typeof LayoutauthLoginRoute
+  "/logout": typeof LayoutauthLogoutRoute
   "/signup": typeof LayoutauthSignupRoute
   "/dashboard": typeof LayoutAuthenticatedDashboardRoute
+  "/events": typeof LayoutAuthenticatedEventsRoute
   "/profile": typeof LayoutAuthenticatedProfileRoute
+  "/settings": typeof LayoutAuthenticatedSettingsRoute
 }
 
 export interface FileRoutesById {
@@ -176,25 +231,49 @@ export interface FileRoutesById {
   "/_layout/_authenticated": typeof LayoutAuthenticatedRouteWithChildren
   "/_layout/": typeof LayoutIndexRoute
   "/_layout/(auth)/login": typeof LayoutauthLoginRoute
+  "/_layout/(auth)/logout": typeof LayoutauthLogoutRoute
   "/_layout/(auth)/signup": typeof LayoutauthSignupRoute
   "/_layout/_authenticated/dashboard": typeof LayoutAuthenticatedDashboardRoute
+  "/_layout/_authenticated/events": typeof LayoutAuthenticatedEventsRoute
   "/_layout/_authenticated/profile": typeof LayoutAuthenticatedProfileRoute
+  "/_layout/_authenticated/settings": typeof LayoutAuthenticatedSettingsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "" | "/" | "/login" | "/signup" | "/dashboard" | "/profile"
+  fullPaths:
+    | ""
+    | "/"
+    | "/login"
+    | "/logout"
+    | "/signup"
+    | "/dashboard"
+    | "/events"
+    | "/profile"
+    | "/settings"
   fileRoutesByTo: FileRoutesByTo
-  to: "" | "/" | "/login" | "/signup" | "/dashboard" | "/profile"
+  to:
+    | ""
+    | "/"
+    | "/login"
+    | "/logout"
+    | "/signup"
+    | "/dashboard"
+    | "/events"
+    | "/profile"
+    | "/settings"
   id:
     | "__root__"
     | "/_layout"
     | "/_layout/_authenticated"
     | "/_layout/"
     | "/_layout/(auth)/login"
+    | "/_layout/(auth)/logout"
     | "/_layout/(auth)/signup"
     | "/_layout/_authenticated/dashboard"
+    | "/_layout/_authenticated/events"
     | "/_layout/_authenticated/profile"
+    | "/_layout/_authenticated/settings"
   fileRoutesById: FileRoutesById
 }
 
@@ -225,6 +304,7 @@ export const routeTree = rootRoute
         "/_layout/_authenticated",
         "/_layout/",
         "/_layout/(auth)/login",
+        "/_layout/(auth)/logout",
         "/_layout/(auth)/signup"
       ]
     },
@@ -233,7 +313,9 @@ export const routeTree = rootRoute
       "parent": "/_layout",
       "children": [
         "/_layout/_authenticated/dashboard",
-        "/_layout/_authenticated/profile"
+        "/_layout/_authenticated/events",
+        "/_layout/_authenticated/profile",
+        "/_layout/_authenticated/settings"
       ]
     },
     "/_layout/": {
@@ -244,6 +326,10 @@ export const routeTree = rootRoute
       "filePath": "_layout/(auth)/login.tsx",
       "parent": "/_layout"
     },
+    "/_layout/(auth)/logout": {
+      "filePath": "_layout/(auth)/logout.tsx",
+      "parent": "/_layout"
+    },
     "/_layout/(auth)/signup": {
       "filePath": "_layout/(auth)/signup.tsx",
       "parent": "/_layout"
@@ -252,8 +338,16 @@ export const routeTree = rootRoute
       "filePath": "_layout/_authenticated/dashboard.tsx",
       "parent": "/_layout/_authenticated"
     },
+    "/_layout/_authenticated/events": {
+      "filePath": "_layout/_authenticated/events.tsx",
+      "parent": "/_layout/_authenticated"
+    },
     "/_layout/_authenticated/profile": {
       "filePath": "_layout/_authenticated/profile.tsx",
+      "parent": "/_layout/_authenticated"
+    },
+    "/_layout/_authenticated/settings": {
+      "filePath": "_layout/_authenticated/settings.tsx",
       "parent": "/_layout/_authenticated"
     }
   }

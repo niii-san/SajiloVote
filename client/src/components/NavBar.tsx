@@ -2,12 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { useAuthStore } from "../stores";
 import { useState } from "react";
 import { cn } from "../lib/utils";
+import { GiVote } from "react-icons/gi";
 import {
     FiHome,
     FiUser,
-    FiMessageSquare,
     FiSettings,
-    FiHelpCircle,
     FiLogOut,
     FiMenu,
     FiX,
@@ -28,29 +27,19 @@ function NavBar() {
 
     const sidebarItems = [
         {
-            to: "/dashboard",
-            label: "Dashboard",
+            to: "/",
+            label: "Home",
             icon: <FiHome className="text-xl" />,
         },
         {
-            to: "/profile",
-            label: "Profile",
-            icon: <FiUser className="text-xl" />,
-        },
-        {
-            to: "/messages",
-            label: "Messages",
-            icon: <FiMessageSquare className="text-xl" />,
+            to: "/events",
+            label: "Events",
+            icon: <GiVote className="text-xl" />,
         },
         {
             to: "/settings",
             label: "Settings",
             icon: <FiSettings className="text-xl" />,
-        },
-        {
-            to: "/help",
-            label: "Help Center",
-            icon: <FiHelpCircle className="text-xl" />,
         },
         {
             to: "/logout",
@@ -103,9 +92,7 @@ function NavBar() {
                                         className={cn(
                                             "shrink-0 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600",
                                             "flex items-center justify-center text-white",
-                                            isSidebarMinimized
-                                                ? "w-9 h-9"
-                                                : "w-11 h-11",
+                                            "w-11 h-11",
                                         )}
                                     >
                                         <span className="font-medium">JD</span>
