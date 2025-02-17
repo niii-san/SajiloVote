@@ -3,14 +3,15 @@ import { useAuthStore } from "../../stores";
 import { Loader } from "../../components";
 
 export const Route = createFileRoute("/_layout/_authenticated")({
-    beforeLoad: async ({ context }) => {
-        context.AuthStore.verify();
+    beforeLoad: async ({ context, location }) => {
+        console.log("Current location:", location);
+        await context.AuthStore.verify();
         const { isLoggedIn } = context.AuthStore;
         if (!isLoggedIn) {
             throw redirect({
                 to: "/login",
                 search: {
-                    redirect: "/",
+                    redirect: location.pathname,
                 },
             });
         }

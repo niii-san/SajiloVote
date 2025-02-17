@@ -11,7 +11,7 @@ type Actions = {
     login: () => void;
     logout: () => void;
     setUserData: () => void;
-    verify: () => void;
+    verify: () => Promise<void>;
 };
 
 export const useAuthStore = create<State & Actions>((set, get) => ({

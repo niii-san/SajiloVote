@@ -143,7 +143,7 @@ function NavBar() {
                                 item.to === "logoutFn" ? (
                                     <button
                                         key={item.to}
-                                        className="group relative w-full "
+                                        className="group relative w-full"
                                         onClick={() => {
                                             handleLogout();
                                             setIsSidebarOpen(false);

@@ -1,4 +1,9 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+    createFileRoute,
+    Link,
+    useNavigate,
+    useSearch,
+} from "@tanstack/react-router";
 import { Input, Label, Button } from "../../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -18,6 +23,7 @@ function RouteComponent() {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [resErr, setResErr] = useState<string | null>(null);
+    const searchParams = useSearch({ from: "" });
 
     const signupSchema = yup
         .object({
@@ -58,7 +64,8 @@ function RouteComponent() {
     };
     useEffect(() => {
         if (isLoggedIn) {
-            navigate({ to: "/" });
+            const redirectTo = searchParams?.redirect || "/";
+            navigate({ to: redirectTo });
         }
     }, []);
 
