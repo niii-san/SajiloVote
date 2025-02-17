@@ -35,8 +35,12 @@ app.get("/", async (req: Request, res: Response) => {
     res.status(200).json(requestData);
 });
 
-import { authRouter } from "./routes/auth.route.js";
+import { authRouter, eventsRouter } from "./routes/index.js";
+// Auth routing
 app.use("/api/v1/auth", authRouter);
 
-// Error response handler always at last after all route
+// Events routing
+app.use("/api/v1/events", eventsRouter);
+
+// Error response handler at last after all route
 app.use(responseErrorHandler);

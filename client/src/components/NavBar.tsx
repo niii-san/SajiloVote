@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuthStore } from "../stores";
 import { useState } from "react";
 import { cn } from "../lib/utils";
@@ -16,6 +16,7 @@ import { api } from "../utils";
 import toast from "react-hot-toast";
 
 function NavBar() {
+    const navigate = useNavigate();
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
@@ -24,6 +25,7 @@ function NavBar() {
         try {
             await api.get("/api/v1/auth/logout");
             logout();
+            navigate({ to: "/" });
             toast.success("Logged out");
         } catch (error) {
             toast.error("Loggout failed");

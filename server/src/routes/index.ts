@@ -1,2 +1,3 @@
 import { authRouter } from "./auth.route.js";
-export { authRouter };
+import { eventsRouter } from "./events.route.js";
+export { authRouter, eventsRouter };

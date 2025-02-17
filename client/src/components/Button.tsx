@@ -5,7 +5,7 @@ type Variant = "filled" | "outline";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
-    variant: Variant;
+    variant?: Variant;
     className?: string;
     loading?: boolean;
     disabled?: boolean;
@@ -14,7 +14,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = ({
     children,
-    variant,
+    variant = "filled",
     className,
     loading = false,
     disabled = false,
