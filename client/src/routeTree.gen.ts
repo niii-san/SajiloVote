@@ -17,7 +17,6 @@ import { Route as LayoutAuthenticatedImport } from "./routes/_layout/_authentica
 import { Route as LayoutAuthenticatedSettingsImport } from "./routes/_layout/_authenticated/settings"
 import { Route as LayoutAuthenticatedEventsImport } from "./routes/_layout/_authenticated/events"
 import { Route as LayoutauthSignupImport } from "./routes/_layout/(auth)/signup"
-import { Route as LayoutauthLogoutImport } from "./routes/_layout/(auth)/logout"
 import { Route as LayoutauthLoginImport } from "./routes/_layout/(auth)/login"
 
 // Create/Update Routes
@@ -57,12 +56,6 @@ const LayoutauthSignupRoute = LayoutauthSignupImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutauthLogoutRoute = LayoutauthLogoutImport.update({
-  id: "/(auth)/logout",
-  path: "/logout",
-  getParentRoute: () => LayoutRoute,
-} as any)
-
 const LayoutauthLoginRoute = LayoutauthLoginImport.update({
   id: "/(auth)/login",
   path: "/login",
@@ -99,13 +92,6 @@ declare module "@tanstack/react-router" {
       path: "/login"
       fullPath: "/login"
       preLoaderRoute: typeof LayoutauthLoginImport
-      parentRoute: typeof LayoutImport
-    }
-    "/_layout/(auth)/logout": {
-      id: "/_layout/(auth)/logout"
-      path: "/logout"
-      fullPath: "/logout"
-      preLoaderRoute: typeof LayoutauthLogoutImport
       parentRoute: typeof LayoutImport
     }
     "/_layout/(auth)/signup": {
@@ -151,7 +137,6 @@ interface LayoutRouteChildren {
   LayoutAuthenticatedRoute: typeof LayoutAuthenticatedRouteWithChildren
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutauthLoginRoute: typeof LayoutauthLoginRoute
-  LayoutauthLogoutRoute: typeof LayoutauthLogoutRoute
   LayoutauthSignupRoute: typeof LayoutauthSignupRoute
 }
 
@@ -159,7 +144,6 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAuthenticatedRoute: LayoutAuthenticatedRouteWithChildren,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutauthLoginRoute: LayoutauthLoginRoute,
-  LayoutauthLogoutRoute: LayoutauthLogoutRoute,
   LayoutauthSignupRoute: LayoutauthSignupRoute,
 }
 
@@ -170,7 +154,6 @@ export interface FileRoutesByFullPath {
   "": typeof LayoutAuthenticatedRouteWithChildren
   "/": typeof LayoutIndexRoute
   "/login": typeof LayoutauthLoginRoute
-  "/logout": typeof LayoutauthLogoutRoute
   "/signup": typeof LayoutauthSignupRoute
   "/events": typeof LayoutAuthenticatedEventsRoute
   "/settings": typeof LayoutAuthenticatedSettingsRoute
@@ -180,7 +163,6 @@ export interface FileRoutesByTo {
   "": typeof LayoutAuthenticatedRouteWithChildren
   "/": typeof LayoutIndexRoute
   "/login": typeof LayoutauthLoginRoute
-  "/logout": typeof LayoutauthLogoutRoute
   "/signup": typeof LayoutauthSignupRoute
   "/events": typeof LayoutAuthenticatedEventsRoute
   "/settings": typeof LayoutAuthenticatedSettingsRoute
@@ -192,7 +174,6 @@ export interface FileRoutesById {
   "/_layout/_authenticated": typeof LayoutAuthenticatedRouteWithChildren
   "/_layout/": typeof LayoutIndexRoute
   "/_layout/(auth)/login": typeof LayoutauthLoginRoute
-  "/_layout/(auth)/logout": typeof LayoutauthLogoutRoute
   "/_layout/(auth)/signup": typeof LayoutauthSignupRoute
   "/_layout/_authenticated/events": typeof LayoutAuthenticatedEventsRoute
   "/_layout/_authenticated/settings": typeof LayoutAuthenticatedSettingsRoute
@@ -200,23 +181,15 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | ""
-    | "/"
-    | "/login"
-    | "/logout"
-    | "/signup"
-    | "/events"
-    | "/settings"
+  fullPaths: "" | "/" | "/login" | "/signup" | "/events" | "/settings"
   fileRoutesByTo: FileRoutesByTo
-  to: "" | "/" | "/login" | "/logout" | "/signup" | "/events" | "/settings"
+  to: "" | "/" | "/login" | "/signup" | "/events" | "/settings"
   id:
     | "__root__"
     | "/_layout"
     | "/_layout/_authenticated"
     | "/_layout/"
     | "/_layout/(auth)/login"
-    | "/_layout/(auth)/logout"
     | "/_layout/(auth)/signup"
     | "/_layout/_authenticated/events"
     | "/_layout/_authenticated/settings"
@@ -250,7 +223,6 @@ export const routeTree = rootRoute
         "/_layout/_authenticated",
         "/_layout/",
         "/_layout/(auth)/login",
-        "/_layout/(auth)/logout",
         "/_layout/(auth)/signup"
       ]
     },
@@ -268,10 +240,6 @@ export const routeTree = rootRoute
     },
     "/_layout/(auth)/login": {
       "filePath": "_layout/(auth)/login.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/(auth)/logout": {
-      "filePath": "_layout/(auth)/logout.tsx",
       "parent": "/_layout"
     },
     "/_layout/(auth)/signup": {

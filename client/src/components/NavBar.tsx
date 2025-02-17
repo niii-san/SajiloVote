@@ -12,11 +12,23 @@ import {
     FiChevronLeft,
     FiChevronRight,
 } from "react-icons/fi";
+import { api } from "../utils";
+import toast from "react-hot-toast";
 
 function NavBar() {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
+    const logout = useAuthStore((state) => state.logout);
+    const handleLogout = async () => {
+        try {
+            await api.get("/api/v1/auth/logout");
+            logout();
+            toast.success("Logged out");
+        } catch (error) {
+            toast.error("Loggout failed");
+        }
+    };
 
     const navLinkStyling = (isActive: boolean) =>
         `p-3 rounded-lg flex items-center gap-4 group
@@ -41,7 +53,7 @@ function NavBar() {
             icon: <FiSettings className="text-xl" />,
         },
         {
-            to: "/logout",
+            to: "logoutFn",
             label: "Log Out",
             icon: <FiLogOut className="text-xl" />,
         },
@@ -127,23 +139,25 @@ function NavBar() {
 
                         {/* Navigation Items */}
                         <nav className="flex-1 space-y-1">
-                            {sidebarItems.map((item) => (
-                                <Link
-                                    key={item.to}
-                                    to={item.to}
-                                    className="group relative"
-                                    onClick={() => setIsSidebarOpen(false)}
-                                >
-                                    {({ isActive }) => (
+                            {sidebarItems.map((item) =>
+                                item.to === "logoutFn" ? (
+                                    <button
+                                        key={item.to}
+                                        className="group relative w-full "
+                                        onClick={() => {
+                                            handleLogout();
+                                            setIsSidebarOpen(false);
+                                        }}
+                                    >
                                         <div
-                                            className={navLinkStyling(isActive)}
+                                            className={`${navLinkStyling(false)} bg-danger hover:bg-danger/90 `}
                                         >
-                                            <span className="flex justify-center text-black">
+                                            <span className="flex justify-center text-white">
                                                 {item.icon}
                                             </span>
                                             <span
                                                 className={cn(
-                                                    "transition-opacity",
+                                                    "transition-opacity text-white",
                                                     isSidebarMinimized
                                                         ? "hidden"
                                                         : "block",
@@ -152,9 +166,38 @@ function NavBar() {
                                                 {item.label}
                                             </span>
                                         </div>
-                                    )}
-                                </Link>
-                            ))}
+                                    </button>
+                                ) : (
+                                    <Link
+                                        key={item.to}
+                                        to={item.to}
+                                        className="group relative"
+                                        onClick={() => setIsSidebarOpen(false)}
+                                    >
+                                        {({ isActive }) => (
+                                            <div
+                                                className={navLinkStyling(
+                                                    isActive,
+                                                )}
+                                            >
+                                                <span className="flex justify-center text-black">
+                                                    {item.icon}
+                                                </span>
+                                                <span
+                                                    className={cn(
+                                                        "transition-opacity",
+                                                        isSidebarMinimized
+                                                            ? "hidden"
+                                                            : "block",
+                                                    )}
+                                                >
+                                                    {item.label}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </Link>
+                                ),
+                            )}
                         </nav>
 
                         {/* Branding */}

@@ -9,6 +9,7 @@ export default {
                 secondary: "#cbe4fe",
                 background: "#eef0f2",
                 dark_text: "#1D1616",
+                danger: "#D84040",
             },
         },
     },
