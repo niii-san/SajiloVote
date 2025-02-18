@@ -37,7 +37,7 @@ export const refreshAccessToken = asyncHandler(
 
         try {
             const decoded: any = jwt.verify(refreshToken, secret);
-            const user = await User.findByPk(decoded?.id);
+            const user = await User.findByPk(decoded?.user_id);
 
             if (!user) {
                 throw new ErrorResponse(

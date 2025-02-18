@@ -21,7 +21,7 @@ function RouteComponent() {
         setLoading(true);
         try {
             const response = await api.get("/api/v1/auth/verify-token");
-            if (response.data?.success && response.data?.is_authenticated) {
+            if (response.data?.success) {
                 login();
             }
         } catch (error) {
