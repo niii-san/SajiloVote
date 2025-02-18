@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { api } from "../../../utils";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 export const Route = createFileRoute("/_layout/(auth)/signup")({
     component: RouteComponent,
@@ -15,6 +16,9 @@ function RouteComponent() {
     const navigate = useNavigate();
     const [signing, setSigning] = useState<boolean>(false);
     const [resErr, setResErr] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const signupSchema = yup
         .object({
             firstName: yup.string().trim().required("First name is required"),
@@ -30,10 +34,8 @@ function RouteComponent() {
                 .required("Password is required"),
             confirmPassword: yup
                 .string()
-                .oneOf(
-                    [yup.ref("password")],
-                    "Confirm password did not matched",
-                ),
+                .oneOf([yup.ref("password")], "Confirm password did not match")
+                .required("Confirm password is required"),
         })
         .required();
 
@@ -58,7 +60,9 @@ function RouteComponent() {
 
         try {
             await api.post("/api/v1/auth/signup", payload);
-            toast.success("Signed up successfully, Proceed to login");
+            toast.success("Signed up successfully, Proceed to login", {
+                duration: 5000,
+            });
             reset();
             navigate({ to: "/login" });
         } catch (error: any) {
@@ -69,118 +73,217 @@ function RouteComponent() {
     };
 
     return (
-        <div className="min-h-[800px] ">
-            <div className="w-[1000px] h-[600px] mx-auto mt-36 flex justify-start">
-                <div className="bg-primary w-[55%] h-full">something</div>
-                <div className="w-[45%] rounded-r-md py-5 bg-white ">
-                    <h1 className="flex justify-center items-center gap-x-1 text-2xl font-bold">
-                        Get started with{" "}
-                        <p className="text-primary">Who Wins</p>
-                    </h1>
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="mt-12 px-5"
-                    >
-                        <div
-                            id="names"
-                            className="flex mx-auto gap-2 justify-between  "
-                        >
-                            <div id="firstNameBody">
-                                <Label htmlFor="firstName">First name</Label>
-                                <Input
-                                    type="text"
-                                    {...register("firstName")}
-                                    placeholder="John"
-                                />
-                                <p className="h-[14px] text-red-600 text-sm">
-                                    {errors.firstName &&
-                                        errors.firstName.message}
-                                </p>
-                            </div>
+        <div className="min-h-screen flex flex-col items-center mt-20 p-4">
+            {/* Logo Section */}
+            <div className="mb-8 flex flex-col items-center">
+                <div className="bg-primary text-white text-2xl font-bold w-16 h-16 rounded-lg flex items-center justify-center mb-2">
+                    LOGO
+                </div>
+                <h1 className="text-2xl font-bold text-gray-900">Who wins</h1>
+            </div>
 
-                            <div id="lastNameBody">
-                                <Label htmlFor="lastName">Last name</Label>
-                                <Input
-                                    type="text"
-                                    {...register("lastName")}
-                                    placeholder="Doe"
-                                />
-                                <p className="h-[14px] text-red-600 text-sm">
-                                    {errors.lastName && errors.lastName.message}
-                                </p>
-                            </div>
-                        </div>
-                        <div id="otherFields" className="mx-auto">
-                            <div id="emailBody" className="mt-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    type="text"
-                                    {...register("email")}
-                                    placeholder="xyz@mail.com"
-                                    id="email"
-                                />
-                                <p className="h-[14px] text-red-600 text-sm">
-                                    {errors.email && errors.email.message}
-                                </p>
-                            </div>
+            {/* Signup Card */}
+            <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8">
+                <div className="mb-8 text-center">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                        Create Your Account
+                    </h2>
+                    <p className="text-gray-500">Start your journey with us</p>
+                </div>
 
-                            <div id="passwordBody" className="mt-2">
-                                <Label htmlFor="password">Password</Label>
-                                <Input
-                                    type="text"
-                                    id="password"
-                                    {...register("password")}
-                                />
-                                <p className="h-[14px] text-red-600 text-sm">
-                                    {errors.password && errors.password.message}
-                                </p>
-                            </div>
-
-                            <div id="confirmPassword" className="mt-2">
-                                <Label htmlFor="confirmPassword">
-                                    Confirm Password
-                                </Label>
-                                <Input
-                                    id="confirmPassword"
-                                    type="text"
-                                    {...register("confirmPassword")}
-                                />
-                                <p className="h-[14px] text-red-600 text-sm">
-                                    {errors.confirmPassword &&
-                                        errors.confirmPassword.message}
-                                </p>
-                            </div>
-                            {resErr && (
-                                <p className="h-[14px] text-red-600 text-sm">
-                                    {resErr}
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    {/* Name Fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <Label
+                                htmlFor="firstName"
+                                className="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                                First Name
+                            </Label>
+                            <Input
+                                id="firstName"
+                                type="text"
+                                {...register("firstName")}
+                                placeholder="John"
+                                className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${errors.firstName
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                    }`}
+                            />
+                            {errors.firstName && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {errors.firstName.message}
                                 </p>
                             )}
                         </div>
 
-                        <div id="submitButton" className="">
-                            <Button
-                                loading={signing}
-                                disabled={signing}
-                                variant="filled"
-                                type="submit"
-                                className=" mt-8"
+                        <div>
+                            <Label
+                                htmlFor="lastName"
+                                className="block text-sm font-medium text-gray-700 mb-1"
                             >
-                                Get started
-                            </Button>
+                                Last Name
+                            </Label>
+                            <Input
+                                id="lastName"
+                                type="text"
+                                {...register("lastName")}
+                                placeholder="Doe"
+                                className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${errors.lastName
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                    }`}
+                            />
+                            {errors.lastName && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {errors.lastName.message}
+                                </p>
+                            )}
                         </div>
-                        <div className="w-[80%] mx-auto flex justify-center mt-4">
-                            <p>Already have an account?</p>{" "}
-                            <p className="ml-2 hover:underline cursor-pointer">
-                                <Link
-                                    to={"/login"}
-                                    className="text-primary font-bold"
-                                >
-                                    Login here
-                                </Link>
+                    </div>
+
+                    {/* Email Field */}
+                    <div>
+                        <Label
+                            htmlFor="email"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Email
+                        </Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            {...register("email")}
+                            placeholder="your@email.com"
+                            className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${errors.email
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                }`}
+                        />
+                        {errors.email && (
+                            <p className="text-red-600 text-sm mt-1">
+                                {errors.email.message}
                             </p>
+                        )}
+                    </div>
+
+                    {/* Password Fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <Label
+                                htmlFor="password"
+                                className="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                                Password
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    type={showPassword ? "text" : "password"}
+                                    {...register("password")}
+                                    placeholder="••••••••"
+                                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${errors.password
+                                            ? "border-red-500"
+                                            : "border-gray-300"
+                                        }`}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    className="absolute right-3 top-2 text-gray-400 hover:text-primary transition-colors"
+                                >
+                                    {showPassword ? (
+                                        <FiEyeOff size={20} />
+                                    ) : (
+                                        <FiEye size={20} />
+                                    )}
+                                </button>
+                            </div>
+                            {errors.password && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </div>
-                    </form>
-                </div>
+
+                        <div>
+                            <Label
+                                htmlFor="confirmPassword"
+                                className="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                                Confirm Password
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    id="confirmPassword"
+                                    type={
+                                        showConfirmPassword
+                                            ? "text"
+                                            : "password"
+                                    }
+                                    {...register("confirmPassword")}
+                                    placeholder="••••••••"
+                                    className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${errors.confirmPassword
+                                            ? "border-red-500"
+                                            : "border-gray-300"
+                                        }`}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowConfirmPassword(
+                                            !showConfirmPassword,
+                                        )
+                                    }
+                                    className="absolute right-3 top-2 text-gray-400 hover:text-primary transition-colors"
+                                >
+                                    {showConfirmPassword ? (
+                                        <FiEyeOff size={20} />
+                                    ) : (
+                                        <FiEye size={20} />
+                                    )}
+                                </button>
+                            </div>
+                            {errors.confirmPassword && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {errors.confirmPassword.message}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Error Message */}
+                    {resErr && (
+                        <div className="text-red-600 text-sm text-center">
+                            {resErr}
+                        </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <Button
+                        type="submit"
+                        variant="filled"
+                        loading={signing}
+                        disabled={signing}
+                        className="w-full py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition-colors"
+                    >
+                        Create Account
+                    </Button>
+
+                    {/* Login Link */}
+                    <div className="text-center text-sm text-gray-500">
+                        Already have an account?{" "}
+                        <Link
+                            to="/login"
+                            className="font-medium text-primary hover:text-primary/80 transition-colors"
+                        >
+                            Login here
+                        </Link>
+                    </div>
+                </form>
             </div>
         </div>
     );

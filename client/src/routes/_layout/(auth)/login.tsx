@@ -73,7 +73,7 @@ function RouteComponent() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4">
             {/* Logo Section */}
             <div className="mb-8 flex flex-col items-center">
                 <div className="bg-primary text-white text-2xl font-bold w-16 h-16 rounded-lg flex items-center justify-center mb-2">
