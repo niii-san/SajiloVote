@@ -24,22 +24,22 @@ function NavBar() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
     const logout = useAuthStore((state) => state.logout);
+
     const handleLogout = async () => {
         try {
             await api.get("/api/v1/auth/logout");
             logout();
             navigate({ to: "/" });
-            toast.success("Logged out");
+            toast.success("Logged out successfully");
         } catch (error) {
-            toast.error("Loggout failed");
+            toast.error("Logout failed");
         }
     };
 
     const navLinkStyling = (isActive: boolean) =>
-        `p-3 rounded-lg flex items-center gap-4 group
-         ${isActive ? "bg-gray-300  border-primary text-dark_text" : "text-black hover:bg-gray-300/50"}
-         ${isSidebarMinimized ? "justify-center" : "px-4"}
-         transition-colors`;
+        `p-3 rounded-lg flex items-center gap-4 group transition-colors
+    ${isActive ? "bg-primary/10 text-primary border-l-4 border-primary" : "text-gray-600 hover:bg-gray-100"}
+    ${isSidebarMinimized ? "justify-center px-3" : "px-4"}`;
 
     const sidebarItems = [
         {
@@ -67,8 +67,8 @@ function NavBar() {
     const MobileToggle = () => (
         <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden p-3 text-slate-300 fixed right-4 top-4 z-50
-                      bg-slate-800 rounded-lg shadow-lg"
+            className="md:hidden p-3 fixed right-4 top-4 z-50
+                bg-primary text-white rounded-lg shadow-lg hover:bg-primary/90"
             aria-label="Toggle navigation"
         >
             {isSidebarOpen ? (
@@ -95,7 +95,7 @@ function NavBar() {
 
                 <aside
                     className={cn(
-                        "fixed md:relative h-screen bg-white transition-all duration-300 z-50",
+                        "fixed md:relative h-screen bg-white border-r border-gray-200 transition-all duration-300 z-50",
                         "transform -translate-x-full md:translate-x-0 shadow-xl md:shadow-sm",
                         isSidebarOpen && "translate-x-0",
                         isSidebarMinimized
@@ -110,7 +110,7 @@ function NavBar() {
                                 <div className="flex items-center gap-3 overflow-hidden">
                                     <div
                                         className={cn(
-                                            "shrink-0 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600",
+                                            "shrink-0 rounded-full bg-gradient-to-br from-primary to-primary/70",
                                             "flex items-center justify-center text-white",
                                             "w-11 h-11",
                                         )}
@@ -126,7 +126,7 @@ function NavBar() {
                                     </div>
                                     {!isSidebarMinimized && (
                                         <div className="min-w-[140px]">
-                                            <p className="font-medium truncate text-black">
+                                            <p className="font-medium truncate text-gray-900">
                                                 {capitalize(
                                                     userData?.first_name ?? "",
                                                 )}{" "}
@@ -134,7 +134,7 @@ function NavBar() {
                                                     userData?.last_name ?? "",
                                                 )}
                                             </p>
-                                            <p className="text-sm text-black truncate">
+                                            <p className="text-sm text-gray-500 truncate">
                                                 {userData?.email}
                                             </p>
                                         </div>
@@ -146,7 +146,7 @@ function NavBar() {
                                             !isSidebarMinimized,
                                         )
                                     }
-                                    className="hidden md:block p-2 hover:bg-gray-300/50 rounded-lg text-black"
+                                    className="hidden md:block p-2 hover:bg-gray-100 rounded-lg text-gray-600"
                                     aria-label="Toggle sidebar"
                                 >
                                     {isSidebarMinimized ? (
@@ -164,21 +164,23 @@ function NavBar() {
                                 item.to === "logoutFn" ? (
                                     <button
                                         key={item.to}
-                                        className="group relative w-full"
+                                        className="group relative w-full "
                                         onClick={() => {
                                             handleLogout();
                                             setIsSidebarOpen(false);
                                         }}
                                     >
                                         <div
-                                            className={`${navLinkStyling(false)} bg-danger hover:bg-danger/90 `}
+                                            className={
+                                                "p-3 rounded-lg flex items-center gap-4 group transition-colors bg-danger text-white hover:bg-danger/90"
+                                            }
                                         >
-                                            <span className="flex justify-center text-white">
+                                            <span className="flex justify-center">
                                                 {item.icon}
                                             </span>
                                             <span
                                                 className={cn(
-                                                    "transition-opacity text-white",
+                                                    "transition-opacity",
                                                     isSidebarMinimized
                                                         ? "hidden"
                                                         : "block",
@@ -201,7 +203,7 @@ function NavBar() {
                                                     isActive,
                                                 )}
                                             >
-                                                <span className="flex justify-center text-black">
+                                                <span className="flex justify-center">
                                                     {item.icon}
                                                 </span>
                                                 <span
@@ -223,9 +225,12 @@ function NavBar() {
 
                         {/* Branding */}
                         {!isSidebarMinimized && (
-                            <div className="mt-8 pt-6 border-t border-slate-700">
-                                <p className="text-sm text-black text-center">
-                                    © 2024 My App
+                            <div className="mt-8 pt-6 border-t border-gray-200">
+                                <p className="text-sm text-gray-500 text-center">
+                                    © 2024{" "}
+                                    <span className="text-primary font-medium">
+                                        Your Brand
+                                    </span>
                                 </p>
                             </div>
                         )}
@@ -238,18 +243,25 @@ function NavBar() {
     }
 
     return (
-        <nav className="sticky top-0 bg-slate-800 shadow-lg z-30">
+        <nav className="sticky top-0 bg-white shadow-sm z-30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="h-16 flex items-center justify-between">
-                    <Link to="/" className="text-xl font-bold text-white">
-                        My App
+                    <Link
+                        to="/"
+                        className="text-xl font-bold text-primary flex items-center gap-2"
+                    >
+                        <GiVote className="text-2xl" />
+                        <span>Your Brand</span>
                     </Link>
                     <div className="flex gap-2">
                         <Link to="/login">
                             {({ isActive }) => (
                                 <span
-                                    className={`px-4 py-2 rounded-md
-                                    ${isActive ? "bg-white text-slate-800" : "text-white hover:bg-slate-700"}`}
+                                    className={`px-4 py-2 rounded-md transition-colors
+                                            ${isActive
+                                            ? "bg-primary text-white"
+                                            : "text-gray-600 hover:bg-gray-100"
+                                        }`}
                                 >
                                     Login
                                 </span>
@@ -258,8 +270,11 @@ function NavBar() {
                         <Link to="/signup">
                             {({ isActive }) => (
                                 <span
-                                    className={`px-4 py-2 rounded-md
-                                    ${isActive ? "bg-white text-slate-800" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+                                    className={`px-4 py-2 rounded-md transition-colors
+                    ${isActive
+                                            ? "bg-primary text-white"
+                                            : "bg-primary/10 text-primary hover:bg-primary/20"
+                                        }`}
                                 >
                                     Sign Up
                                 </span>
