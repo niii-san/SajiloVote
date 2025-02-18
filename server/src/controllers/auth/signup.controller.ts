@@ -14,46 +14,29 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     const password: string = req.body.password ?? "";
 
     if (!first_name) {
-        throw new ErrorResponse(
-            400,
-            "client_error",
-            false,
-            "first name is required!",
-        );
+        throw new ErrorResponse(400, "client_error", "first name is required!");
     }
 
     if (!last_name) {
-        throw new ErrorResponse(
-            400,
-            "client_error",
-            false,
-            "last name is required!",
-        );
+        throw new ErrorResponse(400, "client_error", "last name is required!");
     }
 
     if (!email) {
         throw new ErrorResponse(
             400,
             "client_error",
-            false,
             "email address is required!",
         );
     }
 
     if (!password) {
-        throw new ErrorResponse(
-            400,
-            "client_error",
-            false,
-            "password is required!",
-        );
+        throw new ErrorResponse(400, "client_error", "password is required!");
     }
 
     if (password.length < 8) {
         throw new ErrorResponse(
             400,
             "invalid_payload",
-            false,
             "password must be 8 characters or longer!",
         );
     }
@@ -62,7 +45,6 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(
             400,
             "invalid_payload",
-            false,
             "password too long, only allowed upto 24 characters",
         );
     }
@@ -73,7 +55,6 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(
             409,
             "already_exists",
-            false,
             "user with this email address already exists",
         );
     }
@@ -86,7 +67,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     });
 
     return res.status(201).json(
-        new SuccessResponse<PublicUserType>(201, false, "account created", {
+        new SuccessResponse<PublicUserType>(201, "account created", {
             id: user.id,
             first_name: user.first_name,
             last_name: user.last_name,

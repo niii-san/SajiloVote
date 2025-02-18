@@ -3,7 +3,6 @@ import { ApiResponse } from "../types/index.js";
 export class SuccessResponse<T> implements ApiResponse<T> {
     public status_code: number;
     public success: boolean;
-    public is_authenticated: boolean;
     public message: string;
     public data: T | null;
 
@@ -13,15 +12,9 @@ export class SuccessResponse<T> implements ApiResponse<T> {
      * @param message - A message providing additional information about the response
      * @param data - The actual data returned in the response
      */
-    constructor(
-        status_code: number,
-        is_authenticated: boolean,
-        message: string,
-        data: T | null,
-    ) {
+    constructor(status_code: number, message: string, data: T | null) {
         this.status_code = status_code;
         this.success = true;
-        this.is_authenticated = is_authenticated;
         this.message = message;
         this.data = data;
     }

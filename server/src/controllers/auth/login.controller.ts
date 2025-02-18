@@ -18,35 +18,24 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(
             400,
             "client_error",
-            false,
             "email address is required",
         );
     }
 
     if (!password) {
-        throw new ErrorResponse(
-            400,
-            "client_error",
-            false,
-            "password is required",
-        );
+        throw new ErrorResponse(400, "client_error", "password is required");
     }
 
     const user = await User.findOne({ where: { email: email } });
 
     if (!user) {
-        throw new ErrorResponse(404, "not_found", false, "invalid credentials");
+        throw new ErrorResponse(404, "not_found", "invalid credentials");
     }
 
     const passwordMatched = await bcrypt.compare(password, user.password);
 
     if (!passwordMatched) {
-        throw new ErrorResponse(
-            400,
-            "client_error",
-            false,
-            "invalid credentials",
-        );
+        throw new ErrorResponse(400, "client_error", "invalid credentials");
     }
 
     const accessToken = await generateAccessToken(user.id);
@@ -62,7 +51,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
             new SuccessResponse<{
                 access_token: string;
                 refresh_token: string;
-            }>(200, true, "login successful", {
+            }>(200, "login successful", {
                 access_token: accessToken,
                 refresh_token: refreshToken,
             }),

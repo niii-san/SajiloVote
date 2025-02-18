@@ -15,7 +15,6 @@ export const authenticate = asyncHandler(
             throw new ErrorResponse(
                 401,
                 "auth_error",
-                false,
                 "access token is required",
             );
         }
@@ -33,14 +32,9 @@ export const authenticate = asyncHandler(
             next();
         } catch (err: any) {
             if (err?.message == "jwt expired") {
-                throw new ErrorResponse(
-                    401,
-                    "auth_error",
-                    false,
-                    "token expired",
-                );
+                throw new ErrorResponse(401, "auth_error", "token expired");
             }
-            throw new ErrorResponse(400, "auth_error", false, "invalid token");
+            throw new ErrorResponse(400, "auth_error", "invalid token");
         }
     },
 );

@@ -6,5 +6,5 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
         .clearCookie("access_token")
         .clearCookie("refresh_token")
         .status(200)
-        .json(new SuccessResponse(200, false, "cookies cleared", null));
+        .json(new SuccessResponse(200, "cookies cleared", null));
 });

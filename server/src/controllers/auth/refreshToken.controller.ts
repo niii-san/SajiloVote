@@ -26,7 +26,6 @@ export const refreshAccessToken = asyncHandler(
             throw new ErrorResponse(
                 401,
                 "client_error",
-                false,
                 "refresh token is required",
             );
         }
@@ -44,7 +43,6 @@ export const refreshAccessToken = asyncHandler(
                 throw new ErrorResponse(
                     404,
                     "not_found",
-                    false,
                     "user not found! invalid token",
                 );
             }
@@ -60,7 +58,7 @@ export const refreshAccessToken = asyncHandler(
                 .cookie("refresh_token", newRefreshToken)
                 .status(200)
                 .json(
-                    new SuccessResponse(200, true, "token refreshed", {
+                    new SuccessResponse(200, "token refreshed", {
                         new_access_token: newAccessToken,
                         new_refresh_token: newRefreshToken,
                     }),
@@ -75,7 +73,6 @@ export const refreshAccessToken = asyncHandler(
                         new ErrorResponse(
                             401,
                             "auth_error",
-                            false,
                             "refresh token expired",
                         ).toJSON(),
                     );
@@ -87,7 +84,6 @@ export const refreshAccessToken = asyncHandler(
                     new ErrorResponse(
                         401,
                         "auth_error",
-                        false,
                         "invalid refresh token",
                     ).toJSON(),
                 );

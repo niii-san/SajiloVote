@@ -13,12 +13,7 @@ export const getCurrentUserData = asyncHandler(
         return res
             .status(200)
             .json(
-                new SuccessResponse<UserType>(
-                    200,
-                    true,
-                    "user data fetched",
-                    user,
-                ),
+                new SuccessResponse<UserType>(200, "user data fetched", user),
             );
     },
 );

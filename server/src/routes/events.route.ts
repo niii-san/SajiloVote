@@ -5,4 +5,5 @@ import { createEvent } from "../controllers/index.js";
 export const eventsRouter = Router()
 
 
-eventsRouter.post("/create",authenticate,createEvent)
+// create events
+eventsRouter.post("/",authenticate,createEvent)
