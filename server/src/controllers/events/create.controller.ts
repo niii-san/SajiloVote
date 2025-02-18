@@ -61,18 +61,19 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(404, "not_found", "user not found");
     }
 
-    // const event = await Event.create({
-    //     title: title,
-    //     description: description ?? "",
-    //     type: type,
-    //     creator_id: creator.user_id,
-    //     start_at: startAt,
-    //     end_at: endAt,
-    // });
-    //
-    // creator.events_created?.push({ creator_id: creator.user_id });
+    const start = startAt === "now" ? new Date() : new Date(startAt);
+    const end = new Date(endAt);
+
+    const event = await Event.create({
+        title: title,
+        description: description ?? "",
+        type: type,
+        creator_id: creator.user_id,
+        start_at: start,
+        end_at: end,
+    });
 
     return res
         .status(201)
-        .json(new SuccessResponse(200, "Event created: TEST PASSED", null));
+        .json(new SuccessResponse(200, "Event created: TEST PASSED", event));
 });
