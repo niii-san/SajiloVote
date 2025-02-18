@@ -12,12 +12,15 @@ import {
     FiChevronLeft,
     FiChevronRight,
 } from "react-icons/fi";
-import { api } from "../utils";
+import { api, capitalize } from "../utils";
 import toast from "react-hot-toast";
+import Loader from "./Loader";
 
 function NavBar() {
     const navigate = useNavigate();
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const userData = useAuthStore((state) => state.userData);
+    const userDataLoading = useAuthStore((state) => state.userDataLoading);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
     const logout = useAuthStore((state) => state.logout);
@@ -77,6 +80,10 @@ function NavBar() {
     );
 
     if (isLoggedIn) {
+        if (userDataLoading) {
+            return <Loader />;
+        }
+
         return (
             <>
                 {isSidebarOpen && (
@@ -113,10 +120,15 @@ function NavBar() {
                                     {!isSidebarMinimized && (
                                         <div className="min-w-[140px]">
                                             <p className="font-medium truncate text-black">
-                                                John Doe
+                                                {capitalize(
+                                                    userData?.first_name ?? "",
+                                                )}{" "}
+                                                {capitalize(
+                                                    userData?.last_name ?? "",
+                                                )}
                                             </p>
                                             <p className="text-sm text-black truncate">
-                                                john@example.com
+                                                {userData?.email}
                                             </p>
                                         </div>
                                     )}

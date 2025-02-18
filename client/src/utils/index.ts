@@ -1,2 +1,3 @@
 import { api } from "./api";
-export { api };
+import { capitalize } from "./common";
+export { api, capitalize };

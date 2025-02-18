@@ -25,7 +25,7 @@ export const authenticate = asyncHandler(
 
         try {
             const decoded: any = jwt.verify(token, secret);
-            const user = await User.findByPk(decoded.id, {
+            const user = await User.findByPk(decoded.user_id, {
                 attributes: { exclude: ["password", "refresh_token"] },
             });
             req.user = user;

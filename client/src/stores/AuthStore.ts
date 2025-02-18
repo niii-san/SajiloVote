@@ -6,6 +6,7 @@ type State = {
     isLoggedIn: boolean;
     userData: User | null;
     verifyLoading: boolean;
+    userDataLoading: boolean;
 };
 type Actions = {
     login: () => void;
@@ -17,6 +18,7 @@ type Actions = {
 export const useAuthStore = create<State & Actions>((set, get) => ({
     isLoggedIn: false,
     userData: null,
+    userDataLoading: false,
     verifyLoading: false,
     login: () => {
         const { setUserData } = get();
@@ -26,7 +28,19 @@ export const useAuthStore = create<State & Actions>((set, get) => ({
     logout: () => {
         set({ isLoggedIn: false, userData: null });
     },
-    setUserData: async () => {},
+    setUserData: async () => {
+        set({ userDataLoading: true });
+        try {
+            const res = await api.get("/api/v1/auth/user-data");
+            console.log(res.data.data);
+            
+            set({ userData: res.data.data });
+        } catch (error) {
+            console.error("Failed to set user data.. auth store, ", error);
+        } finally {
+            set({ userDataLoading: false });
+        }
+    },
 
     verify: async () => {
         set({ verifyLoading: true });
