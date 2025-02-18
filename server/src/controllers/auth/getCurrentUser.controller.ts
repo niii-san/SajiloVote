@@ -5,7 +5,7 @@ import type { UserType } from "../../types/ModelsTypes.js";
 
 export const getCurrentUserData = asyncHandler(
     async (req: Request, res: Response) => {
-        const userId = req?.user?.id;
+        const userId = req?.user?.user_id;
         const user = await User.findByPk(userId, {
             attributes: { exclude: ["password", "refresh_token"] },
         });

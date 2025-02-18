@@ -28,7 +28,7 @@ export class User extends Model<
     @Attribute(DataTypes.INTEGER)
     @PrimaryKey
     @AutoIncrement
-    declare id: CreationOptional<number>;
+    declare user_id: CreationOptional<number>;
 
     @Attribute(DataTypes.STRING)
     @NotNull
@@ -54,6 +54,7 @@ export class User extends Model<
 
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
+
 
     @HasMany(() => Event, "event_id")
     declare events_created?: NonAttribute<Event[]>;

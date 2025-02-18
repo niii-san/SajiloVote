@@ -11,7 +11,9 @@ export const sequelize = new Sequelize({
     password: process.env.DB_PASSWORD,
     host: "localhost",
     dialect: PostgresDialect,
-    models: await importModels(resolve(__dirname + "/../models/**/*.model.{ts,js}")),
+    models: await importModels(
+        resolve(__dirname + "/../models/**/*.model.{ts,js}"),
+    ),
 });
 
 export async function connectDB() {

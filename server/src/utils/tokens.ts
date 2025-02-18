@@ -16,14 +16,14 @@ export const generateAccessToken = async (userId: number): Promise<string> => {
 
     const token = jwt.sign(
         {
-            id: user.id,
+            user_id: user.user_id,
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
             created_at: user.created_at,
         },
         secret,
-        { expiresIn: "2m" },
+        { expiresIn: "5m" },
     );
 
     return token;
@@ -44,11 +44,11 @@ export const generateRefreshToken = async (userId: number): Promise<string> => {
 
     const token = jwt.sign(
         {
-            id: user.id,
+            user_id: user.user_id,
             email: user.email,
         },
         secret,
-        { expiresIn: "5m" },
+        { expiresIn: "10m" },
     );
 
     return token;

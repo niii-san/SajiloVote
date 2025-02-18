@@ -11,10 +11,7 @@ import {
     NotNull,
     PrimaryKey,
     AutoIncrement,
-    // CreatedAt,
-    // UpdatedAt,
     Table,
-    BelongsTo,
 } from "@sequelize/core/decorators-legacy";
 import { User } from "./user.model.js";
 

@@ -38,8 +38,8 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(400, "client_error", "invalid credentials");
     }
 
-    const accessToken = await generateAccessToken(user.id);
-    const refreshToken = await generateRefreshToken(user.id);
+    const accessToken = await generateAccessToken(user.user_id);
+    const refreshToken = await generateRefreshToken(user.user_id);
     user.refresh_token = refreshToken;
     await user.save();
 

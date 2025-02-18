@@ -47,8 +47,8 @@ export const refreshAccessToken = asyncHandler(
                 );
             }
 
-            const newAccessToken = await generateAccessToken(user.id);
-            const newRefreshToken = await generateRefreshToken(user.id);
+            const newAccessToken = await generateAccessToken(user.user_id);
+            const newRefreshToken = await generateRefreshToken(user.user_id);
 
             user.refresh_token = newRefreshToken;
             await user.save();
