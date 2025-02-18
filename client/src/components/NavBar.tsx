@@ -115,7 +115,14 @@ function NavBar() {
                                             "w-11 h-11",
                                         )}
                                     >
-                                        <span className="font-medium">JD</span>
+                                        <span className="font-medium">
+                                            {(userData?.first_name ?? "")
+                                                .slice(0, 1)
+                                                .toUpperCase()}
+                                            {(userData?.last_name ?? "")
+                                                .slice(0, 1)
+                                                .toUpperCase()}
+                                        </span>
                                     </div>
                                     {!isSidebarMinimized && (
                                         <div className="min-w-[140px]">
