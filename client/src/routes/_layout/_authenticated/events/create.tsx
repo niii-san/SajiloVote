@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { Button, Input } from "../../../../components";
 import Datetime from "react-datetime";
@@ -13,7 +13,8 @@ import {
     FiCheck,
     FiInfo,
 } from "react-icons/fi";
-import { capitalize } from "../../../../utils";
+import { api, capitalize } from "../../../../utils";
+import toast from "react-hot-toast";
 
 export const Route = createFileRoute("/_layout/_authenticated/events/create")({
     component: RouteComponent,
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/_layout/_authenticated/events/create")({
 
 // TODO: remove react hook form
 function RouteComponent() {
+    const navigate = useNavigate();
     type Inputs = {
         eventTitle: string;
         eventDescription: string;
@@ -93,6 +95,8 @@ function RouteComponent() {
         },
     });
 
+    const [resErr, setResErr] = useState<null | string>(null);
+
     const isValidDate = (currentDate: moment.Moment) => {
         const today = moment().startOf("day"); // Start of today (00:00)
 
@@ -127,6 +131,17 @@ function RouteComponent() {
             payload = { ...pre_payload, poll_options: data.pollOptions };
         } else {
             payload = { ...pre_payload, vote_candidates: data.voteCandidates };
+        }
+
+        try {
+            const res = await api.post("/api/v1/events", payload);
+            if (res.data?.success) {
+                toast.success("Event created");
+            }
+            navigate({ to: "/events" });
+        } catch (error: any) {
+            setResErr(error?.response.data?.message);
+            toast.error("Failed to create event");
         }
 
         console.log(payload);
@@ -453,6 +468,7 @@ function RouteComponent() {
                         </div>
                     </div>
                 </div>
+                {resErr && <p className="text-danger">{resErr}</p>}
 
                 <Button
                     type="submit"
