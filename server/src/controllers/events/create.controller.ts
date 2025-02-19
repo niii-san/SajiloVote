@@ -5,7 +5,7 @@ import {
     ErrorResponse,
     isValidDate,
 } from "../../utils/index.js";
-import { User, Event } from "../../models/index.js";
+import { User, Event, PollOption, VoteCandidate } from "../../models/index.js";
 
 export const createEvent = asyncHandler(async (req: Request, res: Response) => {
     const title: string = (req.body.title ?? "").trim();
@@ -63,8 +63,45 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(404, "not_found", "user not found");
     }
 
+    if (type === "vote") {
+        if (!Array.isArray(voteCandidates)) {
+            throw new ErrorResponse(
+                400,
+                "invalid_payload",
+                "vote candidates should be an array",
+            );
+        }
+
+        if (voteCandidates.length === 0) {
+            throw new ErrorResponse(
+                400,
+                "client_error",
+                "atleast one vote candidate is required",
+            );
+        }
+        //TODO: Apply candidate obj validations
+    }
+
+    if (type === "poll") {
+        if (!Array.isArray(pollOptions)) {
+            throw new ErrorResponse(
+                400,
+                "invalid_payload",
+                "poll options should be an array",
+            );
+        }
+
+        if (pollOptions.length === 0) {
+            throw new ErrorResponse(
+                400,
+                "client_error",
+                "atleast one vote option is required",
+            );
+        }
+        //TODO: Apply poll options obj validations
+    }
+
     const start = startAt === "now" ? new Date() : new Date(startAt);
-    const end = new Date(endAt);
 
     const event = await Event.create({
         title: title,
@@ -72,10 +109,47 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         type: type,
         creator_id: creator.user_id,
         start_at: start,
-        end_at: end,
+        end_at: new Date(endAt),
+    });
+
+    if (type === "poll") {
+        await Promise.all(
+            pollOptions.map(({ option_text }: { option_text: string }) =>
+                PollOption.create({ event_id: event.event_id, option_text }),
+            ),
+        );
+    }
+
+    if (type === "vote") {
+        await Promise.all(
+            voteCandidates.map(
+                ({
+                    candidate_name,
+                    candidate_email,
+                }: {
+                    candidate_name: string;
+                    candidate_email: string | null;
+                }) =>
+                    VoteCandidate.create({
+                        event_id: event.event_id,
+                        candidate_name,
+                        candidate_email,
+                    }),
+            ),
+        );
+    }
+
+    const createdEvent = await Event.findByPk(event.event_id, {
+        include: ["vote_candidates", "poll_options"],
     });
 
     return res
         .status(201)
-        .json(new SuccessResponse(200, "Event created: TEST PASSED", event));
+        .json(
+            new SuccessResponse(
+                200,
+                "Event created: TEST PASSED",
+                createdEvent,
+            ),
+        );
 });

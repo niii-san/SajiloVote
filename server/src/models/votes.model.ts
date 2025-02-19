@@ -18,7 +18,7 @@ import {
  * This is table for candidates options in Event type "vote"
  */
 
-@Table({ underscored: true, tableName: "vote_candidates" })
+@Table({ underscored: true, tableName: "vote_candidates", timestamps: false })
 export class VoteCandidate extends Model<
     InferAttributes<VoteCandidate>,
     InferCreationAttributes<VoteCandidate>
@@ -38,7 +38,7 @@ export class VoteCandidate extends Model<
     declare candidate_name: string;
 
     @Attribute(DataTypes.STRING)
-    declare candidate_email: string;
+    declare candidate_email: CreationOptional<string | null>;
 }
 
 /*
@@ -46,7 +46,7 @@ export class VoteCandidate extends Model<
  * This table is for poll options in Event type "poll"
  */
 
-@Table({ underscored: true, tableName: "poll_options" })
+@Table({ underscored: true, tableName: "poll_options", timestamps: false })
 export class PollOption extends Model<
     InferAttributes<PollOption>,
     InferCreationAttributes<PollOption>
@@ -72,8 +72,8 @@ export class PollOption extends Model<
  * who voted in which event for which option
  */
 
-@Table({ underscored: true, tableName: "vote_records" })
-export class Vote_Record extends Model<
+@Table({ underscored: true, tableName: "vote_records", timestamps: false })
+export class VoteRecord extends Model<
     InferAttributes<PollOption>,
     InferCreationAttributes<PollOption>
 > {
