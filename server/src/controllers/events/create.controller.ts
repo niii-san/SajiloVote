@@ -42,7 +42,7 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
-    if (startAt !== "now" && !isValidDate(startAt)) {
+    if (startAt !== "now" && startAt !== "manual" && !isValidDate(startAt)) {
         throw new ErrorResponse(
             400,
             "invalid_payload",
