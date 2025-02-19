@@ -95,7 +95,7 @@ function NavBar() {
 
                 <aside
                     className={cn(
-                        "fixed md:relative h-screen bg-white border-r border-gray-200 transition-all duration-300 z-50",
+                        "fixed md:relative min-h-screen bg-white border-r border-gray-200 transition-all duration-300 z-50",
                         "transform -translate-x-full md:translate-x-0 shadow-xl md:shadow-sm",
                         isSidebarOpen && "translate-x-0",
                         isSidebarMinimized
