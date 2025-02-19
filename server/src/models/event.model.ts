@@ -3,7 +3,6 @@ import {
     Model,
     InferAttributes,
     CreationOptional,
-    NonAttribute,
     InferCreationAttributes,
 } from "@sequelize/core";
 import {
@@ -13,7 +12,6 @@ import {
     AutoIncrement,
     Table,
 } from "@sequelize/core/decorators-legacy";
-import { User } from "./user.model.js";
 
 @Table({ underscored: true })
 export class Event extends Model<

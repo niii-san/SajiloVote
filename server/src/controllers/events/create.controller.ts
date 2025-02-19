@@ -14,8 +14,8 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
     const startAt: string | "now" = req.body.start_at;
     const endAt: string = req.body.end_at;
     const userId = req.user?.user_id;
-    // const voteCandidates = req.body?.vote_candidates ?? [];
-    // const pollOptions = req.body?.poll_options ?? [];
+    const voteCandidates = req.body?.vote_candidates ?? [];
+    const pollOptions = req.body?.poll_options ?? [];
 
     if (!title) {
         throw new ErrorResponse(400, "client_error", "event title is required");
