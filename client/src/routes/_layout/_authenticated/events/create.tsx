@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
-import { Button, Input, Label } from "../../../components";
+import { Button, Input, Label } from "../../../../components";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { useEffect, useState } from "react";
 import moment from "moment";
 
-export const Route = createFileRoute("/_layout/_authenticated/create")({
+export const Route = createFileRoute("/_layout/_authenticated/events/create")({
     component: RouteComponent,
 });
 
