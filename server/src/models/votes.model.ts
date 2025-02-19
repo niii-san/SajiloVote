@@ -4,6 +4,7 @@ import {
     InferAttributes,
     CreationOptional,
     InferCreationAttributes,
+    NonAttribute,
 } from "@sequelize/core";
 import {
     Attribute,
@@ -11,6 +12,7 @@ import {
     PrimaryKey,
     AutoIncrement,
     Table,
+    BelongsTo,
 } from "@sequelize/core/decorators-legacy";
 
 /*
@@ -74,8 +76,8 @@ export class PollOption extends Model<
 
 @Table({ underscored: true, tableName: "vote_records", timestamps: false })
 export class VoteRecord extends Model<
-    InferAttributes<PollOption>,
-    InferCreationAttributes<PollOption>
+    InferAttributes<VoteRecord>,
+    InferCreationAttributes<VoteRecord>
 > {
     @Attribute(DataTypes.INTEGER)
     @PrimaryKey

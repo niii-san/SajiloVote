@@ -11,7 +11,7 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
     const title: string = (req.body.title ?? "").trim();
     const description = req.body.description;
     const type = (req.body.type ?? "").trim();
-    const startAt: string | "now" = req.body.start_at;
+    const startAt: string | "immediate" = req.body.start_at;
     const endAt: string = req.body.end_at;
     const userId = req.user?.user_id;
     const voteCandidates = req.body?.vote_candidates ?? [];
@@ -42,7 +42,7 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
-    if (startAt !== "now" && startAt !== "manual" && !isValidDate(startAt)) {
+    if (startAt !== "immediate" && startAt !== "manual" && !isValidDate(startAt)) {
         throw new ErrorResponse(
             400,
             "invalid_payload",
@@ -101,7 +101,19 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         //TODO: Apply poll options obj validations
     }
 
-    const start = startAt === "now" ? new Date() : new Date(startAt);
+    const start =
+        startAt === "immediate"
+            ? new Date()
+            : startAt === "manual"
+              ? null
+              : new Date(startAt);
+
+    const startType =
+        startAt === "immediate"
+            ? "immediate"
+            : startAt === "manual"
+              ? "manual"
+              : "date";
 
     const event = await Event.create({
         title: title,
@@ -109,6 +121,7 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         type: type,
         creator_id: creator.user_id,
         start_at: start,
+        start_type: startType,
         end_at: new Date(endAt),
     });
 

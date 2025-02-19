@@ -29,7 +29,7 @@ function RouteComponent() {
         eventType: "poll" | "vote";
         pollOptions: Array<{ option: string }>;
         voteCandidates: Array<{ name: string; email?: string }>;
-        startTime: "now" | "manual" | "custom" | Date;
+        startTime: "immediate" | "manual" | "custom" | Date;
         eventStartTime: string;
         eventEndTime: string;
         voteOrPollMethod: string;
@@ -50,7 +50,7 @@ function RouteComponent() {
             eventType: "poll",
             pollOptions: [{ option: "" }],
             voteCandidates: [{ name: "" }],
-            startTime: "now",
+            startTime: "immediate",
             eventStartTime: moment().toISOString(),
             eventEndTime: moment().add(2, "hours").toISOString(),
         },
@@ -120,17 +120,31 @@ function RouteComponent() {
             description: data?.eventDescription ?? "",
             type: data.eventType,
             start_at:
-                data.startTime === "now"
-                    ? "now"
+                data.startTime === "immediate"
+                    ? "immediate"
                     : data.startTime === "manual"
                         ? "manual"
                         : data.eventStartTime,
             end_at: data.eventEndTime,
         };
         if (eventType === "poll") {
-            payload = { ...pre_payload, poll_options: data.pollOptions };
+            payload = {
+                ...pre_payload,
+                poll_options: data.pollOptions.map((item) => ({
+                    option_text: item.option,
+                })),
+            };
         } else {
-            payload = { ...pre_payload, vote_candidates: data.voteCandidates };
+            payload = {
+                ...pre_payload,
+                vote_candidates: data.voteCandidates.map((item) => ({
+                    candidate_name: item.name,
+                    candidate_email:
+                        (item.email ?? "").trim().length === 0
+                            ? null
+                            : item.email,
+                })),
+            };
         }
 
         try {
@@ -143,8 +157,6 @@ function RouteComponent() {
             setResErr(error?.response.data?.message);
             toast.error("Failed to create event");
         }
-
-        console.log(payload);
     };
 
     return (
@@ -394,7 +406,7 @@ function RouteComponent() {
                         </span>
                         <div className="grid gap-3 border rounded-lg p-4 dark:border-gray-600">
                             {[
-                                { value: "now", label: "Start Immediately" },
+                                { value: "immediate", label: "Start Immediately" },
                                 { value: "manual", label: "Start Manually" },
                                 {
                                     value: "custom",

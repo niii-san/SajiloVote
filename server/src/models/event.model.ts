@@ -33,17 +33,19 @@ export class Event extends Model<
     @Attribute(DataTypes.TEXT)
     declare description: CreationOptional<string>;
 
-    @Attribute(DataTypes.STRING)
+    @Attribute(DataTypes.ENUM(["poll", "vote"]))
     @NotNull
     declare type: "poll" | "vote";
 
     @Attribute(DataTypes.DATE)
-    @NotNull
-    declare start_at: Date;
+    declare start_at: Date | null;
 
     @Attribute(DataTypes.DATE)
+    declare end_at: Date | null;
+
+    @Attribute(DataTypes.ENUM(["immediate", "manual", "date"]))
     @NotNull
-    declare end_at: Date;
+    declare start_type: "immediate" | "manual" | "date";
 
     // Foreign key
     @Attribute(DataTypes.INTEGER)
