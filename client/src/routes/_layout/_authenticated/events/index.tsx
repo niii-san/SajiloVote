@@ -14,7 +14,7 @@ function RouteComponent() {
                 </h1>
                 <div className="space-y-12">
                     <CreatedEvents />
-                    {/* Participated Events Section - Add content later */}
+
                     <section className="bg-white rounded-xl p-6 shadow-sm">
                         <h2 className="text-xl font-semibold text-gray-700 mb-4">
                             Participated Events
@@ -26,7 +26,7 @@ function RouteComponent() {
                 </div>
 
                 <Link to={"/events/create"}>
-                    <Button className="fixed md:hidden bottom-8 right-8 w-14 h-14 rounded-full shadow-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                    <Button className="fixed md:hidden bottom-8 right-8 w-14 h-14 rounded-full shadow-lg">
                         <span className="text-2xl">+</span>
                     </Button>
                 </Link>
