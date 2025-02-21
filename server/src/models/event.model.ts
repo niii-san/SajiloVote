@@ -13,10 +13,8 @@ import {
     AutoIncrement,
     Table,
     HasMany,
-    BelongsTo,
 } from "@sequelize/core/decorators-legacy";
 import { PollOption, VoteCandidate, VoteRecord } from "./votes.model.js";
-import { User } from "./user.model.js";
 
 @Table({ underscored: true })
 export class Event extends Model<
@@ -83,7 +81,4 @@ export class Event extends Model<
         },
     })
     declare poll_options?: NonAttribute<PollOption[]>;
-
-    @BelongsTo(() => User, "user_id")
-    declare user?: NonAttribute<User>;
 }

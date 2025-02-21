@@ -4,7 +4,6 @@ import {
     InferAttributes,
     InferCreationAttributes,
     CreationOptional,
-    NonAttribute,
 } from "@sequelize/core";
 import {
     Attribute,
@@ -15,9 +14,7 @@ import {
     UpdatedAt,
     Table,
     BeforeSave,
-    HasMany,
 } from "@sequelize/core/decorators-legacy";
-import { Event } from "./event.model.js";
 import bcrypt from "bcrypt";
 
 @Table({ underscored: true })
@@ -54,11 +51,6 @@ export class User extends Model<
 
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
-
-    // @HasMany(() => Event, {
-    //     foreignKey: "creator_id",
-    // })
-    // declare events_created?: NonAttribute<Event[]>;
 
     @BeforeSave
     static async hashPassword(user: User) {
