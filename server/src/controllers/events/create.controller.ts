@@ -7,6 +7,12 @@ import {
 } from "../../utils/index.js";
 import { User, Event, PollOption, VoteCandidate } from "../../models/index.js";
 
+/**
+ * **_Requires Authentication🚀_**
+ *
+ * Create Event controller
+ * used to create events
+ */
 export const createEvent = asyncHandler(async (req: Request, res: Response) => {
     const title: string = (req.body.title ?? "").trim();
     const description = req.body.description;
@@ -42,7 +48,11 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
-    if (startAt !== "immediate" && startAt !== "manual" && !isValidDate(startAt)) {
+    if (
+        startAt !== "immediate" &&
+        startAt !== "manual" &&
+        !isValidDate(startAt)
+    ) {
         throw new ErrorResponse(
             400,
             "invalid_payload",
@@ -125,8 +135,8 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         end_at: new Date(endAt),
     });
 
-    if(!event){
-        throw new ErrorResponse(500,"server_error","failed to create event")
+    if (!event) {
+        throw new ErrorResponse(500, "server_error", "failed to create event");
     }
 
     if (type === "poll") {
@@ -166,7 +176,7 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
             new SuccessResponse(
                 200,
                 "Event created: TEST PASSED",
-                createdEvent
+                createdEvent,
             ),
         );
 });

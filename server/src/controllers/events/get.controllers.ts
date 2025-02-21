@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import { asyncHandler, SuccessResponse } from "../../utils/index.js";
 import { Event } from "../../models/index.js";
 
-/*
+/**
  * Get all the Events posted by current user
  *
- *
+ * **_Requires Authentication🚀_**
  */
-// [authenticated]
 export const getEventsCreatedByCurrentUser = asyncHandler(
     async (req: Request, res: Response) => {
         const userId = req.user?.user_id;

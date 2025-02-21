@@ -4,6 +4,11 @@ import { ErrorResponse } from "../utils/ErrorResponse.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
+/**
+ * **Authentication middleware**
+ * This middleware will allow to pass only if:
+ * _access_token is provided and is valid_
+ */
 export const authenticate = asyncHandler(
     async (req: Request, _: Response, next: NextFunction) => {
         const token =
