@@ -13,6 +13,8 @@ import {
     AutoIncrement,
     Table,
     HasMany,
+    CreatedAt,
+    UpdatedAt,
 } from "@sequelize/core/decorators-legacy";
 import { PollOption, VoteCandidate, VoteRecord } from "./votes.model.js";
 
@@ -51,6 +53,12 @@ export class Event extends Model<
     @Attribute(DataTypes.INTEGER)
     @NotNull
     declare creator_id: number;
+
+    @CreatedAt
+    declare created_at: CreationOptional<Date>;
+
+    @UpdatedAt
+    declare updated_at: CreationOptional<Date>;
 
     // one event has many vote records, i.e which user voted to which poll_option/vote_candidate
     @HasMany(() => VoteRecord, {

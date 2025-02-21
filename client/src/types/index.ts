@@ -1,3 +1,4 @@
 import { User } from "./User.type";
 import { AuthStoreType } from "./StoreTypes";
-export type { User, AuthStoreType };
+import { Event } from "./Event.type";
+export type { User, AuthStoreType, Event };
