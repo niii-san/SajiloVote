@@ -1,8 +1,7 @@
-import { NextFunction, Request } from "express";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import { ErrorResponse } from "../utils/ErrorResponse.js";
 import jwt from "jsonwebtoken";
-import { User } from "../models/user.model.js";
+import { NextFunction, Request } from "express";
+import { asyncHandler,ErrorResponse } from "../utils/index.js";
+import { User } from "../models/index.js";
 
 /**
  * **Authentication middleware**

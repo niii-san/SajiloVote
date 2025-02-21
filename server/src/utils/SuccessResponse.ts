@@ -1,5 +1,9 @@
 import { ApiResponse } from "../types/index.js";
 
+/**
+ * Successful response format
+ * _Status code_ **2xx** **_ONLY**
+ */
 export class SuccessResponse<T> implements ApiResponse<T> {
     public status_code: number;
     public success: boolean;

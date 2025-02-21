@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import type { ApiResponse, Reason } from "../types/index.js";
 
+/**
+ * Error response format
+ * _Status codes:_  **3xx**, **4xx**, **5xx**
+ */
 export class ErrorResponse extends Error implements ApiResponse {
     public status_code: number;
     public success: boolean;
     public reason: Reason;
     public message: string;
 
-    constructor(
-        status_code: number,
-        reason: Reason,
-        message: string,
-    ) {
+    constructor(status_code: number, reason: Reason, message: string) {
         super(message);
         this.status_code = status_code;
         this.success = false;

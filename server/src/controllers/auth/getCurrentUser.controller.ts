@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler, SuccessResponse } from "../../utils/index.js";
 import { User } from "../../models/index.js";
-import type { UserType } from "../../types/ModelsTypes.js";
+import type { UserType } from "../../types/index.js";
 
 export const getCurrentUserData = asyncHandler(
     async (req: Request, res: Response) => {
