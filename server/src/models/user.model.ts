@@ -55,9 +55,10 @@ export class User extends Model<
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
 
-
-    @HasMany(() => Event, "event_id")
-    declare events_created?: NonAttribute<Event[]>;
+    // @HasMany(() => Event, {
+    //     foreignKey: "creator_id",
+    // })
+    // declare events_created?: NonAttribute<Event[]>;
 
     @BeforeSave
     static async hashPassword(user: User) {

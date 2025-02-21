@@ -14,6 +14,7 @@ import {
     Table,
     BelongsTo,
 } from "@sequelize/core/decorators-legacy";
+import { Event } from "./event.model.js";
 
 /*
  * Votes candidate table
@@ -41,6 +42,15 @@ export class VoteCandidate extends Model<
 
     @Attribute(DataTypes.STRING)
     declare candidate_email: CreationOptional<string | null>;
+
+    @BelongsTo(() => Event, {
+        foreignKey: {
+            name: "event_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
+    declare event?: NonAttribute<Event>;
 }
 
 /*
@@ -66,6 +76,15 @@ export class PollOption extends Model<
     @Attribute(DataTypes.STRING)
     @NotNull
     declare option_text: string;
+
+    @BelongsTo(() => Event, {
+        foreignKey: {
+            name: "event_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
+    declare event?: NonAttribute<Event>;
 }
 
 /*
@@ -101,4 +120,13 @@ export class VoteRecord extends Model<
     @Attribute(DataTypes.DATE)
     @NotNull
     declare voted_at: Date;
+
+    @BelongsTo(() => Event, {
+        foreignKey: {
+            name: "event_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
+    declare event?: NonAttribute<Event>;
 }

@@ -125,6 +125,10 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         end_at: new Date(endAt),
     });
 
+    if(!event){
+        throw new ErrorResponse(500,"server_error","failed to create event")
+    }
+
     if (type === "poll") {
         await Promise.all(
             pollOptions.map(({ option_text }: { option_text: string }) =>
@@ -162,7 +166,7 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
             new SuccessResponse(
                 200,
                 "Event created: TEST PASSED",
-                createdEvent,
+                createdEvent
             ),
         );
 });

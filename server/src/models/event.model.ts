@@ -13,8 +13,10 @@ import {
     AutoIncrement,
     Table,
     HasMany,
+    BelongsTo,
 } from "@sequelize/core/decorators-legacy";
 import { PollOption, VoteCandidate, VoteRecord } from "./votes.model.js";
+import { User } from "./user.model.js";
 
 @Table({ underscored: true })
 export class Event extends Model<
@@ -45,7 +47,7 @@ export class Event extends Model<
 
     @Attribute(DataTypes.ENUM(["immediate", "manual", "date"]))
     @NotNull
-    declare start_type: "immediate" | "manual" | "date";
+    declare start_type: "immediate" | "manual" | "date" | string;
 
     // Foreign key
     @Attribute(DataTypes.INTEGER)
@@ -53,14 +55,35 @@ export class Event extends Model<
     declare creator_id: number;
 
     // one event has many vote records, i.e which user voted to which poll_option/vote_candidate
-    @HasMany(() => VoteRecord, "event_id")
+    @HasMany(() => VoteRecord, {
+        foreignKey: {
+            name: "event_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
     declare vote_records?: NonAttribute<VoteRecord[]>;
 
     // one event can have many candidates if the event type is "vote"
-    @HasMany(() => VoteCandidate, "event_id")
+    @HasMany(() => VoteCandidate, {
+        foreignKey: {
+            name: "event_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
     declare vote_candidates?: NonAttribute<VoteCandidate[]>;
 
     // one event can have many poll options if the event type is "poll"
-    @HasMany(() => PollOption, "event_id")
+    @HasMany(() => PollOption, {
+        foreignKey: {
+            name: "event_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
     declare poll_options?: NonAttribute<PollOption[]>;
+
+    @BelongsTo(() => User, "user_id")
+    declare user?: NonAttribute<User>;
 }
