@@ -27,7 +27,7 @@ export const joinEvent = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(404, "not_found", "event not found");
     }
 
-    if (event.user_id=== userId) {
+    if (event.user_id === userId) {
         return res.status(200).json(
             new SuccessResponse(200, "event joined", {
                 eventId,
@@ -41,11 +41,9 @@ export const joinEvent = asyncHandler(async (req: Request, res: Response) => {
     });
 
     if (alreadyJoined) {
-        throw new ErrorResponse(
-            400,
-            "already_exists",
-            "already joined this event",
-        );
+        return res
+            .status(200)
+            .json(new SuccessResponse(200, "event joined", alreadyJoined));
     }
 
     const participant = await EventParticipant.create({
