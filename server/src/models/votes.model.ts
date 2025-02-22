@@ -13,6 +13,7 @@ import {
     AutoIncrement,
     Table,
     BelongsTo,
+    HasOne,
 } from "@sequelize/core/decorators-legacy";
 import { Event } from "./event.model.js";
 
@@ -120,6 +121,31 @@ export class VoteRecord extends Model<
     @Attribute(DataTypes.DATE)
     @NotNull
     declare voted_at: Date;
+
+    @BelongsTo(() => Event, {
+        foreignKey: {
+            name: "event_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
+    declare event?: NonAttribute<Event>;
+}
+
+@Table({ tableName: "event_participants", underscored: true })
+export class EventParticipant extends Model<
+    InferAttributes<EventParticipant>,
+    InferCreationAttributes<EventParticipant>
+> {
+    // which user participated
+    @Attribute(DataTypes.INTEGER)
+    @NotNull
+    declare user_id: number;
+
+    // foreign key, which user participated in which event
+    @Attribute(DataTypes.INTEGER)
+    @NotNull
+    declare event_id: number;
 
     @BelongsTo(() => Event, {
         foreignKey: {

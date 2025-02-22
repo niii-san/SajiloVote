@@ -16,7 +16,12 @@ import {
     CreatedAt,
     UpdatedAt,
 } from "@sequelize/core/decorators-legacy";
-import { PollOption, VoteCandidate, VoteRecord } from "./votes.model.js";
+import {
+    EventParticipant,
+    PollOption,
+    VoteCandidate,
+    VoteRecord,
+} from "./votes.model.js";
 
 @Table({ underscored: true })
 export class Event extends Model<
@@ -89,4 +94,14 @@ export class Event extends Model<
         },
     })
     declare poll_options?: NonAttribute<PollOption[]>;
+
+    // one event can have many participants
+    @HasMany(() => EventParticipant, {
+        foreignKey: {
+            name: "event_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
+    declare event_participants?: NonAttribute<EventParticipant[]>;
 }
