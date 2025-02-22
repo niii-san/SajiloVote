@@ -5,7 +5,10 @@ import { signup } from "./auth/signup.controller.js";
 import { verifyToken } from "./auth/verifyToken.controller.js";
 import { getCurrentUserData } from "./auth/getCurrentUser.controller.js";
 import { createEvent } from "./events/create.controller.js";
-import { getEventsCreatedByCurrentUser } from "./events/get.controllers.js";
+import {
+    getEventsCreatedByCurrentUser,
+    getPreviewEvent,
+} from "./events/get.controllers.js";
 import { joinEvent } from "./events/join.controller.js";
 
 export {
@@ -18,4 +21,5 @@ export {
     getCurrentUserData,
     getEventsCreatedByCurrentUser,
     joinEvent,
+    getPreviewEvent,
 };

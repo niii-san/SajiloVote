@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { asyncHandler, SuccessResponse } from "../../utils/index.js";
+import {
+    asyncHandler,
+    ErrorResponse,
+    SuccessResponse,
+} from "../../utils/index.js";
 import { Event } from "../../models/index.js";
 
 /**
@@ -20,5 +24,31 @@ export const getEventsCreatedByCurrentUser = asyncHandler(
             .json(
                 new SuccessResponse(200, "self created events fetched", events),
             );
+    },
+);
+
+/**
+ * Get events for preview like
+ * for showing before joining
+ *
+ * **_Requires Authentication🚀_**
+ */
+export const getPreviewEvent = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { eventId } = req.params;
+
+        if (isNaN(Number(eventId))) {
+            throw new ErrorResponse(400, "client_error", "invalid event id");
+        }
+
+        const event = await Event.findByPk(eventId);
+
+        if (!event) {
+            throw new ErrorResponse(404, "not_found", "event not found");
+        }
+
+        return res
+            .status(200)
+            .json(new SuccessResponse(200, "event fetched", event));
     },
 );
