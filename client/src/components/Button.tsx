@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "../lib/utils";
 
-type Variant = "filled" | "outline";
+type Variant = "filled" | "outline" | "ghost";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
@@ -28,6 +28,7 @@ const Button = ({
         outline:
             "text-dark_text hover:bg-primary hover:bg-opacity-20 hover:border-opacity-20",
         filled: "bg-primary hover:bg-primary/95",
+        ghost: "bg-none border-none text-black hover:bg-gray-100",
     };
 
     const disabledStyle =

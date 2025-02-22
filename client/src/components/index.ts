@@ -1,4 +1,5 @@
 import Button from "./Button";
+import ConfirmJoinModal from "./ConfirmJoinModal";
 import CreatedEvents from "./CreatedEvents";
 import EventCard from "./EventCard";
 import Footer from "./Footer";
@@ -16,4 +17,5 @@ export {
     Loader,
     EventCard,
     CreatedEvents,
+    ConfirmJoinModal,
 };
