@@ -4,7 +4,7 @@ import {
     ErrorResponse,
     SuccessResponse,
 } from "../../utils/index.js";
-import { Event } from "../../models/index.js";
+import { Event, User } from "../../models/index.js";
 
 /**
  * Get all the Events posted by current user
@@ -16,7 +16,7 @@ export const getEventsCreatedByCurrentUser = asyncHandler(
         const userId = req.user?.user_id;
 
         const events = await Event.findAll({
-            where: { creator_id: userId },
+            where: { user_id: userId },
         });
 
         return res
@@ -41,7 +41,17 @@ export const getPreviewEvent = asyncHandler(
             throw new ErrorResponse(400, "client_error", "invalid event id");
         }
 
-        const event = await Event.findByPk(eventId);
+        const event = await Event.findByPk(eventId, {
+            include: [
+                {
+                    model: User,
+                    as: "creator",
+                    attributes: {
+                        exclude: ["password", "refresh_token", "email"],
+                    },
+                },
+            ],
+        });
 
         if (!event) {
             throw new ErrorResponse(404, "not_found", "event not found");

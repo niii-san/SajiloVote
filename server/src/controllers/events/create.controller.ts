@@ -115,21 +115,21 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         startAt === "immediate"
             ? new Date()
             : startAt === "manual"
-              ? null
-              : new Date(startAt);
+                ? null
+                : new Date(startAt);
 
     const startType =
         startAt === "immediate"
             ? "immediate"
             : startAt === "manual"
-              ? "manual"
-              : "date";
+                ? "manual"
+                : "date";
 
     const event = await Event.create({
         title: title,
         description: description ?? "",
         type: type,
-        creator_id: creator.user_id,
+        user_id: creator.user_id,
         start_at: start,
         start_type: startType,
         end_at: new Date(endAt),

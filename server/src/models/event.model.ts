@@ -15,6 +15,7 @@ import {
     HasMany,
     CreatedAt,
     UpdatedAt,
+    BelongsTo,
 } from "@sequelize/core/decorators-legacy";
 import {
     EventParticipant,
@@ -22,6 +23,7 @@ import {
     VoteCandidate,
     VoteRecord,
 } from "./votes.model.js";
+import { User } from "./user.model.js";
 
 @Table({ underscored: true })
 export class Event extends Model<
@@ -57,7 +59,7 @@ export class Event extends Model<
     // Foreign key
     @Attribute(DataTypes.INTEGER)
     @NotNull
-    declare creator_id: number;
+    declare user_id: number;
 
     @CreatedAt
     declare created_at: CreationOptional<Date>;
@@ -104,4 +106,7 @@ export class Event extends Model<
         },
     })
     declare event_participants?: NonAttribute<EventParticipant[]>;
+
+    @BelongsTo(() => User, "user_id")
+    declare creator?: NonAttribute<User>;
 }
