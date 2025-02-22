@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Event } from "../../../../types";
 import { api, capitalize } from "../../../../utils";
@@ -18,13 +18,14 @@ interface PreEventType extends Event {
 }
 
 function RouteComponent() {
+    const navigate = useNavigate();
     const { eventId } = Route.useParams();
     const [err, setErr] = useState<null | string>(null);
     const [preEvent, setPreEvent] = useState<PreEventType | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [confirmJoinModal, setConfirmJoinModal] = useState<boolean>(false);
     const [confirmLoading, setConfimrLoading] = useState<boolean>(false);
-    const [confirmResErr, setConfirmResErr] = useState<string | null>();
+    const [confirmResErr, setConfirmResErr] = useState<string | null>(null);
 
     const handleJoin = async () => {
         setConfirmJoinModal(true);
@@ -44,7 +45,19 @@ function RouteComponent() {
         }
     };
 
-    const handleConfirm = async () => { };
+    const handleConfirm = async () => {
+        setConfimrLoading(true);
+        try {
+            const res = await api.post(`/api/v1/events/${eventId}/join`);
+            if (res.data.success) {
+                navigate({ to: `/events/${eventId}` });
+            }
+        } catch (error: any) {
+            setConfirmResErr(error.response.data.message);
+        } finally {
+            setConfimrLoading(false);
+        }
+    };
 
     useEffect(() => {
         fetchSetPreEvent();

@@ -68,7 +68,7 @@ function ConfirmJoinModal({
                         variant="ghost"
                         onClick={() => !loading && setModalFn(false)}
                         disabled={loading}
-                        className="px-4 py-2"
+                        className="px-4 py-2 border-none bg-none"
                     >
                         Cancel
                     </Button>
