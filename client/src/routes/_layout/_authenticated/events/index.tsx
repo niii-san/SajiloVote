@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button, CreatedEvents } from "../../../../components";
 import { useState } from "react";
 
@@ -7,7 +7,9 @@ export const Route = createFileRoute("/_layout/_authenticated/events/")({
 });
 
 function RouteComponent() {
+    const navigate = useNavigate();
     const [joinErr, _] = useState<null | string>(null);
+    const [joinVal, setJoinVal] = useState<string>("");
     return (
         <div className="min-h-screen w-full bg-gray-50 p-8">
             <div className="max-w-7xl mx-auto">
@@ -24,7 +26,9 @@ function RouteComponent() {
                         <div className="w-[90%] md:w-[70%] lg:w-[60%] mx-auto flex group relative">
                             <input
                                 type="text"
-                                placeholder="Event code (e.g. XF34K9)"
+                                value={joinVal}
+                                onChange={(e) => setJoinVal(e.target.value)}
+                                placeholder="Event code (e.g. 123)"
                                 className="w-full border-y-2 border-l-2 border-primary bg-white/95 focus:bg-white 
                 text-gray-900 px-12 py-3 text-lg focus:outline-none placeholder-gray-500 
                 transition-all duration-200 h-[48px] rounded-l-lg shadow-sm
@@ -37,6 +41,9 @@ function RouteComponent() {
                 font-semibold h-[48px] rounded-r-lg hover:bg-gray-50
                 flex items-center justify-center gap-2 transition-all duration-200
                 shadow-sm hover:shadow-md "
+                                onClick={() =>
+                                    navigate({ to: `/join/${joinVal}` })
+                                }
                             >
                                 Join
                             </button>
