@@ -4,6 +4,7 @@ import {
     InferAttributes,
     InferCreationAttributes,
     CreationOptional,
+    NonAttribute,
 } from "@sequelize/core";
 import {
     Attribute,
@@ -14,8 +15,10 @@ import {
     UpdatedAt,
     Table,
     BeforeSave,
+    HasMany,
 } from "@sequelize/core/decorators-legacy";
 import bcrypt from "bcrypt";
+import { EventParticipant } from "./votes.model.js";
 
 @Table({ underscored: true })
 export class User extends Model<
@@ -51,6 +54,16 @@ export class User extends Model<
 
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
+
+    // user may have joined multiple events
+    @HasMany(() => EventParticipant, {
+        foreignKey: {
+            name: "user_id",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        },
+    })
+    declare events_participated?: NonAttribute<EventParticipant>;
 
     @BeforeSave
     static async hashPassword(user: User) {

@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { asyncHandler } from "../../utils/asyncHandler.js";
+import { asyncHandler } from "../../utils/index.js";
 
 
 /**
