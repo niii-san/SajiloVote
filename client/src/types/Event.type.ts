@@ -6,7 +6,7 @@ export interface Event {
     start_at: string | null;
     end_at: string;
     start_type: "immediate" | "manual" | "date";
-    creator_id: number;
+    user_id: number;
     created_at: string;
     updated_at: string;
 }
