@@ -6,6 +6,7 @@ import { verifyToken } from "./auth/verifyToken.controller.js";
 import { getCurrentUserData } from "./auth/getCurrentUser.controller.js";
 import { createEvent } from "./events/create.controller.js";
 import { getEventsCreatedByCurrentUser } from "./events/get.controllers.js";
+import { joinEvent } from "./events/join.controller.js";
 
 export {
     login,
@@ -16,4 +17,5 @@ export {
     createEvent,
     getCurrentUserData,
     getEventsCreatedByCurrentUser,
+    joinEvent,
 };

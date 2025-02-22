@@ -137,6 +137,11 @@ export class EventParticipant extends Model<
     InferAttributes<EventParticipant>,
     InferCreationAttributes<EventParticipant>
 > {
+    @Attribute(DataTypes.INTEGER)
+    @PrimaryKey
+    @AutoIncrement
+    declare id: CreationOptional<number>;
+
     // which user participated
     @Attribute(DataTypes.INTEGER)
     @NotNull
