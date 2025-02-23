@@ -6,6 +6,8 @@ import {
     getEventsCreatedByCurrentUser,
     getPreviewEvent,
     joinEvent,
+    voteForCandidate,
+    voteForOption,
 } from "../controllers/index.js";
 
 export const eventsRouter = Router();
@@ -25,6 +27,15 @@ eventsRouter.post("/:eventId/join", authenticate, joinEvent);
 eventsRouter.get("/:eventId", authenticate, getEvent);
 
 // vote for option in poll event
-eventsRouter.post("/:eventId/option/:optionId")
+eventsRouter.post(
+    "/:eventId/option/:optionId/vote",
+    authenticate,
+    voteForOption,
+);
 
 // vore for candidate in vote event
+eventsRouter.post(
+    "/:eventId/candidate/:voteCandidateId/vote",
+    authenticate,
+    voteForCandidate,
+);

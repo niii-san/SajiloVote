@@ -11,6 +11,7 @@ import {
     getPreviewEvent,
 } from "./events/get.controllers.js";
 import { joinEvent } from "./events/join.controller.js";
+import { voteForCandidate, voteForOption } from "./events/vote.controller.js";
 
 export {
     login,
@@ -24,4 +25,6 @@ export {
     joinEvent,
     getPreviewEvent,
     getEvent,
+    voteForCandidate,
+    voteForOption,
 };

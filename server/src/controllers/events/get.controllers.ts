@@ -12,7 +12,6 @@ import {
     VoteCandidate,
     VoteRecord,
 } from "../../models/index.js";
-import { log } from "node:console";
 
 /**
  * Get all the Events posted by current user
