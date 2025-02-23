@@ -23,3 +23,8 @@ eventsRouter.get("/pre/:eventId", getPreviewEvent);
 eventsRouter.post("/:eventId/join", authenticate, joinEvent);
 
 eventsRouter.get("/:eventId", authenticate, getEvent);
+
+// vote for option in poll event
+eventsRouter.post("/:eventId/option/:optionId")
+
+// vore for candidate in vote event

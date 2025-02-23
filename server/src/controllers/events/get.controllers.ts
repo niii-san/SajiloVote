@@ -71,6 +71,12 @@ export const getPreviewEvent = asyncHandler(
     },
 );
 
+/**
+ * Get event if only user has joined the event
+ * use for event room
+ *
+ * _Requires Authentication🚀_
+ */
 export const getEvent = asyncHandler(async (req: Request, res: Response) => {
     const { eventId } = req.params;
     const userId = req.user?.user_id;
