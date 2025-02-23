@@ -18,6 +18,7 @@ import {
     FaClock,
     FaVoteYea,
     FaPoll,
+    FaCheck,
 } from "react-icons/fa";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
@@ -46,7 +47,6 @@ function RouteComponent() {
     const [joinedEvent, setJoinedEvent] = useState<JoinedEventType | null>(
         null,
     );
-    console.log(joinedEvent);
     const [resErr, setResErr] = useState<string | null>(null);
 
     const fetchSetJointedEvent = async () => {
@@ -68,9 +68,7 @@ function RouteComponent() {
     };
 
     const handleLeaveEvent = async () => {
-        //TODO: handle leave event
         console.log("Leave event");
-        // navigate({ to: "/events" });
     };
 
     const hasUserAlreadyVotedToCandidate = (): {
@@ -81,7 +79,6 @@ function RouteComponent() {
         if (
             joinedEvent?.vote_records.some((record, i) => {
                 indx = i;
-
                 return record.voter_id === userData?.user_id;
             })
         ) {
@@ -124,106 +121,115 @@ function RouteComponent() {
     if (resErr) {
         return (
             <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gray-50 p-4">
-                <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center space-y-4">
-                    <h1 className="text-2xl font-bold text-red-600">Error</h1>
-                    <p className="text-gray-600">{resErr}</p>
+                <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center space-y-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
+                        <FaInfoCircle className="text-red-600 text-2xl" />
+                    </div>
+                    <h1 className="text-3xl font-bold text-gray-900">Oops!</h1>
+                    <p className="text-gray-600 text-lg">{resErr}</p>
                     <Button
                         onClick={() => navigate({ to: "/events" })}
-                        className="w-full mt-4 bg-red-600 border-red-600 hover:bg-red-700"
+                        className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white rounded-lg py-3"
                     >
-                        Go back
+                        Return to Events
                     </Button>
                 </div>
             </div>
         );
     }
+
     const voteStatus = hasUserAlreadyVotedToCandidate();
 
     return (
-        <div className="min-h-screen w-full bg-gray-50 p-6 md:p-8 lg:p-12">
-            {/* Header Section */}
-            <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-start mb-8">
-                    <div>
-                        <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 p-6 md:p-8 lg:p-12">
+            <div className="max-w-7xl mx-auto space-y-8">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+                    <div className="space-y-2">
+                        <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
                             {joinedEvent?.title}
                         </h1>
-                        <div className="flex items-center gap-2 text-gray-600">
-                            <FaUsers className="text-blue-500" />
-                            <span>
-                                Created by{" "}
-                                {capitalize(
-                                    joinedEvent?.creator.first_name ?? "",
-                                )}{" "}
-                                {capitalize(
-                                    joinedEvent?.creator.last_name ?? "",
-                                )}
+                        <div className="flex items-center gap-3 text-gray-600">
+                            <span className="inline-flex items-center gap-2 bg-blue-100 px-3 py-1.5 rounded-full">
+                                <FaUsers className="text-blue-600" />
+                                <span className="text-sm font-medium">
+                                    {capitalize(
+                                        joinedEvent?.creator.first_name ?? "",
+                                    )}{" "}
+                                    {capitalize(
+                                        joinedEvent?.creator.last_name ?? "",
+                                    )}
+                                </span>
                             </span>
                         </div>
                     </div>
                     <Button
                         onClick={handleLeaveEvent}
-                        className="bg-red-500 border-red-500 w-fit hover:bg-red-600 text-white flex items-center gap-2 px-6 py-2 "
+                        className=" w-fit bg-red-500 border-red-500 hover:bg-red-600 text-white flex items-center gap-2 px-6 py-3 rounded-xl shadow-sm transition-all"
                     >
-                        <FaSignOutAlt /> Leave Event
+                        <FaSignOutAlt className="text-lg" />
+                        Leave Event
                     </Button>
                 </div>
 
                 {/* Main Content Grid */}
                 <div className="grid md:grid-cols-3 gap-8">
-                    {/* Left Column - Event Details */}
-                    <div className="md:col-span-2 space-y-6">
-                        {/* Event Info Card */}
-                        <div className="bg-white rounded-xl p-6 shadow-sm">
-                            <div className="flex items-center gap-2 mb-4">
-                                <FaInfoCircle className="text-blue-500 text-xl" />
-                                <h2 className="text-xl font-semibold">
+                    {/* Left Column */}
+                    <div className="md:col-span-2 space-y-8">
+                        {/* Event Details Card */}
+                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="p-3 bg-blue-100 rounded-lg">
+                                    <FaInfoCircle className="text-blue-600 text-2xl" />
+                                </div>
+                                <h2 className="text-2xl font-semibold text-gray-900">
                                     Event Details
                                 </h2>
                             </div>
 
                             {joinedEvent?.description && (
-                                <p className="text-gray-600 mb-6">
+                                <p className="text-gray-600 mb-8 text-lg leading-relaxed">
                                     {joinedEvent.description}
                                 </p>
                             )}
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="flex items-center gap-3">
-                                    <FaCalendar className="text-gray-500" />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                                    <div className="p-3 bg-white rounded-lg shadow-sm">
+                                        <FaCalendar className="text-gray-600 text-xl" />
+                                    </div>
                                     <div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-gray-500 mb-1">
                                             Start Date
                                         </p>
-                                        <p className="font-medium">
+                                        <p className="font-medium text-gray-900">
                                             {joinedEvent?.start_type ===
                                             "manual"
                                                 ? "Manual Start"
                                                 : format(
-                                                      joinedEvent?.start_at
-                                                          ? new Date(
-                                                                joinedEvent?.start_at,
-                                                            )
-                                                          : new Date(),
-
+                                                      new Date(
+                                                          joinedEvent?.start_at ??
+                                                              new Date(),
+                                                      ),
                                                       "PPp",
                                                   )}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <FaClock className="text-gray-500" />
+                                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                                    <div className="p-3 bg-white rounded-lg shadow-sm">
+                                        <FaClock className="text-gray-600 text-xl" />
+                                    </div>
                                     <div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-gray-500 mb-1">
                                             End Date
                                         </p>
-                                        <p className="font-medium">
+                                        <p className="font-medium text-gray-900">
                                             {format(
-                                                joinedEvent?.end_at
-                                                    ? new Date(
-                                                          joinedEvent?.end_at,
-                                                      )
-                                                    : new Date(),
+                                                new Date(
+                                                    joinedEvent?.end_at ??
+                                                        new Date(),
+                                                ),
                                                 "PPp",
                                             )}
                                         </p>
@@ -232,12 +238,14 @@ function RouteComponent() {
                             </div>
                         </div>
 
-                        {/* Poll/Vote Section */}
+                        {/* Voting/Poll Section */}
                         {joinedEvent?.type === "poll" ? (
-                            <div className="bg-white rounded-xl p-6 shadow-sm">
-                                <div className="flex items-center gap-2 mb-6">
-                                    <FaPoll className="text-green-500 text-xl" />
-                                    <h2 className="text-xl font-semibold">
+                            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                                <div className="flex items-center gap-3 mb-8">
+                                    <div className="p-3 bg-green-100 rounded-lg">
+                                        <FaPoll className="text-green-600 text-2xl" />
+                                    </div>
+                                    <h2 className="text-2xl font-semibold text-gray-900">
                                         Poll Options
                                     </h2>
                                 </div>
@@ -245,14 +253,17 @@ function RouteComponent() {
                                     {joinedEvent?.poll_options.map((option) => (
                                         <label
                                             key={option.option_id}
-                                            className="flex items-center gap-3 p-4 border rounded-lg hover:border-blue-400 transition-all cursor-pointer"
+                                            className="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-blue-300 transition-all cursor-pointer group"
                                         >
-                                            <input
-                                                type="radio"
-                                                name="poll"
-                                                className="h-5 w-5 text-blue-500"
-                                            />
-                                            <span className="text-gray-700">
+                                            <div className="flex items-center justify-center h-6 w-6 border-2 border-gray-300 rounded-full group-hover:border-blue-400 transition-colors">
+                                                <input
+                                                    type="radio"
+                                                    name="poll"
+                                                    className="opacity-0 absolute"
+                                                />
+                                                <span className="h-3 w-3 bg-transparent rounded-full group-hover:bg-blue-100 transition-colors" />
+                                            </div>
+                                            <span className="text-gray-700 text-lg">
                                                 {option.option_text}
                                             </span>
                                         </label>
@@ -260,44 +271,58 @@ function RouteComponent() {
                                 </div>
                             </div>
                         ) : joinedEvent?.type === "vote" ? (
-                            <div className="bg-white rounded-xl p-6 shadow-sm">
-                                <div className="flex items-center gap-2 mb-6">
-                                    <FaVoteYea className="text-purple-500 text-xl" />
-                                    <h2 className="text-xl font-semibold">
+                            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                                <div className="flex items-center gap-3 mb-8">
+                                    <div className="p-3 bg-purple-100 rounded-lg">
+                                        <FaVoteYea className="text-purple-600 text-2xl" />
+                                    </div>
+                                    <h2 className="text-2xl font-semibold text-gray-900">
                                         Vote Candidates
                                     </h2>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {joinedEvent?.vote_candidates.map(
                                         (candidate) => (
-                                            <label
+                                            <div
                                                 key={
                                                     candidate.vote_candidate_id
                                                 }
-                                                className="flex items-center gap-3 p-4 border rounded-lg hover:border-blue-400 transition-all cursor-pointer"
                                                 onClick={() =>
                                                     handleVoteCandidate(
                                                         candidate.vote_candidate_id,
                                                     )
                                                 }
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="vote"
-                                                    className="h-5 w-5 text-blue-500"
-                                                    checked={
+                                                className={`p-4 border rounded-xl cursor-pointer transition-all
+                                                    ${voteStatus.hasVoted ? "opacity-75" : "hover:border-blue-400 hover:bg-blue-50"}
+                                                    ${
                                                         voteStatus.recordId ===
                                                         candidate.vote_candidate_id
-                                                    }
-                                                    disabled={
-                                                        voteStatus.hasVoted
-                                                    }
-                                                    id={candidate.vote_candidate_id.toString()}
-                                                />
-                                                <span className="text-gray-700">
-                                                    {candidate.candidate_name}
-                                                </span>
-                                            </label>
+                                                            ? "border-blue-400 bg-blue-50"
+                                                            : "border-gray-200"
+                                                    }`}
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    <div
+                                                        className={`flex items-center justify-center h-6 w-6 rounded-full 
+                                                        ${
+                                                            voteStatus.recordId ===
+                                                            candidate.vote_candidate_id
+                                                                ? "bg-blue-500 text-white"
+                                                                : "bg-gray-100"
+                                                        }`}
+                                                    >
+                                                        {voteStatus.recordId ===
+                                                            candidate.vote_candidate_id && (
+                                                            <FaCheck className="text-sm" />
+                                                        )}
+                                                    </div>
+                                                    <span className="text-gray-900 font-medium">
+                                                        {
+                                                            candidate.candidate_name
+                                                        }
+                                                    </span>
+                                                </div>
+                                            </div>
                                         ),
                                     )}
                                 </div>
@@ -306,22 +331,23 @@ function RouteComponent() {
                     </div>
 
                     {/* Right Column - Participants */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm h-fit">
-                        <div className="flex items-center gap-2 mb-6">
-                            <FaUsers className="text-orange-500 text-xl" />
-                            <h2 className="text-xl font-semibold">
+                    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 h-fit">
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="p-3 bg-orange-100 rounded-lg">
+                                <FaUsers className="text-orange-600 text-2xl" />
+                            </div>
+                            <h2 className="text-2xl font-semibold text-gray-900">
                                 Participants
                             </h2>
                         </div>
-                        <div className="flex items-center gap-2 mb-4">
-                            <span className="text-2xl font-bold text-blue-500">
+                        <div className="flex items-center gap-4 mb-6">
+                            <span className="text-4xl font-bold text-blue-600">
                                 {joinedEvent?.event_participants.length ?? 0}
                             </span>
-                            <span className="text-gray-500">
+                            <span className="text-gray-600">
                                 Total Participants
                             </span>
                         </div>
-                        <div className="space-y-3"></div>
                     </div>
                 </div>
             </div>
