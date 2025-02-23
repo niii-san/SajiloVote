@@ -37,38 +37,43 @@ function NavBar() {
     };
 
     const navLinkStyling = (isActive: boolean) =>
-        `p-3 rounded-lg flex items-center gap-4 group transition-colors
-    ${isActive ? "bg-primary/10 text-primary border-l-4 border-primary" : "text-gray-600 hover:bg-gray-100"}
+        `p-3 rounded-lg flex items-center gap-4 group transition-all duration-200
+    ${
+        isActive
+            ? "bg-primary/10 text-primary font-semibold border-l-4 border-primary"
+            : "text-gray-600 hover:bg-gray-50/80 hover:text-gray-900"
+    }
     ${isSidebarMinimized ? "justify-center px-3" : "px-4"}`;
 
     const sidebarItems = [
         {
             to: "/",
             label: "Home",
-            icon: <FiHome className="text-xl" />,
+            icon: <FiHome className="text-xl shrink-0" />,
         },
         {
             to: "/events",
             label: "Events",
-            icon: <GiVote className="text-xl" />,
+            icon: <GiVote className="text-xl shrink-0" />,
         },
         {
             to: "/settings",
             label: "Settings",
-            icon: <FiSettings className="text-xl" />,
+            icon: <FiSettings className="text-xl shrink-0" />,
         },
         {
             to: "logoutFn",
             label: "Log Out",
-            icon: <FiLogOut className="text-xl" />,
+            icon: <FiLogOut className="text-xl shrink-0" />,
         },
     ];
 
     const MobileToggle = () => (
         <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden p-3 fixed right-4 top-4 z-50
-                bg-primary text-white rounded-lg shadow-lg hover:bg-primary/90"
+            className="md:hidden p-3 fixed right-6 top-6 z-50
+        bg-white text-gray-600 rounded-xl shadow-lg hover:bg-gray-50
+        border border-gray-200 hover:border-gray-300 transition-all"
             aria-label="Toggle navigation"
         >
             {isSidebarOpen ? (
@@ -88,14 +93,14 @@ function NavBar() {
             <>
                 {isSidebarOpen && (
                     <div
-                        className="fixed inset-0 bg-black/30 backdrop-blur-sm md:hidden z-40"
+                        className="fixed inset-0 bg-black/20 backdrop-blur-sm md:hidden z-40"
                         onClick={() => setIsSidebarOpen(false)}
                     />
                 )}
 
                 <aside
                     className={cn(
-                        "fixed md:relative min-h-screen bg-white border-r border-gray-200 transition-all duration-300 z-50",
+                        "fixed md:relative min-h-screen bg-white border-r border-gray-100 transition-all duration-300 z-50",
                         "transform -translate-x-full md:translate-x-0 shadow-xl md:shadow-sm",
                         isSidebarOpen && "translate-x-0",
                         isSidebarMinimized
@@ -112,7 +117,7 @@ function NavBar() {
                                         className={cn(
                                             "shrink-0 rounded-full bg-gradient-to-br from-primary to-primary/70",
                                             "flex items-center justify-center text-white",
-                                            "w-11 h-11",
+                                            "w-12 h-12 text-lg",
                                         )}
                                     >
                                         <span className="font-medium">
@@ -146,7 +151,7 @@ function NavBar() {
                                             !isSidebarMinimized,
                                         )
                                     }
-                                    className="hidden md:block p-2 hover:bg-gray-100 rounded-lg text-gray-600"
+                                    className="hidden md:block p-2 hover:bg-gray-100 rounded-lg text-gray-600 hover:text-gray-900 transition-colors"
                                     aria-label="Toggle sidebar"
                                 >
                                     {isSidebarMinimized ? (
@@ -159,12 +164,12 @@ function NavBar() {
                         </div>
 
                         {/* Navigation Items */}
-                        <nav className="flex-1 space-y-1">
+                        <nav className="flex-1 flex flex-col gap-2">
                             {sidebarItems.map((item) =>
                                 item.to === "logoutFn" ? (
                                     <button
                                         key={item.to}
-                                        className="group relative w-full "
+                                        className="group mt-auto w-full hover:scale-[0.98] transition-transform"
                                         onClick={() => {
                                             handleLogout();
                                             setIsSidebarOpen(false);
@@ -172,7 +177,7 @@ function NavBar() {
                                     >
                                         <div
                                             className={
-                                                "p-3 rounded-lg flex items-center gap-4 group transition-colors bg-danger text-white hover:bg-danger/90"
+                                                "p-3 rounded-lg flex items-center gap-4 bg-danger/90 text-white hover:bg-danger transition-colors"
                                             }
                                         >
                                             <span className="flex justify-center">
@@ -194,7 +199,7 @@ function NavBar() {
                                     <Link
                                         key={item.to}
                                         to={item.to}
-                                        className="group relative"
+                                        className="group relative hover:scale-[0.98] transition-transform"
                                         onClick={() => setIsSidebarOpen(false)}
                                     >
                                         {({ isActive }) => (
@@ -228,7 +233,7 @@ function NavBar() {
                             <div className="mt-8 pt-6 border-t border-gray-200">
                                 <p className="text-sm text-gray-500 text-center">
                                     © 2024{" "}
-                                    <span className="text-primary font-medium">
+                                    <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-medium">
                                         Your Brand
                                     </span>
                                 </p>
@@ -243,25 +248,30 @@ function NavBar() {
     }
 
     return (
-        <nav className="sticky top-0 bg-white shadow-sm z-30">
+        <nav className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-100 z-30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="h-16 flex items-center justify-between">
                     <Link
                         to="/"
-                        className="text-xl font-bold text-primary flex items-center gap-2"
+                        className="text-xl font-bold flex items-center gap-3 group"
                     >
-                        <GiVote className="text-2xl" />
-                        <span>Your Brand</span>
+                        <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                            <GiVote className="text-2xl text-primary" />
+                        </div>
+                        <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                            Your Brand
+                        </span>
                     </Link>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                         <Link to="/login">
                             {({ isActive }) => (
                                 <span
-                                    className={`px-4 py-2 rounded-md transition-colors
-                                            ${isActive
-                                            ? "bg-primary text-white"
-                                            : "text-gray-600 hover:bg-gray-100"
-                                        }`}
+                                    className={`px-5 py-2.5 rounded-lg transition-all duration-200 font-medium
+                    ${
+                        isActive
+                            ? "bg-primary text-white shadow-sm"
+                            : "text-gray-600 hover:bg-gray-50/80 hover:text-gray-900"
+                    }`}
                                 >
                                     Login
                                 </span>
@@ -270,11 +280,12 @@ function NavBar() {
                         <Link to="/signup">
                             {({ isActive }) => (
                                 <span
-                                    className={`px-4 py-2 rounded-md transition-colors
-                    ${isActive
-                                            ? "bg-primary text-white"
-                                            : "bg-primary/10 text-primary hover:bg-primary/20"
-                                        }`}
+                                    className={`px-5 py-2.5 rounded-lg transition-all duration-200 font-medium
+                    ${
+                        isActive
+                            ? "bg-primary text-white shadow-sm"
+                            : "bg-gradient-to-br from-primary/10 to-primary/5 text-primary hover:from-primary/20 hover:to-primary/10"
+                    }`}
                                 >
                                     Sign Up
                                 </span>
