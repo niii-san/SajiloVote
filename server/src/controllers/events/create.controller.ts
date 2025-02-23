@@ -5,7 +5,13 @@ import {
     ErrorResponse,
     isValidDate,
 } from "../../utils/index.js";
-import { User, Event, PollOption, VoteCandidate } from "../../models/index.js";
+import {
+    User,
+    Event,
+    PollOption,
+    VoteCandidate,
+    EventParticipant,
+} from "../../models/index.js";
 
 /**
  * **_Requires Authentication🚀_**
@@ -22,6 +28,10 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.user_id;
     const voteCandidates = req.body?.vote_candidates ?? [];
     const pollOptions = req.body?.poll_options ?? [];
+
+    if (!userId) {
+        throw new Error("user id not got");
+    }
 
     if (!title) {
         throw new ErrorResponse(400, "client_error", "event title is required");
@@ -115,15 +125,15 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
         startAt === "immediate"
             ? new Date()
             : startAt === "manual"
-                ? null
-                : new Date(startAt);
+              ? null
+              : new Date(startAt);
 
     const startType =
         startAt === "immediate"
             ? "immediate"
             : startAt === "manual"
-                ? "manual"
-                : "date";
+              ? "manual"
+              : "date";
 
     const event = await Event.create({
         title: title,
@@ -165,6 +175,11 @@ export const createEvent = asyncHandler(async (req: Request, res: Response) => {
             ),
         );
     }
+
+    await EventParticipant.create({
+        user_id: userId,
+        event_id: event.event_id,
+    });
 
     const createdEvent = await Event.findByPk(event.event_id, {
         include: ["vote_candidates", "poll_options"],

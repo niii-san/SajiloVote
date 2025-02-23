@@ -4,7 +4,14 @@ import {
     ErrorResponse,
     SuccessResponse,
 } from "../../utils/index.js";
-import { Event, User } from "../../models/index.js";
+import {
+    Event,
+    EventParticipant,
+    PollOption,
+    User,
+    VoteCandidate,
+} from "../../models/index.js";
+import { log } from "node:console";
 
 /**
  * Get all the Events posted by current user
@@ -62,3 +69,39 @@ export const getPreviewEvent = asyncHandler(
             .json(new SuccessResponse(200, "event fetched", event));
     },
 );
+
+export const getEvent = asyncHandler(async (req: Request, res: Response) => {
+    const { eventId } = req.params;
+    const userId = req.user?.user_id;
+
+    if (isNaN(Number(eventId))) {
+        throw new ErrorResponse(400, "client_error", "invalid event id");
+    }
+
+    const event = await Event.findByPk(eventId, {
+        include: [
+            { model: PollOption, as: "poll_options" },
+            { model: VoteCandidate, as: "vote_candidates" },
+            { model: EventParticipant, as: "event_participants" },
+        ],
+    });
+    if (!event) {
+        throw new ErrorResponse(404, "not_found", "event not found");
+    }
+
+    const hasUserParticipated = event.event_participants?.some(
+        (p) => p.user_id === userId,
+    );
+
+    if (!hasUserParticipated) {
+        throw new ErrorResponse(
+            403,
+            "not_allowed",
+            "user has not joined the event",
+        );
+    }
+
+    return res
+        .status(200)
+        .json(new SuccessResponse(200, "event fetched", event));
+});
