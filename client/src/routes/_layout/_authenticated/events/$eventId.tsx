@@ -20,6 +20,8 @@ import {
     FaPoll,
 } from "react-icons/fa";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
+import { useAuthStore } from "../../../../stores";
 
 export const Route = createFileRoute("/_layout/_authenticated/events/$eventId")(
     {
@@ -38,11 +40,13 @@ interface JoinedEventType extends Event {
 function RouteComponent() {
     const { eventId } = Route.useParams();
     const navigate = useNavigate();
+    const userData = useAuthStore((state) => state.userData);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [joinedEvent, setJoinedEvent] = useState<JoinedEventType | null>(
         null,
     );
+    console.log(joinedEvent);
     const [resErr, setResErr] = useState<string | null>(null);
 
     const fetchSetJointedEvent = async () => {
@@ -63,15 +67,55 @@ function RouteComponent() {
         }
     };
 
+    const handleLeaveEvent = async () => {
+        //TODO: handle leave event
+        console.log("Leave event");
+        // navigate({ to: "/events" });
+    };
+
+    const hasUserAlreadyVotedToCandidate = (): {
+        hasVoted: boolean;
+        recordId: null | number;
+    } => {
+        let indx = 0;
+        if (
+            joinedEvent?.vote_records.some((record, i) => {
+                indx = i;
+
+                return record.voter_id === userData?.user_id;
+            })
+        ) {
+            return {
+                hasVoted: true,
+                recordId: Number(
+                    joinedEvent?.vote_records[indx].voted_candidate_id,
+                ),
+            };
+        }
+        return {
+            hasVoted: false,
+            recordId: null,
+        };
+    };
+
+    const handleVoteCandidate = async (voteCandidateId: number) => {
+        if (!hasUserAlreadyVotedToCandidate().hasVoted) {
+            try {
+                const res = await api.post(
+                    `/api/v1/events/${eventId}/candidate/${voteCandidateId}/vote`,
+                );
+                if (res.data.success) {
+                    fetchSetJointedEvent();
+                }
+            } catch (error: any) {
+                toast.error(error.response.data.message);
+            }
+        }
+    };
+
     useEffect(() => {
         fetchSetJointedEvent();
     }, []);
-
-    const handleLeaveEvent = async () => {
-        // Implement leave event logic here
-        console.log("Leave event");
-        navigate({ to: "/events" });
-    };
 
     if (loading) {
         return <Loader />;
@@ -93,6 +137,7 @@ function RouteComponent() {
             </div>
         );
     }
+    const voteStatus = hasUserAlreadyVotedToCandidate();
 
     return (
         <div className="min-h-screen w-full bg-gray-50 p-6 md:p-8 lg:p-12">
@@ -230,11 +275,23 @@ function RouteComponent() {
                                                     candidate.vote_candidate_id
                                                 }
                                                 className="flex items-center gap-3 p-4 border rounded-lg hover:border-blue-400 transition-all cursor-pointer"
+                                                onClick={() =>
+                                                    handleVoteCandidate(
+                                                        candidate.vote_candidate_id,
+                                                    )
+                                                }
                                             >
                                                 <input
                                                     type="radio"
                                                     name="vote"
                                                     className="h-5 w-5 text-blue-500"
+                                                    checked={
+                                                        voteStatus.recordId ===
+                                                        candidate.vote_candidate_id
+                                                    }
+                                                    disabled={
+                                                        voteStatus.hasVoted
+                                                    }
                                                     id={candidate.vote_candidate_id.toString()}
                                                 />
                                                 <span className="text-gray-700">
