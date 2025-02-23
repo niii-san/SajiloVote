@@ -10,6 +10,7 @@ import {
     PollOption,
     User,
     VoteCandidate,
+    VoteRecord,
 } from "../../models/index.js";
 import { log } from "node:console";
 
@@ -83,6 +84,12 @@ export const getEvent = asyncHandler(async (req: Request, res: Response) => {
             { model: PollOption, as: "poll_options" },
             { model: VoteCandidate, as: "vote_candidates" },
             { model: EventParticipant, as: "event_participants" },
+            { model: VoteRecord, as: "vote_records" },
+            {
+                model: User,
+                as: "creator",
+                attributes: { exclude: ["password", "refresh_token", "email"] },
+            },
         ],
     });
     if (!event) {
