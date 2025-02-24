@@ -73,9 +73,9 @@ function RouteComponent() {
 
     const hasUserAlreadyVotedToCandidate = (): {
         hasVoted: boolean;
-        recordId: null | number;
+        voted_candidate_id: null | number;
     } => {
-        let indx = 0;
+        let indx = -1;
         if (
             joinedEvent?.vote_records.some((record, i) => {
                 indx = i;
@@ -84,14 +84,14 @@ function RouteComponent() {
         ) {
             return {
                 hasVoted: true,
-                recordId: Number(
+                voted_candidate_id: Number(
                     joinedEvent?.vote_records[indx].voted_candidate_id,
                 ),
             };
         }
         return {
             hasVoted: false,
-            recordId: null,
+            voted_candidate_id: null,
         };
     };
 
@@ -100,6 +100,48 @@ function RouteComponent() {
             try {
                 const res = await api.post(
                     `/api/v1/events/${eventId}/candidate/${voteCandidateId}/vote`,
+                );
+                if (res.data.success) {
+                    fetchSetJointedEvent();
+                }
+            } catch (error: any) {
+                toast.error(error.response.data.message);
+            }
+        }
+    };
+
+    const hasUserAlreadyVotedToOption = (): {
+        poll_option_id: number | null;
+        hasVoted: boolean;
+    } => {
+        let indx = -1;
+
+        if (joinedEvent?.poll_options.length === 0) {
+            return { poll_option_id: null, hasVoted: false };
+        }
+
+        if (
+            joinedEvent?.vote_records.some((record, i) => {
+                indx = i;
+                return record.voter_id === userData?.user_id;
+            })
+        ) {
+            return {
+                hasVoted: true,
+                poll_option_id: Number(
+                    joinedEvent?.vote_records[indx].voted_option_id,
+                ),
+            };
+        }
+
+        return { poll_option_id: null, hasVoted: false };
+    };
+
+    const handleVoteOption = async (pollOptionId: number) => {
+        if (!hasUserAlreadyVotedToOption().hasVoted) {
+            try {
+                const res = await api.post(
+                    `/api/v1/events/${eventId}/option/${pollOptionId}/vote`,
                 );
                 if (res.data.success) {
                     fetchSetJointedEvent();
@@ -138,7 +180,8 @@ function RouteComponent() {
         );
     }
 
-    const voteStatus = hasUserAlreadyVotedToCandidate();
+    const candidateVoteStatus = hasUserAlreadyVotedToCandidate();
+    const pollVoteStatus = hasUserAlreadyVotedToOption();
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 p-6 md:p-8 lg:p-12">
@@ -204,15 +247,15 @@ function RouteComponent() {
                                         </p>
                                         <p className="font-medium text-gray-900">
                                             {joinedEvent?.start_type ===
-                                            "manual"
+                                                "manual"
                                                 ? "Manual Start"
                                                 : format(
-                                                      new Date(
-                                                          joinedEvent?.start_at ??
-                                                              new Date(),
-                                                      ),
-                                                      "PPp",
-                                                  )}
+                                                    new Date(
+                                                        joinedEvent?.start_at ??
+                                                        new Date(),
+                                                    ),
+                                                    "PPp",
+                                                )}
                                         </p>
                                     </div>
                                 </div>
@@ -228,7 +271,7 @@ function RouteComponent() {
                                             {format(
                                                 new Date(
                                                     joinedEvent?.end_at ??
-                                                        new Date(),
+                                                    new Date(),
                                                 ),
                                                 "PPp",
                                             )}
@@ -252,13 +295,21 @@ function RouteComponent() {
                                 <div className="space-y-4">
                                     {joinedEvent?.poll_options.map((option) => (
                                         <label
-                                            key={option.option_id}
+                                            key={option.poll_option_id}
                                             className="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-blue-300 transition-all cursor-pointer group"
+                                            onClick={() =>
+                                                handleVoteOption(
+                                                    option.poll_option_id,
+                                                )
+                                            }
                                         >
                                             <div className="flex items-center justify-center h-6 w-6 border-2 border-gray-300 rounded-full group-hover:border-blue-400 transition-colors">
                                                 <input
                                                     type="radio"
                                                     name="poll"
+                                                    disabled={
+                                                        pollVoteStatus.hasVoted
+                                                    }
                                                     className="opacity-0 absolute"
                                                 />
                                                 <span className="h-3 w-3 bg-transparent rounded-full group-hover:bg-blue-100 transition-colors" />
@@ -293,28 +344,26 @@ function RouteComponent() {
                                                     )
                                                 }
                                                 className={`p-4 border rounded-xl cursor-pointer transition-all
-                                                    ${voteStatus.hasVoted ? "opacity-75" : "hover:border-blue-400 hover:bg-blue-50"}
-                                                    ${
-                                                        voteStatus.recordId ===
+                                                    ${candidateVoteStatus.hasVoted ? "opacity-75" : "hover:border-blue-400 hover:bg-blue-50"}
+                                                    ${candidateVoteStatus.voted_candidate_id ===
                                                         candidate.vote_candidate_id
-                                                            ? "border-blue-400 bg-blue-50"
-                                                            : "border-gray-200"
+                                                        ? "border-blue-400 bg-blue-50"
+                                                        : "border-gray-200"
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div
                                                         className={`flex items-center justify-center h-6 w-6 rounded-full 
-                                                        ${
-                                                            voteStatus.recordId ===
-                                                            candidate.vote_candidate_id
+                                                        ${candidateVoteStatus.voted_candidate_id ===
+                                                                candidate.vote_candidate_id
                                                                 ? "bg-blue-500 text-white"
                                                                 : "bg-gray-100"
-                                                        }`}
+                                                            }`}
                                                     >
-                                                        {voteStatus.recordId ===
+                                                        {candidateVoteStatus.voted_candidate_id ===
                                                             candidate.vote_candidate_id && (
-                                                            <FaCheck className="text-sm" />
-                                                        )}
+                                                                <FaCheck className="text-sm" />
+                                                            )}
                                                     </div>
                                                     <span className="text-gray-900 font-medium">
                                                         {

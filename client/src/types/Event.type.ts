@@ -20,7 +20,7 @@ export interface EventParticipantType {
 }
 
 export interface PollOptionsType {
-    option_id: number;
+    poll_option_id: number;
     option_text: string;
 }
 export interface VoteCandidateType {
@@ -33,6 +33,7 @@ export interface VoteRecordType {
     vote_record_id: number;
     event_id: number;
     voted_candidate_id: number;
+    voted_option_id: number;
     voter_id: number;
     created_at: string;
     updated_at: string;
