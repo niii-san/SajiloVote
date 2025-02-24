@@ -8,6 +8,8 @@ import {
 } from "react-icons/fa";
 import { EventParticipantType, Event, User } from "../types";
 import { api, capitalize } from "../utils";
+import { useAuthStore } from "../stores";
+import Loader from "./Loader";
 
 interface EventWithCreator extends Event {
     creator: User;
@@ -21,6 +23,8 @@ function ParticipatedEvents() {
     const [participatedEvents, setParticipatedEvents] = useState<
         ParticiaptedEvent[]
     >([]);
+
+    const userData = useAuthStore((state) => state.userData);
 
     const fetchSetParticipatedEvents = async () => {
         try {
@@ -80,12 +84,27 @@ function ParticipatedEvents() {
         }
     };
 
+    if (!userData) {
+        return <Loader />;
+    }
+
+    const participateLength = () => {
+        let count = 0;
+        participatedEvents.forEach((item) => {
+            if (item.event.creator.user_id !== userData.user_id) {
+                count++;
+            }
+        });
+
+        return count;
+    };
+
     return (
         <div className="bg-white rounded-xl p-6 shadow-lg max-w-6xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                 Participated Events
                 <span className="text-blue-600 text-lg">
-                    ({participatedEvents.length})
+                    {participateLength()}
                 </span>
             </h2>
 
@@ -99,60 +118,64 @@ function ParticipatedEvents() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {participatedEvents.map((item) => {
                         const status = getEventStatus(item.event);
-                        return (
-                            <div
-                                key={item.event_id}
-                                className="border rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
-                            >
-                                <div className="flex justify-between items-start mb-3">
-                                    <h3 className="text-lg font-semibold text-gray-800 truncate">
-                                        {item.event.title}
-                                    </h3>
-                                    <span className="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-50 rounded-full">
-                                        {item.event.type}
-                                    </span>
-                                </div>
+                        if (item.event.creator.user_id !== userData.user_id) {
+                            return (
+                                <div
+                                    key={item.event_id}
+                                    className="border rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
+                                >
+                                    <div className="flex justify-between items-start mb-3">
+                                        <h3 className="text-lg font-semibold text-gray-800 truncate">
+                                            {item.event.title}
+                                        </h3>
+                                        <span className="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-50 rounded-full">
+                                            {item.event.type}
+                                        </span>
+                                    </div>
 
-                                <div className="flex items-center gap-2 mb-4">
-                                    <span
-                                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${status.color}`}
-                                    >
-                                        <status.icon className="w-4 h-4 mr-1" />
-                                        {status.status}
-                                    </span>
-                                </div>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <span
+                                            className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${status.color}`}
+                                        >
+                                            <status.icon className="w-4 h-4 mr-1" />
+                                            {status.status}
+                                        </span>
+                                    </div>
 
-                                <div className="space-y-2 text-sm text-gray-600">
-                                    <div className="flex items-center gap-2">
-                                        <FaClock className="w-4 h-4 text-gray-400" />
-                                        <span>
-                                            {formatDate(
-                                                item.event.start_at ?? "",
+                                    <div className="space-y-2 text-sm text-gray-600">
+                                        <div className="flex items-center gap-2">
+                                            <FaClock className="w-4 h-4 text-gray-400" />
+                                            <span>
+                                                {formatDate(
+                                                    item.event.start_at ?? "",
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <FaTimesCircle className="w-4 h-4 text-gray-400" />
+                                            <span>
+                                                {formatDate(item.event.end_at)}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 pt-3 border-t border-gray-100 flex items-center gap-2">
+                                        <FaUserCircle className="w-6 h-6 text-gray-400" />
+                                        <span className="text-sm text-gray-600">
+                                            Created by{" "}
+                                            {capitalize(
+                                                item.event.creator.first_name ??
+                                                "",
+                                            )}{" "}
+                                            {capitalize(
+                                                item.event.creator.last_name ??
+                                                "",
                                             )}
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <FaTimesCircle className="w-4 h-4 text-gray-400" />
-                                        <span>
-                                            {formatDate(item.event.end_at)}
-                                        </span>
-                                    </div>
                                 </div>
-
-                                <div className="mt-4 pt-3 border-t border-gray-100 flex items-center gap-2">
-                                    <FaUserCircle className="w-6 h-6 text-gray-400" />
-                                    <span className="text-sm text-gray-600">
-                                        Created by{" "}
-                                        {capitalize(
-                                            item.event.creator.first_name ?? "",
-                                        )}{" "}
-                                        {capitalize(
-                                            item.event.creator.last_name ?? "",
-                                        )}
-                                    </span>
-                                </div>
-                            </div>
-                        );
+                            );
+                        }
                     })}
                 </div>
             )}
