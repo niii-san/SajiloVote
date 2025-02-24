@@ -13,7 +13,8 @@ import {
     AutoIncrement,
     Table,
     BelongsTo,
-    HasOne,
+    CreatedAt,
+    UpdatedAt,
 } from "@sequelize/core/decorators-legacy";
 import { Event } from "./event.model.js";
 
@@ -160,4 +161,10 @@ export class EventParticipant extends Model<
         },
     })
     declare event?: NonAttribute<Event>;
+
+    @CreatedAt
+    declare created_at: CreationOptional<Date>;
+
+    @UpdatedAt
+    declare updated_at: CreationOptional<Date>;
 }
