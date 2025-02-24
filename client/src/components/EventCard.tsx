@@ -9,8 +9,16 @@ import {
     FaArrowRight,
     FaTrash,
 } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { api } from "../utils";
 
-export default function EventCard({ eventData }: { eventData: Event }) {
+export default function EventCard({
+    eventData,
+    refetchEvents,
+}: {
+    eventData: Event;
+    refetchEvents: () => void;
+}) {
     function formatDate(timestamp: string | null) {
         if (!timestamp) return "Manual";
         const date = new Date(timestamp);
@@ -68,6 +76,18 @@ export default function EventCard({ eventData }: { eventData: Event }) {
         }
     }
 
+    const handleDelete = async (eventId: number) => {
+        try {
+            const res = await api.delete(`/api/v1/events/${eventId}`);
+            if (res.data.success) {
+                refetchEvents();
+                toast.success("Event deleted successfully");
+            }
+        } catch (error) {
+            toast.error("Failed to delete event");
+        }
+    };
+
     const {
         status,
         color,
@@ -123,8 +143,9 @@ export default function EventCard({ eventData }: { eventData: Event }) {
                     <Button
                         className="w-fit px-6 py-3 bg-red-500 border-red-500 hover:bg-red-600 text-white gap-2"
                         onClick={() => {
-                            /* Add delete handler */
+                            handleDelete(eventData.event_id);
                         }}
+                    /* Add delete handler */
                     >
                         <FaTrash className="w-5 h-5" />
                     </Button>

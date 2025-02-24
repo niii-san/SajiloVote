@@ -39,7 +39,11 @@ function CreatedEvents() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {createdEvents.map((item) => (
-                    <EventCard eventData={item} key={item.event_id} />
+                    <EventCard
+                        eventData={item}
+                        key={item.event_id}
+                        refetchEvents={fetchSetCreatedEvents}
+                    />
                 ))}
             </div>
         </div>
