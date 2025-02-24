@@ -24,8 +24,8 @@ function RouteComponent() {
             if (response.data?.success) {
                 login();
             }
-        } catch (error) {
-            console.error("Token verification failed:", error);
+        } catch (_) {
+            console.error("Token verification failed");
             logout();
         } finally {
             setLoading(false);

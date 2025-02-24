@@ -32,8 +32,6 @@ export const useAuthStore = create<State & Actions>((set, get) => ({
         set({ userDataLoading: true });
         try {
             const res = await api.get("/api/v1/auth/user-data");
-            console.log(res.data.data);
-            
             set({ userData: res.data.data });
         } catch (error) {
             console.error("Failed to set user data.. auth store, ", error);

@@ -4,7 +4,6 @@ import { Loader } from "../../components";
 
 export const Route = createFileRoute("/_layout/_authenticated")({
     beforeLoad: async ({ context, location }) => {
-        console.log("Current location:", location);
         await context.AuthStore.verify();
         const { isLoggedIn } = context.AuthStore;
         if (!isLoggedIn) {

@@ -68,7 +68,7 @@ function RouteComponent() {
     };
 
     const handleLeaveEvent = async () => {
-        console.log("Leave event");
+        console.log("Leaving ");
     };
 
     const hasUserAlreadyVotedToCandidate = (): {

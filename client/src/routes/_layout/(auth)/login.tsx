@@ -59,7 +59,6 @@ function RouteComponent() {
             login();
         } catch (error: any) {
             setResErr(error.response?.data?.message);
-            console.error(error);
         } finally {
             setLoading(false);
         }
