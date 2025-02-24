@@ -133,6 +133,19 @@ export const getParticipatedEvents = asyncHandler(
 
         const participated_events = await EventParticipant.findAll({
             where: { user_id: userId },
+            include: [
+                {
+                    model: Event,
+                    as: "event",
+                    include: {
+                        model: User,
+                        as: "creator",
+                        attributes: {
+                            exclude: ["password", "refresh_token", "email"],
+                        },
+                    },
+                },
+            ],
         });
 
         return res
