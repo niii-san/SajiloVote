@@ -8,6 +8,7 @@ import { createEvent } from "./events/create.controller.js";
 import {
     getEvent,
     getEventsCreatedByCurrentUser,
+    getParticipatedEvents,
     getPreviewEvent,
 } from "./events/get.controllers.js";
 import { joinEvent } from "./events/join.controller.js";
@@ -27,4 +28,5 @@ export {
     getEvent,
     voteForCandidate,
     voteForOption,
+    getParticipatedEvents,
 };

@@ -117,3 +117,32 @@ export const getEvent = asyncHandler(async (req: Request, res: Response) => {
         .status(200)
         .json(new SuccessResponse(200, "event fetched", event));
 });
+
+/**
+ * Get all the events participated by current user
+ *
+ * **_Requires Authentication🚀_**
+ */
+export const getParticipatedEvents = asyncHandler(
+    async (req: Request, res: Response) => {
+        const userId = req.user?.user_id;
+
+        if (!userId) {
+            throw new Error("server was not able to get user id");
+        }
+
+        const participated_events = await EventParticipant.findAll({
+            where: { user_id: userId },
+        });
+
+        return res
+            .status(200)
+            .json(
+                new SuccessResponse(
+                    200,
+                    "participated events fetched",
+                    participated_events,
+                ),
+            );
+    },
+);
