@@ -7,6 +7,7 @@ import Input from "./Input";
 import Label from "./Label";
 import Loader from "./Loader";
 import NavBar from "./NavBar";
+import ParticipatedEvents from "./ParticipatedEvents";
 
 export {
     Button,
@@ -18,4 +19,5 @@ export {
     EventCard,
     CreatedEvents,
     ConfirmJoinModal,
+    ParticipatedEvents,
 };

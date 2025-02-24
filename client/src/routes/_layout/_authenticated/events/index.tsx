@@ -1,5 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Button, CreatedEvents } from "../../../../components";
+import {
+    Button,
+    CreatedEvents,
+    ParticipatedEvents,
+} from "../../../../components";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_layout/_authenticated/events/")({
@@ -60,15 +64,7 @@ function RouteComponent() {
                 </div>{" "}
                 <div className="space-y-12">
                     <CreatedEvents />
-
-                    <section className="bg-white rounded-xl p-6 shadow-sm">
-                        <h2 className="text-xl font-semibold text-gray-700 mb-4">
-                            Participated Events
-                        </h2>
-                        <div className="text-gray-500 italic">
-                            No events participated yet
-                        </div>
-                    </section>
+                    <ParticipatedEvents />
                 </div>
                 <Link to={"/events/create"}>
                     <Button className="fixed md:hidden bottom-8 right-8 w-14 h-14 rounded-full shadow-lg">
