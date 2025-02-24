@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authenticate } from "../middlewares/index.js";
 import {
     createEvent,
+    deleteEvent,
     getEvent,
     getEventsCreatedByCurrentUser,
     getParticipatedEvents,
@@ -44,3 +45,4 @@ eventsRouter.get("/participated", authenticate, getParticipatedEvents);
 
 // get event for event room / after joining event
 eventsRouter.get("/:eventId", authenticate, getEvent);
+eventsRouter.delete("/:eventId", authenticate, deleteEvent);
