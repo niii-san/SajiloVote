@@ -3,7 +3,6 @@ import { useAuthStore } from "../../stores";
 import { Button, Loader } from "../../components";
 import { capitalize } from "../../utils";
 import { FiCheck, FiStar, FiAward, FiUsers, FiPlus } from "react-icons/fi";
-import { TfiTicket } from "react-icons/tfi";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -159,12 +158,11 @@ function RouteComponent() {
                         </h1>
 
                         <div className="w-[90%] md:w-[70%] lg:w-[60%] mx-auto flex group relative">
-                            <TfiTicket className="absolute left-4 top-1/2 -translate-y-1/2 text-dark_text/50 w-5 h-5" />
                             <input
                                 type="text"
                                 value={joinVal}
                                 onChange={(e) => setJoinVal(e.target.value)}
-                                placeholder="Event code (e.g. X9F3K7)"
+                                placeholder="Event code (e.g. 123)"
                                 className="w-full border-2 border-primary/50 bg-white/95 focus:bg-white
                                        text-dark_text px-12 py-3 text-lg focus:outline-none placeholder-gray-500
                                        transition-all duration-200 h-[48px] rounded-l-lg shadow-sm
@@ -190,19 +188,16 @@ function RouteComponent() {
                 <div className="grid md:grid-cols-2 gap-8 mt-28">
                     <motion.div
                         whileHover={{ y: -5 }}
-                        className="bg-primary text-white p-8 rounded-2xl shadow-lg border-2 border-primary/80"
+                        className="bg-white text-black p-8 rounded-2xl shadow-lg border-2"
                     >
-                        <FiAward className="w-12 h-12 mb-6 text-secondary" />
+                        <FiAward className="w-12 h-12 mb-6 text-primary" />
                         <h2 className="text-2xl font-bold mb-4">
                             Explore Events
                         </h2>
                         <p className="mb-6 opacity-90">
                             Discover trending competitions and cast your votes
                         </p>
-                        <Button
-                            onClick={() => navigate({ to: "/events" })}
-                            className="bg-white text-dark_text hover:bg-white shadow-md hover:shadow-lg"
-                        >
+                        <Button onClick={() => navigate({ to: "/events" })}>
                             Browse Events
                         </Button>
                     </motion.div>
