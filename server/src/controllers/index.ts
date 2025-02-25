@@ -19,6 +19,7 @@ import {
     updateLastName,
 } from "./user/updateNames.controller.js";
 import { updateEmail } from "./user/updateEmail.controller.js";
+import { updatePassword } from "./user/updatePassword.controller.js";
 
 export {
     login,
@@ -39,4 +40,5 @@ export {
     updateFirstName,
     updateLastName,
     updateEmail,
+    updatePassword,
 };
