@@ -40,6 +40,8 @@ function RouteComponent() {
             if (error.response.data.reason === "not_found") {
                 setErr("Event not found");
             }
+
+            setErr(error.response.data.message ?? "Something went wrong");
         } finally {
             setLoading(false);
         }
@@ -79,7 +81,7 @@ function RouteComponent() {
                     <p className="text-gray-600">{err}</p>
                     <Button
                         onClick={() => window.history.back()}
-                        className="w-full mt-4 bg-red-600 hover:bg-red-700"
+                        className="w-full mt-4 bg-red-600 border-red-600 hover:bg-red-700"
                     >
                         Go back
                     </Button>
