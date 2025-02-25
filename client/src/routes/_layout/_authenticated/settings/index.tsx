@@ -55,7 +55,25 @@ function RouteComponent() {
         }
     };
     const updateLastName = async () => {
-        console.log("update last name");
+        if (firstNameUpdating || emailUpdating) {
+            toast.error("Please wait other fields are updating");
+            return;
+        }
+        setLastNameUpdating(true);
+
+        try {
+            const res = await api.put("/api/v1/users/update/last-name", {
+                new_last_name: lastName,
+            });
+            if (res.data.success) {
+                invalidateUserData();
+                toast.success("Last name updated");
+            }
+        } catch (error: any) {
+            setLastNameErr(
+                error.response.data.message ?? "Something went wrong",
+            );
+        }
     };
     const updateEmail = async () => {
         console.log("update email");
