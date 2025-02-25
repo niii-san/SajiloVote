@@ -17,7 +17,7 @@ import { deleteEvent } from "./events/delete.controller.js";
 import {
     updateFirstName,
     updateLastName,
-} from "./auth/updateNames.controller.js";
+} from "./user/updateNames.controller.js";
 
 export {
     login,

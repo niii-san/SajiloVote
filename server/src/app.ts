@@ -43,7 +43,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/events", eventsRouter);
 
 // Account routing
-app.use("/api/v1/account", accountRouter);
+app.use("/api/v1/users", accountRouter);
 
 // Error response handler at last after all route
 app.use(responseErrorHandler);
