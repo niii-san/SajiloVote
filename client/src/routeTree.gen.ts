@@ -19,6 +19,7 @@ import { Route as LayoutauthLoginImport } from "./routes/_layout/(auth)/login"
 import { Route as LayoutAuthenticatedSettingsIndexImport } from "./routes/_layout/_authenticated/settings/index"
 import { Route as LayoutAuthenticatedJoinIndexImport } from "./routes/_layout/_authenticated/join/index"
 import { Route as LayoutAuthenticatedEventsIndexImport } from "./routes/_layout/_authenticated/events/index"
+import { Route as LayoutAuthenticatedSettingsUpdatePasswordImport } from "./routes/_layout/_authenticated/settings/update-password"
 import { Route as LayoutAuthenticatedJoinEventIdImport } from "./routes/_layout/_authenticated/join/$eventId"
 import { Route as LayoutAuthenticatedEventsCreateImport } from "./routes/_layout/_authenticated/events/create"
 import { Route as LayoutAuthenticatedEventsEventIdImport } from "./routes/_layout/_authenticated/events/$eventId"
@@ -71,6 +72,13 @@ const LayoutAuthenticatedEventsIndexRoute =
   LayoutAuthenticatedEventsIndexImport.update({
     id: "/events/",
     path: "/events/",
+    getParentRoute: () => LayoutAuthenticatedRoute,
+  } as any)
+
+const LayoutAuthenticatedSettingsUpdatePasswordRoute =
+  LayoutAuthenticatedSettingsUpdatePasswordImport.update({
+    id: "/settings/update-password",
+    path: "/settings/update-password",
     getParentRoute: () => LayoutAuthenticatedRoute,
   } as any)
 
@@ -155,6 +163,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutAuthenticatedJoinEventIdImport
       parentRoute: typeof LayoutAuthenticatedImport
     }
+    "/_layout/_authenticated/settings/update-password": {
+      id: "/_layout/_authenticated/settings/update-password"
+      path: "/settings/update-password"
+      fullPath: "/settings/update-password"
+      preLoaderRoute: typeof LayoutAuthenticatedSettingsUpdatePasswordImport
+      parentRoute: typeof LayoutAuthenticatedImport
+    }
     "/_layout/_authenticated/events/": {
       id: "/_layout/_authenticated/events/"
       path: "/events"
@@ -185,6 +200,7 @@ interface LayoutAuthenticatedRouteChildren {
   LayoutAuthenticatedEventsEventIdRoute: typeof LayoutAuthenticatedEventsEventIdRoute
   LayoutAuthenticatedEventsCreateRoute: typeof LayoutAuthenticatedEventsCreateRoute
   LayoutAuthenticatedJoinEventIdRoute: typeof LayoutAuthenticatedJoinEventIdRoute
+  LayoutAuthenticatedSettingsUpdatePasswordRoute: typeof LayoutAuthenticatedSettingsUpdatePasswordRoute
   LayoutAuthenticatedEventsIndexRoute: typeof LayoutAuthenticatedEventsIndexRoute
   LayoutAuthenticatedJoinIndexRoute: typeof LayoutAuthenticatedJoinIndexRoute
   LayoutAuthenticatedSettingsIndexRoute: typeof LayoutAuthenticatedSettingsIndexRoute
@@ -194,6 +210,8 @@ const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
   LayoutAuthenticatedEventsEventIdRoute: LayoutAuthenticatedEventsEventIdRoute,
   LayoutAuthenticatedEventsCreateRoute: LayoutAuthenticatedEventsCreateRoute,
   LayoutAuthenticatedJoinEventIdRoute: LayoutAuthenticatedJoinEventIdRoute,
+  LayoutAuthenticatedSettingsUpdatePasswordRoute:
+    LayoutAuthenticatedSettingsUpdatePasswordRoute,
   LayoutAuthenticatedEventsIndexRoute: LayoutAuthenticatedEventsIndexRoute,
   LayoutAuthenticatedJoinIndexRoute: LayoutAuthenticatedJoinIndexRoute,
   LayoutAuthenticatedSettingsIndexRoute: LayoutAuthenticatedSettingsIndexRoute,
@@ -227,6 +245,7 @@ export interface FileRoutesByFullPath {
   "/events/$eventId": typeof LayoutAuthenticatedEventsEventIdRoute
   "/events/create": typeof LayoutAuthenticatedEventsCreateRoute
   "/join/$eventId": typeof LayoutAuthenticatedJoinEventIdRoute
+  "/settings/update-password": typeof LayoutAuthenticatedSettingsUpdatePasswordRoute
   "/events": typeof LayoutAuthenticatedEventsIndexRoute
   "/join": typeof LayoutAuthenticatedJoinIndexRoute
   "/settings": typeof LayoutAuthenticatedSettingsIndexRoute
@@ -240,6 +259,7 @@ export interface FileRoutesByTo {
   "/events/$eventId": typeof LayoutAuthenticatedEventsEventIdRoute
   "/events/create": typeof LayoutAuthenticatedEventsCreateRoute
   "/join/$eventId": typeof LayoutAuthenticatedJoinEventIdRoute
+  "/settings/update-password": typeof LayoutAuthenticatedSettingsUpdatePasswordRoute
   "/events": typeof LayoutAuthenticatedEventsIndexRoute
   "/join": typeof LayoutAuthenticatedJoinIndexRoute
   "/settings": typeof LayoutAuthenticatedSettingsIndexRoute
@@ -255,6 +275,7 @@ export interface FileRoutesById {
   "/_layout/_authenticated/events/$eventId": typeof LayoutAuthenticatedEventsEventIdRoute
   "/_layout/_authenticated/events/create": typeof LayoutAuthenticatedEventsCreateRoute
   "/_layout/_authenticated/join/$eventId": typeof LayoutAuthenticatedJoinEventIdRoute
+  "/_layout/_authenticated/settings/update-password": typeof LayoutAuthenticatedSettingsUpdatePasswordRoute
   "/_layout/_authenticated/events/": typeof LayoutAuthenticatedEventsIndexRoute
   "/_layout/_authenticated/join/": typeof LayoutAuthenticatedJoinIndexRoute
   "/_layout/_authenticated/settings/": typeof LayoutAuthenticatedSettingsIndexRoute
@@ -270,6 +291,7 @@ export interface FileRouteTypes {
     | "/events/$eventId"
     | "/events/create"
     | "/join/$eventId"
+    | "/settings/update-password"
     | "/events"
     | "/join"
     | "/settings"
@@ -282,6 +304,7 @@ export interface FileRouteTypes {
     | "/events/$eventId"
     | "/events/create"
     | "/join/$eventId"
+    | "/settings/update-password"
     | "/events"
     | "/join"
     | "/settings"
@@ -295,6 +318,7 @@ export interface FileRouteTypes {
     | "/_layout/_authenticated/events/$eventId"
     | "/_layout/_authenticated/events/create"
     | "/_layout/_authenticated/join/$eventId"
+    | "/_layout/_authenticated/settings/update-password"
     | "/_layout/_authenticated/events/"
     | "/_layout/_authenticated/join/"
     | "/_layout/_authenticated/settings/"
@@ -338,6 +362,7 @@ export const routeTree = rootRoute
         "/_layout/_authenticated/events/$eventId",
         "/_layout/_authenticated/events/create",
         "/_layout/_authenticated/join/$eventId",
+        "/_layout/_authenticated/settings/update-password",
         "/_layout/_authenticated/events/",
         "/_layout/_authenticated/join/",
         "/_layout/_authenticated/settings/"
@@ -365,6 +390,10 @@ export const routeTree = rootRoute
     },
     "/_layout/_authenticated/join/$eventId": {
       "filePath": "_layout/_authenticated/join/$eventId.tsx",
+      "parent": "/_layout/_authenticated"
+    },
+    "/_layout/_authenticated/settings/update-password": {
+      "filePath": "_layout/_authenticated/settings/update-password.tsx",
       "parent": "/_layout/_authenticated"
     },
     "/_layout/_authenticated/events/": {
