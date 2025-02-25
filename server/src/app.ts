@@ -35,12 +35,15 @@ app.get("/", async (req: Request, res: Response) => {
     res.status(200).json(requestData);
 });
 
-import { authRouter, eventsRouter } from "./routes/index.js";
+import { authRouter, eventsRouter, accountRouter } from "./routes/index.js";
 // Auth routing
 app.use("/api/v1/auth", authRouter);
 
 // Events routing
 app.use("/api/v1/events", eventsRouter);
+
+// Account routing
+app.use("/api/v1/account", accountRouter);
 
 // Error response handler at last after all route
 app.use(responseErrorHandler);

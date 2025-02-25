@@ -14,6 +14,7 @@ import {
 import { joinEvent } from "./events/join.controller.js";
 import { voteForCandidate, voteForOption } from "./events/vote.controller.js";
 import { deleteEvent } from "./events/delete.controller.js";
+import { updateFirstName } from "./auth/updateNames.controller.js";
 
 export {
     login,
@@ -31,4 +32,5 @@ export {
     voteForOption,
     getParticipatedEvents,
     deleteEvent,
+    updateFirstName,
 };
