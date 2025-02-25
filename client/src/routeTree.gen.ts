@@ -14,9 +14,9 @@ import { Route as rootRoute } from "./routes/__root"
 import { Route as LayoutImport } from "./routes/_layout"
 import { Route as LayoutIndexImport } from "./routes/_layout/index"
 import { Route as LayoutAuthenticatedImport } from "./routes/_layout/_authenticated"
-import { Route as LayoutAuthenticatedSettingsImport } from "./routes/_layout/_authenticated/settings"
 import { Route as LayoutauthSignupImport } from "./routes/_layout/(auth)/signup"
 import { Route as LayoutauthLoginImport } from "./routes/_layout/(auth)/login"
+import { Route as LayoutAuthenticatedSettingsIndexImport } from "./routes/_layout/_authenticated/settings/index"
 import { Route as LayoutAuthenticatedJoinIndexImport } from "./routes/_layout/_authenticated/join/index"
 import { Route as LayoutAuthenticatedEventsIndexImport } from "./routes/_layout/_authenticated/events/index"
 import { Route as LayoutAuthenticatedJoinEventIdImport } from "./routes/_layout/_authenticated/join/$eventId"
@@ -41,13 +41,6 @@ const LayoutAuthenticatedRoute = LayoutAuthenticatedImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutAuthenticatedSettingsRoute =
-  LayoutAuthenticatedSettingsImport.update({
-    id: "/settings",
-    path: "/settings",
-    getParentRoute: () => LayoutAuthenticatedRoute,
-  } as any)
-
 const LayoutauthSignupRoute = LayoutauthSignupImport.update({
   id: "/(auth)/signup",
   path: "/signup",
@@ -59,6 +52,13 @@ const LayoutauthLoginRoute = LayoutauthLoginImport.update({
   path: "/login",
   getParentRoute: () => LayoutRoute,
 } as any)
+
+const LayoutAuthenticatedSettingsIndexRoute =
+  LayoutAuthenticatedSettingsIndexImport.update({
+    id: "/settings/",
+    path: "/settings/",
+    getParentRoute: () => LayoutAuthenticatedRoute,
+  } as any)
 
 const LayoutAuthenticatedJoinIndexRoute =
   LayoutAuthenticatedJoinIndexImport.update({
@@ -134,13 +134,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutauthSignupImport
       parentRoute: typeof LayoutImport
     }
-    "/_layout/_authenticated/settings": {
-      id: "/_layout/_authenticated/settings"
-      path: "/settings"
-      fullPath: "/settings"
-      preLoaderRoute: typeof LayoutAuthenticatedSettingsImport
-      parentRoute: typeof LayoutAuthenticatedImport
-    }
     "/_layout/_authenticated/events/$eventId": {
       id: "/_layout/_authenticated/events/$eventId"
       path: "/events/$eventId"
@@ -176,27 +169,34 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutAuthenticatedJoinIndexImport
       parentRoute: typeof LayoutAuthenticatedImport
     }
+    "/_layout/_authenticated/settings/": {
+      id: "/_layout/_authenticated/settings/"
+      path: "/settings"
+      fullPath: "/settings"
+      preLoaderRoute: typeof LayoutAuthenticatedSettingsIndexImport
+      parentRoute: typeof LayoutAuthenticatedImport
+    }
   }
 }
 
 // Create and export the route tree
 
 interface LayoutAuthenticatedRouteChildren {
-  LayoutAuthenticatedSettingsRoute: typeof LayoutAuthenticatedSettingsRoute
   LayoutAuthenticatedEventsEventIdRoute: typeof LayoutAuthenticatedEventsEventIdRoute
   LayoutAuthenticatedEventsCreateRoute: typeof LayoutAuthenticatedEventsCreateRoute
   LayoutAuthenticatedJoinEventIdRoute: typeof LayoutAuthenticatedJoinEventIdRoute
   LayoutAuthenticatedEventsIndexRoute: typeof LayoutAuthenticatedEventsIndexRoute
   LayoutAuthenticatedJoinIndexRoute: typeof LayoutAuthenticatedJoinIndexRoute
+  LayoutAuthenticatedSettingsIndexRoute: typeof LayoutAuthenticatedSettingsIndexRoute
 }
 
 const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
-  LayoutAuthenticatedSettingsRoute: LayoutAuthenticatedSettingsRoute,
   LayoutAuthenticatedEventsEventIdRoute: LayoutAuthenticatedEventsEventIdRoute,
   LayoutAuthenticatedEventsCreateRoute: LayoutAuthenticatedEventsCreateRoute,
   LayoutAuthenticatedJoinEventIdRoute: LayoutAuthenticatedJoinEventIdRoute,
   LayoutAuthenticatedEventsIndexRoute: LayoutAuthenticatedEventsIndexRoute,
   LayoutAuthenticatedJoinIndexRoute: LayoutAuthenticatedJoinIndexRoute,
+  LayoutAuthenticatedSettingsIndexRoute: LayoutAuthenticatedSettingsIndexRoute,
 }
 
 const LayoutAuthenticatedRouteWithChildren =
@@ -224,12 +224,12 @@ export interface FileRoutesByFullPath {
   "/": typeof LayoutIndexRoute
   "/login": typeof LayoutauthLoginRoute
   "/signup": typeof LayoutauthSignupRoute
-  "/settings": typeof LayoutAuthenticatedSettingsRoute
   "/events/$eventId": typeof LayoutAuthenticatedEventsEventIdRoute
   "/events/create": typeof LayoutAuthenticatedEventsCreateRoute
   "/join/$eventId": typeof LayoutAuthenticatedJoinEventIdRoute
   "/events": typeof LayoutAuthenticatedEventsIndexRoute
   "/join": typeof LayoutAuthenticatedJoinIndexRoute
+  "/settings": typeof LayoutAuthenticatedSettingsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -237,12 +237,12 @@ export interface FileRoutesByTo {
   "/": typeof LayoutIndexRoute
   "/login": typeof LayoutauthLoginRoute
   "/signup": typeof LayoutauthSignupRoute
-  "/settings": typeof LayoutAuthenticatedSettingsRoute
   "/events/$eventId": typeof LayoutAuthenticatedEventsEventIdRoute
   "/events/create": typeof LayoutAuthenticatedEventsCreateRoute
   "/join/$eventId": typeof LayoutAuthenticatedJoinEventIdRoute
   "/events": typeof LayoutAuthenticatedEventsIndexRoute
   "/join": typeof LayoutAuthenticatedJoinIndexRoute
+  "/settings": typeof LayoutAuthenticatedSettingsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -252,12 +252,12 @@ export interface FileRoutesById {
   "/_layout/": typeof LayoutIndexRoute
   "/_layout/(auth)/login": typeof LayoutauthLoginRoute
   "/_layout/(auth)/signup": typeof LayoutauthSignupRoute
-  "/_layout/_authenticated/settings": typeof LayoutAuthenticatedSettingsRoute
   "/_layout/_authenticated/events/$eventId": typeof LayoutAuthenticatedEventsEventIdRoute
   "/_layout/_authenticated/events/create": typeof LayoutAuthenticatedEventsCreateRoute
   "/_layout/_authenticated/join/$eventId": typeof LayoutAuthenticatedJoinEventIdRoute
   "/_layout/_authenticated/events/": typeof LayoutAuthenticatedEventsIndexRoute
   "/_layout/_authenticated/join/": typeof LayoutAuthenticatedJoinIndexRoute
+  "/_layout/_authenticated/settings/": typeof LayoutAuthenticatedSettingsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -267,24 +267,24 @@ export interface FileRouteTypes {
     | "/"
     | "/login"
     | "/signup"
-    | "/settings"
     | "/events/$eventId"
     | "/events/create"
     | "/join/$eventId"
     | "/events"
     | "/join"
+    | "/settings"
   fileRoutesByTo: FileRoutesByTo
   to:
     | ""
     | "/"
     | "/login"
     | "/signup"
-    | "/settings"
     | "/events/$eventId"
     | "/events/create"
     | "/join/$eventId"
     | "/events"
     | "/join"
+    | "/settings"
   id:
     | "__root__"
     | "/_layout"
@@ -292,12 +292,12 @@ export interface FileRouteTypes {
     | "/_layout/"
     | "/_layout/(auth)/login"
     | "/_layout/(auth)/signup"
-    | "/_layout/_authenticated/settings"
     | "/_layout/_authenticated/events/$eventId"
     | "/_layout/_authenticated/events/create"
     | "/_layout/_authenticated/join/$eventId"
     | "/_layout/_authenticated/events/"
     | "/_layout/_authenticated/join/"
+    | "/_layout/_authenticated/settings/"
   fileRoutesById: FileRoutesById
 }
 
@@ -335,12 +335,12 @@ export const routeTree = rootRoute
       "filePath": "_layout/_authenticated.tsx",
       "parent": "/_layout",
       "children": [
-        "/_layout/_authenticated/settings",
         "/_layout/_authenticated/events/$eventId",
         "/_layout/_authenticated/events/create",
         "/_layout/_authenticated/join/$eventId",
         "/_layout/_authenticated/events/",
-        "/_layout/_authenticated/join/"
+        "/_layout/_authenticated/join/",
+        "/_layout/_authenticated/settings/"
       ]
     },
     "/_layout/": {
@@ -354,10 +354,6 @@ export const routeTree = rootRoute
     "/_layout/(auth)/signup": {
       "filePath": "_layout/(auth)/signup.tsx",
       "parent": "/_layout"
-    },
-    "/_layout/_authenticated/settings": {
-      "filePath": "_layout/_authenticated/settings.tsx",
-      "parent": "/_layout/_authenticated"
     },
     "/_layout/_authenticated/events/$eventId": {
       "filePath": "_layout/_authenticated/events/$eventId.tsx",
@@ -377,6 +373,10 @@ export const routeTree = rootRoute
     },
     "/_layout/_authenticated/join/": {
       "filePath": "_layout/_authenticated/join/index.tsx",
+      "parent": "/_layout/_authenticated"
+    },
+    "/_layout/_authenticated/settings/": {
+      "filePath": "_layout/_authenticated/settings/index.tsx",
       "parent": "/_layout/_authenticated"
     }
   }
