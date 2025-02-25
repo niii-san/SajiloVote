@@ -18,6 +18,7 @@ import {
     updateFirstName,
     updateLastName,
 } from "./user/updateNames.controller.js";
+import { updateEmail } from "./user/updateEmail.controller.js";
 
 export {
     login,
@@ -37,4 +38,5 @@ export {
     deleteEvent,
     updateFirstName,
     updateLastName,
+    updateEmail,
 };
