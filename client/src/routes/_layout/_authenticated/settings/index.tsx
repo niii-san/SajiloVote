@@ -73,10 +73,30 @@ function RouteComponent() {
             setLastNameErr(
                 error.response.data.message ?? "Something went wrong",
             );
+        } finally {
+            setLastNameUpdating(false);
         }
     };
     const updateEmail = async () => {
-        console.log("update email");
+        if (firstNameUpdating || lastNameUpdating) {
+            toast.error("Please wait other fields are updating");
+            return;
+        }
+        setEmailUpdating(true);
+
+        try {
+            const res = await api.put("/api/v1/users/update/email", {
+                new_email: email,
+            });
+            if (res.data.success) {
+                invalidateUserData();
+                toast.success("Email updated");
+            }
+        } catch (error: any) {
+            setEmailErr(error.response.data.message ?? "Something went wrong");
+        } finally {
+            setEmailUpdating(false);
+        }
     };
 
     return (
