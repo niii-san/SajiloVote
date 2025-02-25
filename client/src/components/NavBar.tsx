@@ -234,7 +234,7 @@ function NavBar() {
                                 <p className="text-sm text-gray-500 text-center">
                                     © 2024{" "}
                                     <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-medium">
-                                        Your Brand
+                                        Who Wins
                                     </span>
                                 </p>
                             </div>
@@ -259,7 +259,8 @@ function NavBar() {
                             <GiVote className="text-2xl text-primary" />
                         </div>
                         <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                            Your Brand
+                            Who Wins
+                            
                         </span>
                     </Link>
                     <div className="flex gap-3">

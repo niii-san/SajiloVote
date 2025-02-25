@@ -58,7 +58,7 @@ function RouteComponent() {
                         <div className="flex gap-4 justify-center">
                             <Button
                                 onClick={() => navigate({ to: "/signup" })}
-                                className="px-8 py-4 text-lg bg-secondary hover:bg-secondary/90 text-dark_text
+                                className="px-8 py-4 text-lg bg-secondary hover:bg-secondary/90 border-secondary text-dark_text
                                            shadow-md hover:shadow-lg transition-all"
                             >
                                 Get Started
