@@ -7,6 +7,7 @@ import { api } from "../../../utils";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import logo from "../../../assets/logo.svg";
 
 export const Route = createFileRoute("/_layout/(auth)/signup")({
     component: RouteComponent,
@@ -76,10 +77,7 @@ function RouteComponent() {
         <div className="min-h-screen flex flex-col items-center mt-20 p-4">
             {/* Logo Section */}
             <div className="mb-8 flex flex-col items-center">
-                <div className="bg-primary text-white text-2xl font-bold w-16 h-16 rounded-lg flex items-center justify-center mb-2">
-                    LOGO
-                </div>
-                <h1 className="text-2xl font-bold text-gray-900">Who wins</h1>
+                <img src={logo} alt="logo" className="w-56" />
             </div>
 
             {/* Signup Card */}

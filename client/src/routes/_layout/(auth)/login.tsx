@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../../utils";
 import { useAuthStore } from "../../../stores";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import logo from "../../../assets/logo.svg";
 
 export const Route = createFileRoute("/_layout/(auth)/login")({
     component: RouteComponent,
@@ -72,13 +73,10 @@ function RouteComponent() {
     }, []);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen flex flex-col items-center p-4">
             {/* Logo Section */}
-            <div className="mb-8 flex flex-col items-center">
-                <div className="bg-primary text-white text-2xl font-bold w-16 h-16 rounded-lg flex items-center justify-center mb-2">
-                    LOGO
-                </div>
-                <h1 className="text-2xl font-bold text-gray-900">Who Wins</h1>
+            <div className="mb-8 flex flex-col items-center mt-[80px]">
+                <img src={logo} alt="logo" className="w-56" />
             </div>
 
             {/* Login Card */}

@@ -15,6 +15,7 @@ import {
 import { api, capitalize } from "../utils";
 import toast from "react-hot-toast";
 import Loader from "./Loader";
+import logo from "../assets/logo.svg";
 
 function NavBar() {
     const navigate = useNavigate();
@@ -38,11 +39,10 @@ function NavBar() {
 
     const navLinkStyling = (isActive: boolean) =>
         `p-3 rounded-lg flex items-center gap-4 group transition-all duration-200
-    ${
-        isActive
+    ${isActive
             ? "bg-primary/10 text-primary font-semibold border-l-4 border-primary"
             : "text-gray-600 hover:bg-gray-50/80 hover:text-gray-900"
-    }
+        }
     ${isSidebarMinimized ? "justify-center px-3" : "px-4"}`;
 
     const sidebarItems = [
@@ -255,12 +255,8 @@ function NavBar() {
                         to="/"
                         className="text-xl font-bold flex items-center gap-3 group"
                     >
-                        <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                            <GiVote className="text-2xl text-primary" />
-                        </div>
                         <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                            Who Wins
-                            
+                            <img src={logo} alt="logo" className="w-36" />
                         </span>
                     </Link>
                     <div className="flex gap-3">
@@ -268,11 +264,10 @@ function NavBar() {
                             {({ isActive }) => (
                                 <span
                                     className={`px-5 py-2.5 rounded-lg transition-all duration-200 font-medium
-                    ${
-                        isActive
-                            ? "bg-primary text-white shadow-sm"
-                            : "text-gray-600 hover:bg-gray-50/80 hover:text-gray-900"
-                    }`}
+                    ${isActive
+                                            ? "bg-primary text-white shadow-sm"
+                                            : "text-gray-600 hover:bg-gray-50/80 hover:text-gray-900"
+                                        }`}
                                 >
                                     Login
                                 </span>
@@ -282,11 +277,10 @@ function NavBar() {
                             {({ isActive }) => (
                                 <span
                                     className={`px-5 py-2.5 rounded-lg transition-all duration-200 font-medium
-                    ${
-                        isActive
-                            ? "bg-primary text-white shadow-sm"
-                            : "bg-gradient-to-br from-primary/10 to-primary/5 text-primary hover:from-primary/20 hover:to-primary/10"
-                    }`}
+                    ${isActive
+                                            ? "bg-primary text-white shadow-sm"
+                                            : "bg-gradient-to-br from-primary/10 to-primary/5 text-primary hover:from-primary/20 hover:to-primary/10"
+                                        }`}
                                 >
                                     Sign Up
                                 </span>
