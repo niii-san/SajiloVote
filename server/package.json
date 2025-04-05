@@ -11,8 +11,8 @@
         "url": "git+https://github.com/niishaan/whowins.git"
     },
     "license": "ISC",
-    "author": "Nishan Bista",
     "type": "module",
+    "author": "Nishan Bista",
     "main": "./src/server.js",
     "scripts": {
         "dev": "npx tsc --watch & nodemon dist/server.js",

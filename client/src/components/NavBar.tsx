@@ -232,7 +232,7 @@ function NavBar() {
                         {!isSidebarMinimized && (
                             <div className="mt-8 pt-6 border-t border-gray-200">
                                 <p className="text-sm text-gray-500 text-center">
-                                    © 2024{" "}
+                                    © 2025{" "}
                                     <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-medium">
                                         Who Wins
                                     </span>

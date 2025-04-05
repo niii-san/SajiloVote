@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+// import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { NavBar, Footer, Loader } from "../components";
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "../stores";
@@ -53,7 +53,6 @@ function RouteComponent() {
                 </>
             )}
             {!isLoggedIn && <Footer />}
-            <TanStackRouterDevtools />
         </>
     );
 }
