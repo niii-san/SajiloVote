@@ -42,7 +42,6 @@ export const useAuthStore = create<State & Actions>((set, get) => ({
 
     verify: async () => {
         set({ verifyLoading: true });
-        console.log("runned verify token fn");
         try {
             const res = await api.get("/api/v1/auth/verify-token");
             if (res.data?.success) {
