@@ -32,8 +32,8 @@
     },
     "dependencies": {
         "@prisma/client": "^6.6.0",
-        "@sequelize/core": "^7.0.0-alpha.44",
-        "@sequelize/postgres": "^7.0.0-alpha.44",
+        "@sequelize/core": "^7.0.0-alpha.46",
+        "@sequelize/postgres": "^7.0.0-alpha.46",
         "bcrypt": "^5.1.1",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",

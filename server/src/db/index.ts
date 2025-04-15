@@ -1,3 +1,3 @@
-import { connectDB } from "./connectDB.js";
+import prisma from "./prisma.js";
 
-export { connectDB };
+export { prisma };
