@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import type { ApiResponse, Reason } from "../types/index.js";
+import type { ApiResponse } from "../types/index.js";
 
 /**
  * Error response format
@@ -8,27 +8,28 @@ import type { ApiResponse, Reason } from "../types/index.js";
 export class ErrorResponse extends Error implements ApiResponse {
     public status_code: number;
     public success: boolean;
-    public reason: Reason;
+    public error_code: number;
     public message: string;
 
-    constructor(status_code: number, reason: Reason, message: string) {
+    constructor(status_code: number, error_code: number, message: string) {
         super(message);
         this.status_code = status_code;
         this.success = false;
-        this.reason = reason;
+        this.error_code = error_code;
         this.message = message;
     }
     public toJSON() {
         return {
             status_code: this.status_code,
             success: this.success,
-            reason: this.reason,
             message: this.message,
         };
     }
 }
 
-export const responseErrorHandler = (
+
+
+export const errorHandler = (
     err: Error,
     _: Request,
     res: Response,
@@ -40,7 +41,7 @@ export const responseErrorHandler = (
         res.status(500).json(
             new ErrorResponse(
                 500,
-                "server_error",
+                910,
                 `INTERNAL SERVER ERROR... ${err.message}`,
             ),
         );

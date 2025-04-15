@@ -1,19 +1,6 @@
-export type Reason =
-    | "server_error"
-    | "client_error"
-    | "auth_error"
-    | "unauthorized"
-    | "not_found"
-    | "not_allowed"
-    | "invalid_payload"
-    | "already_exists"
-    | null
-    | undefined;
-
-export interface ApiResponse<TypeOfDataToSend = undefined> {
+export interface ApiResponse<T = undefined> {
     status_code: number;
     success: boolean;
-    reason?: Reason;
     message: string;
-    data?: TypeOfDataToSend | null;
+    data?: T | null;
 }

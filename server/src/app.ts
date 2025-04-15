@@ -1,5 +1,5 @@
 import express, { Response, Request } from "express";
-import { responseErrorHandler } from "./utils/ErrorResponse.js";
+import { errorHandler } from "./utils/ErrorResponse.js";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 
@@ -45,5 +45,5 @@ app.use("/api/v1/events", eventsRouter);
 // Account routing
 app.use("/api/v1/users", accountRouter);
 
-// Error response handler at last after all route
-app.use(responseErrorHandler);
+// Error handle middlewarer at last after all route
+app.use(errorHandler);
