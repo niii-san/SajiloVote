@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-    provider = "prisma-client-js"
-    output   = "../generated/prisma"
+    provider        = "prisma-client-js"
+    output          = "../generated/prisma"
+    previewFeatures = ["prismaSchemaFolder"]
 }
 
 datasource db {
@@ -14,14 +15,51 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// User Schema
 model User {
-    id    Int     @id @default(autoincrement())
-    email String  @unique
-    name  String?
+    id             Int      @id @default(autoincrement())
+    first_name     String
+    last_name      String
+    email_address  String   @unique
+    password       String
+    refresh_token  String?  @db.Text()
+    created_at     DateTime @default(now()) @db.Timestamptz(5)
+    update_at      DateTime @updatedAt
+    events_created Event[]
+
+    @@map("users")
 }
 
-model Post {
-    id Int @id @default(autoincrement())
-    post_title String
-    descripton String
-    }
+// Event Schema
+enum EVENT_TYPE {
+    POLL
+    VOTE
+}
+
+enum START_TYPE {
+    IMMEDIATE
+    MANUAL
+    TIME
+}
+
+enum END_TYPE {
+    MANUAL
+    TIME
+}
+
+model Event {
+    id          Int        @id @default(autoincrement())
+    title       String
+    description String?    @db.Text()
+    type        EVENT_TYPE
+    creator     User       @relation(fields: [creator_id], references: [id])
+    creator_id  Int
+    start_type  START_TYPE
+    start_at    DateTime?
+    end_type    END_TYPE
+    end_at      DateTime?
+    created_at  DateTime   @default(now()) @db.Timestamptz()
+    updated_at  DateTime   @updatedAt @db.Timestamptz()
+
+    @@map("events")
+}

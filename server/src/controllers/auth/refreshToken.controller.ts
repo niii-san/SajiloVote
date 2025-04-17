@@ -5,7 +5,6 @@ import {
     SuccessResponse,
 } from "../../utils/index.js";
 import jwt from "jsonwebtoken";
-import { User } from "../../models/index.js";
 
 /*
  * Function to handle requrest on /auth/refresh-token
