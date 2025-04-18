@@ -4,3 +4,4 @@ export const cookieOptions: CookieOptions = {
     httpOnly: true,
     secure: true,
 };
+

@@ -5,6 +5,7 @@ import {
 } from "../../utils/index.js";
 import { Request, Response } from "express";
 import { prisma } from "../../db/index.js";
+import bcrypt from "bcrypt";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
     const firstName = (req.body?.first_name ?? "").trim();
@@ -56,12 +57,15 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const user = await prisma.user.create({
         data: {
             first_name: firstName,
             last_name: lastName,
             email_address: emailAddress,
-            password: password,
+            password: hashedPassword,
         },
     });
 
