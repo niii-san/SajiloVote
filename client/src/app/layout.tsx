@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavSideBar from "@/components/NavSideBar";
+import NavSideBar from "./components/NavSideBar";
 
 export const metadata: Metadata = {
     title: "Who Wins",
@@ -13,7 +13,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" className="dark">
             <body className={`antialiased`}>
                 <NavSideBar />
                 {children}
