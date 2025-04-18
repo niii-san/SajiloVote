@@ -37,10 +37,19 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     const accessToken = await generateAccessToken(user.id);
     const refreshToken = await generateRefreshToken(user.id);
 
-    return res.status(200).json(
-        new SuccessResponse(200, "login success", {
-            access_token: accessToken,
-            refresh_token: refreshToken,
-        }),
-    );
+    await prisma.user.update({
+        where: { id: user.id },
+        data: { refresh_token: refreshToken },
+    });
+
+    return res
+        .cookie("access_token", accessToken, cookieOptions)
+        .cookie("refresh_token", refreshToken, cookieOptions)
+        .status(200)
+        .json(
+            new SuccessResponse(200, "login success", {
+                access_token: accessToken,
+                refresh_token: refreshToken,
+            }),
+        );
 });
