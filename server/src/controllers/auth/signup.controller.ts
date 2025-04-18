@@ -10,8 +10,8 @@ import bcrypt from "bcrypt";
 export const signup = asyncHandler(async (req: Request, res: Response) => {
     const firstName = (req.body?.first_name ?? "").trim();
     const lastName = (req.body?.last_name ?? "").trim();
-    const emailAddress = (req.body?.email_address ?? "").trim();
-    const password = req.body?.password ?? "";
+    const emailAddress = (req.body?.email_address ?? "").trim().toLowerCase();
+    const password = req.body?.password;
 
     if (!firstName) {
         throw new ErrorResponse(400, 1000, "first_name is required");
