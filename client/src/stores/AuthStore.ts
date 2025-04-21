@@ -1,10 +1,20 @@
 import { create } from "zustand";
+import { User } from "@/types";
 
-export const useAuthStore = create((set) => ({
+interface AuthState {
+  userData: User | null;
+  isLoggedIn: boolean;
+}
+interface AuthActions {
+  login: ({ payload }: { payload: User }) => void;
+}
+
+type AuthStore = AuthState & AuthActions;
+
+export const useAuthStore = create<AuthStore>((set) => ({
   userData: null,
   isLoggedIn: false,
-  login: ({}) => {
-    set({ isLoggedIn: true });
+  login: ({ payload }) => {
+    set({ isLoggedIn: true, userData: payload });
   },
 }));
-
