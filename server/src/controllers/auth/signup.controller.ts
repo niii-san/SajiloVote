@@ -75,5 +75,5 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
 
     return res
         .status(201)
-        .json(new SuccessResponse(201, "user created", { user }));
+        .json(new SuccessResponse(201, "user created", { ...user }));
 });

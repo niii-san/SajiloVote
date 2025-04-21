@@ -15,13 +15,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import api from "@/lib/api";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string(),
 });
 
 function Page() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+  const [resErr, setResErr] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,14 +34,20 @@ function Page() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    if (resErr) setResErr(null);
+    try {
+      await api.post("/api/v1/auth/login", {
+        email_address: values.email,
+        password: values.password,
+      });
+    } catch (error: any) {
+      setResErr(error.response.data.message);
+    }
   };
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="p-8 rounded-lg shadow-md w-full max-w-md bg-gray-800">
+      <div className="p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center mb-8">Welcome Back</h1>
 
         <Form {...form}>
@@ -75,7 +84,7 @@ function Page() {
                         placeholder="Enter your password"
                         {...field}
                         autoComplete="current-password"
-                        className="focus-visible:ring-blue-500 pr-10"
+                        className=""
                       />
                       <Button
                         type="button"
@@ -96,6 +105,10 @@ function Page() {
                     </div>
                   </FormControl>
                   <FormMessage className="text-red-500" />
+
+                  {resErr && (
+                    <FormMessage className="text-red-500">{resErr}</FormMessage>
+                  )}
                 </FormItem>
               )}
             />
