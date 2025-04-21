@@ -6,7 +6,9 @@ const PORT = process.env.PORT || 8000;
 
 function startServer() {
     app.listen(PORT, () => {
-        console.log(`SERVER RUNNING ON PORT ${PORT}`);
+        console.log(
+            `SERVER RUNNING ON PORT ${PORT} ${process.env.RUNTIME == "DEV" ? "[developement mode]" : "[production mode]"}`,
+        );
     });
 }
 

@@ -67,6 +67,10 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
             email_address: emailAddress,
             password: hashedPassword,
         },
+        omit: {
+            password: true,
+            refresh_token: true,
+        },
     });
 
     return res

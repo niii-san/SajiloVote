@@ -25,7 +25,14 @@ export const generateAccessToken = async (userId: number): Promise<string> => {
 };
 
 export const generateRefreshToken = async (userId: number): Promise<string> => {
-    const user = await prisma.user.findFirst({ where: { id: userId } });
+    const user = await prisma.user.findFirst({
+        where: { id: userId },
+        omit: {
+            password: true,
+            refresh_token: true,
+            update_at: true,
+        },
+    });
     if (!user) {
         throw new ErrorResponse(404, 4000, "token generation failed");
     }
