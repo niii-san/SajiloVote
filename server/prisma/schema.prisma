@@ -24,7 +24,7 @@ model User {
     password       String
     refresh_token  String?  @db.Text()
     created_at     DateTime @default(now()) @db.Timestamptz(5)
-    update_at      DateTime @updatedAt
+    updated_at      DateTime @updatedAt @db.Timestamptz
     events_created Event[]
 
     @@map("users")
@@ -43,7 +43,7 @@ enum START_TYPE {
 }
 
 enum END_TYPE {
-    MANUAL
+    MANUL
     TIME
 }
 

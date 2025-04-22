@@ -1,10 +1,11 @@
+import { cookies } from "next/headers";
 
-export default function Home() {
-  return (
-    <div className="">
-            <h1>Hello this is / page</h1>
-
-
-         </div>
-  );
+export default  async function Home() {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
+    return (
+        <div className="">
+            <h1>"You're logged in" : "You're not logged in {accessToken}</h1>
+        </div>
+    );
 }

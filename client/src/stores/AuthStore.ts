@@ -2,19 +2,19 @@ import { create } from "zustand";
 import { User } from "@/types";
 
 interface AuthState {
-  userData: User | null;
-  isLoggedIn: boolean;
+    userData: User | null;
+    isLoggedIn: boolean;
 }
 interface AuthActions {
-  login: ({ payload }: { payload: User }) => void;
+    login: (payload: User) => void;
 }
 
 type AuthStore = AuthState & AuthActions;
 
 export const useAuthStore = create<AuthStore>((set) => ({
-  userData: null,
-  isLoggedIn: false,
-  login: ({ payload }) => {
-    set({ isLoggedIn: true, userData: payload });
-  },
+    userData: null,
+    isLoggedIn: false,
+    login: (payload) => {
+        set({ isLoggedIn: true, userData: payload });
+    },
 }));
