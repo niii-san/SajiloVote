@@ -56,7 +56,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
                     last_name: userData.last_name,
                     email_address: userData.email_address,
                     created_at: userData.created_at,
-                    updated_at: userData.update_at,
+                    updated_at: userData.updated_at,
                 },
             }),
         );
