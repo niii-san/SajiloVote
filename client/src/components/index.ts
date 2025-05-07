@@ -13,6 +13,7 @@ import {
     FormField,
 } from "./ui/form";
 import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
 
 export {
     Button,
@@ -28,4 +29,5 @@ export {
     FormMessage,
     FormField,
     LoginForm,
+    SignupForm,
 };
