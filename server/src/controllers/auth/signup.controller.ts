@@ -14,26 +14,26 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     const password = req.body?.password;
 
     if (!firstName) {
-        throw new ErrorResponse(400, 1000, "first_name is required");
+        throw new ErrorResponse(400, 1000, "First name is required");
     }
 
     if (!lastName) {
-        throw new ErrorResponse(400, 1000, "last_name is required");
+        throw new ErrorResponse(400, 1000, "Last name is required");
     }
 
     if (!emailAddress) {
-        throw new ErrorResponse(400, 1000, "email_addres is required");
+        throw new ErrorResponse(400, 1000, "Email address is required");
     }
 
     if (!password) {
-        throw new ErrorResponse(400, 1000, "password is required");
+        throw new ErrorResponse(400, 1000, "Password is required");
     }
 
     if (password.length < 8) {
         throw new ErrorResponse(
             400,
             1000,
-            "password must be 8 characters or longer",
+            "Password must be 8 characters or longer",
         );
     }
 
@@ -41,7 +41,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(
             400,
             1000,
-            "password cannot be longer than 20 characters",
+            "Password cannot be longer than 20 characters",
         );
     }
 
@@ -53,7 +53,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         throw new ErrorResponse(
             409,
             900,
-            "user with this email address already exists",
+            "User with this email address already exists",
         );
     }
 
@@ -73,7 +73,5 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         },
     });
 
-    return res
-        .status(201)
-        .json(new SuccessResponse(201, "user created", { ...user }));
+    return res.status(201).json(new SuccessResponse(201, "User created", user));
 });

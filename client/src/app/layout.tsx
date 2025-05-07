@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "../../envConfig.ts";
 import { NavSideBar } from "@/components";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
     title: "Sajilo Vote",
@@ -18,6 +19,7 @@ export default function RootLayout({
             <body className={`antialiased`}>
                 <NavSideBar />
                 {children}
+                <Toaster position="top-right" />
             </body>
         </html>
     );

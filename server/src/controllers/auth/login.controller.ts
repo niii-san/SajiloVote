@@ -14,10 +14,10 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     const password = req.body.password;
 
     if (!emailAddress) {
-        throw new ErrorResponse(400, 1000, "email_address is required");
+        throw new ErrorResponse(400, 1000, "Email address is required");
     }
     if (!password) {
-        throw new ErrorResponse(400, 1000, "password is required");
+        throw new ErrorResponse(400, 1000, "Password is required");
     }
 
     const user = await prisma.user.findFirst({
@@ -25,13 +25,13 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     });
 
     if (!user) {
-        throw new ErrorResponse(400, 1000, "invalid user or password");
+        throw new ErrorResponse(400, 1000, "Invalid email or password");
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
-        throw new ErrorResponse(400, 1000, "invalid user or password");
+        throw new ErrorResponse(400, 1000, "Invalid email or password");
     }
 
     const accessToken = await generateAccessToken(user.id);

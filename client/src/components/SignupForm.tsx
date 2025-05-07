@@ -15,6 +15,9 @@ import {
     Input,
     Button,
 } from "./index";
+import api from "@/lib/api";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const formSchema = z
     .object({
@@ -39,6 +42,8 @@ const formSchema = z
 function SignupForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [resErr, setResErr] = useState<null | string>(null);
+    const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -51,7 +56,22 @@ function SignupForm() {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        if (resErr) setResErr(null);
+        try {
+            const payload = {
+                first_name: values.firstName,
+                last_name: values.lastName,
+                email_address: values.email,
+                password: values.password,
+            };
+            await api.post("/api/v1/auth/signup", payload);
+            router.push("/login");
+            toast.success("Account created! Continue to login.", {
+                duration: 4000,
+            });
+        } catch (error: any) {
+            setResErr(error.response.data.message);
+        }
     };
 
     return (
@@ -234,7 +254,11 @@ function SignupForm() {
                                                 </Button>
                                             </div>
                                         </FormControl>
-                                        <FormMessage />
+                                        {(resErr ||
+                                            form.formState.errors
+                                                .confirmPassword) && (
+                                            <FormMessage>{resErr}</FormMessage>
+                                        )}
                                     </FormItem>
                                 )}
                             />
