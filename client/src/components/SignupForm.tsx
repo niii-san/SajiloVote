@@ -18,6 +18,7 @@ import {
 import api from "@/lib/api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const formSchema = z
     .object({
@@ -79,7 +80,7 @@ function SignupForm() {
             {/* Image Section */}
             <div className="hidden bg-muted lg:block">
                 <img
-                    src="/signup-image.jpg" // Replace with your actual image path
+                    src="/signup-image.jpg"
                     alt="Signup Illustration"
                     className="h-full w-full object-cover"
                 />
@@ -95,27 +96,6 @@ function SignupForm() {
                         <p className="mt-2 text-sm text-muted-foreground">
                             Create your account to get started
                         </p>
-                    </div>
-
-                    <Button
-                        variant="outline"
-                        className="w-full gap-2 cursor-pointer"
-                        type="button"
-                        // onClick={() => signIn("google")}
-                    >
-                        <FcGoogle className="h-5 w-5" />
-                        <span>Continue with Google</span>
-                    </Button>
-
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
-                                OR CONTINUE WITH EMAIL
-                            </span>
-                        </div>
                     </div>
 
                     <Form {...form}>
@@ -168,7 +148,7 @@ function SignupForm() {
                                         <FormControl>
                                             <Input
                                                 type="email"
-                                                placeholder="hello@mail.com"
+                                                placeholder="your@mail.com"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -263,7 +243,10 @@ function SignupForm() {
                                 )}
                             />
 
-                            <Button type="submit" className="w-full">
+                            <Button
+                                type="submit"
+                                className="w-full cursor-pointer"
+                            >
                                 Create Account
                             </Button>
                         </form>
@@ -279,6 +262,38 @@ function SignupForm() {
                             Privacy Policy
                         </a>
                     </p>
+
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-background px-2 text-muted-foreground">
+                                OR CONTINUE WITH
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <Button
+                            variant="outline"
+                            className="w-full gap-2 cursor-pointer"
+                            type="button"
+                        >
+                            <FcGoogle className="h-5 w-5" />
+                            <span>Continue with Google</span>
+                        </Button>
+
+                        <div className="mt-4 text-center text-sm">
+                            Already have an account?{" "}
+                            <Link
+                                href="/login"
+                                className="font-medium underline underline-offset-4"
+                            >
+                                Sign in
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
