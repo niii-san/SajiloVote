@@ -11,7 +11,8 @@ import {
     Button,
 } from "./index";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { FcGoogle } from "react-icons/fc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { z } from "zod";
@@ -23,7 +24,7 @@ import { useRouter } from "next/navigation";
 function LoginForm() {
     const formSchema = z.object({
         email: z.string().email("Please enter a valid email address"),
-        password: z.string(),
+        password: z.string().nonempty("Password is required"),
     });
 
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
@@ -38,6 +39,7 @@ function LoginForm() {
             password: "",
         },
     });
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (resErr) setResErr(null);
         try {
@@ -45,20 +47,23 @@ function LoginForm() {
                 email_address: values.email,
                 password: values.password,
             });
-            console.log(res.data.data.userData);
             login(res.data.data.userData);
             router.push("/");
         } catch (error: any) {
-            console.log(error);
             setResErr(error?.response?.data?.message || "Something went wrong");
         }
     };
 
     return (
-        <div className="p-8 rounded-lg shadow-md w-full max-w-md">
-            <h1 className="text-2xl font-bold text-center mb-8">
-                Welcome Back
-            </h1>
+        <div className="w-full max-w-md space-y-6 p-6">
+            <div className="text-center">
+                <h1 className="text-3xl font-bold tracking-tight">
+                    Welcome Back
+                </h1>
+                <p className="mt-2 text-sm text-muted-foreground">
+                    Sign in to your account
+                </p>
+            </div>
 
             <Form {...form}>
                 <form
@@ -70,16 +75,15 @@ function LoginForm() {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="">Email</FormLabel>
+                                <FormLabel>Email</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Enter your email"
+                                        placeholder="hello@mail.com"
                                         {...field}
                                         autoComplete="email"
-                                        className=""
                                     />
                                 </FormControl>
-                                <FormMessage className="" />
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -89,9 +93,7 @@ function LoginForm() {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-gray-700">
-                                    Password
-                                </FormLabel>
+                                <FormLabel>Password</FormLabel>
                                 <FormControl>
                                     <div className="relative">
                                         <Input
@@ -100,16 +102,15 @@ function LoginForm() {
                                                     ? "text"
                                                     : "password"
                                             }
-                                            placeholder="Enter your password"
+                                            placeholder="********"
                                             {...field}
                                             autoComplete="current-password"
-                                            className=""
                                         />
                                         <Button
                                             type="button"
                                             variant="ghost"
                                             size="sm"
-                                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer"
                                             onClick={() =>
                                                 setIsPasswordVisible((p) => !p)
                                             }
@@ -120,46 +121,70 @@ function LoginForm() {
                                             }
                                         >
                                             {isPasswordVisible ? (
-                                                <EyeOff className="h-5 w-5 text-gray-500" />
+                                                <AiOutlineEyeInvisible className="h-5 w-5" />
                                             ) : (
-                                                <Eye className="h-5 w-5 text-gray-500" />
+                                                <AiOutlineEye className="h-5 w-5" />
                                             )}
                                         </Button>
                                     </div>
                                 </FormControl>
-                                <FormMessage className="text-red-500" />
-
-                                {resErr && (
-                                    <FormMessage className="text-red-500">
-                                        {resErr}
-                                    </FormMessage>
-                                )}
+                                <FormMessage>{resErr}</FormMessage>
                             </FormItem>
                         )}
                     />
+
+                    <div className="flex items-center justify-between">
+                        <Link
+                            href="/forgot-password"
+                            className="text-sm font-medium underline underline-offset-4"
+                        >
+                            Forgot password?
+                        </Link>
+                    </div>
+
                     <Button
                         type="submit"
                         className="w-full cursor-pointer"
                         disabled={form.formState.isSubmitting}
                     >
                         {form.formState.isSubmitting
-                            ? "Logging in..."
-                            : "Login"}
+                            ? "Signing in..."
+                            : "Sign In"}
                     </Button>
-
-                    <div className="text-center mt-4">
-                        <span className="text-gray-600">
-                            Don't have an account?{" "}
-                        </span>
-                        <Link
-                            href="/signup"
-                            className="text-blue-600 hover:text-blue-700 font-medium underline"
-                        >
-                            Sign up
-                        </Link>
-                    </div>
                 </form>
             </Form>
+
+            <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                        OR CONTINUE WITH
+                    </span>
+                </div>
+            </div>
+
+            <div className="space-y-4">
+                <Button
+                    variant="outline"
+                    className="w-full gap-2 cursor-pointer"
+                    type="button"
+                >
+                    <FcGoogle className="h-5 w-5" />
+                    <span>Continue with Google</span>
+                </Button>
+
+                <div className="mt-4 text-center text-sm">
+                    Don't have an account?{" "}
+                    <Link
+                        href="/signup"
+                        className="font-medium underline underline-offset-4"
+                    >
+                        Sign up
+                    </Link>
+                </div>
+            </div>
         </div>
     );
 }
