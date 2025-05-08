@@ -18,7 +18,6 @@ import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import api from "@/lib/api";
-import { useAuthStore } from "@/stores";
 import { useRouter } from "next/navigation";
 
 function LoginForm() {
@@ -29,7 +28,6 @@ function LoginForm() {
 
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const [resErr, setResErr] = useState<string | null>(null);
-    const login = useAuthStore((state) => state.login);
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -47,8 +45,9 @@ function LoginForm() {
                 email_address: values.email,
                 password: values.password,
             });
-            login(res.data.data.userData);
-            router.push("/");
+            if (res.status == 200) {
+                router.push("/");
+            }
         } catch (error: any) {
             setResErr(error?.response?.data?.message || "Something went wrong");
         }

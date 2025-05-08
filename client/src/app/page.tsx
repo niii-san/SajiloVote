@@ -1,15 +1,14 @@
-"use client";
-import { useAuthStore } from "@/stores";
+import { verifyToken } from "@/lib";
 
-export default function Home() {
-    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-    const userData = useAuthStore((state) => state.userData);
+export default async function Home() {
+    const user = await verifyToken();
 
     return (
         <div className="">
             <h1>
-                {isLoggedIn ? "You're logged in" : "You're not logged in"} as{" "}
-                {userData?.first_name ?? "login first"}{" "}
+                {user
+                    ? `Hello ${user.data?.first_name}`
+                    : "You're not logged in, Please log in."}
             </h1>
         </div>
     );
