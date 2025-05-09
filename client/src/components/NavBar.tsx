@@ -29,9 +29,9 @@ function NavSideBar({ user }: { user: UserType | null }) {
                             className="text-2xl font-bold text-indigo-600 flex items-center"
                         >
                             <FiHome className="mr-2" />
-                            SajiloVote
+                            AppName
                         </Link>
-                        <div className="flex space-x-8">
+                        <div className="hidden sm:flex space-x-8">
                             <NavLink
                                 href="/login"
                                 icon={<FiLogIn />}
@@ -65,14 +65,14 @@ function NavSideBar({ user }: { user: UserType | null }) {
 
             {/* Sidebar */}
             <aside
-                className={`lg:fixed left-0 top-0 h-screen w-64 bg-white shadow-lg z-40 transition-all duration-300
-    ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+                className={`fixed left-0 top-0 h-screen w-64 bg-white shadow-lg z-40 transition-all duration-300
+          ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
             >
                 <div className="h-full flex flex-col">
                     {/* Close Button for Mobile */}
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="lg:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        className="lg:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100"
                     >
                         <MdClose size={24} className="text-gray-600" />
                     </button>
@@ -145,6 +145,7 @@ function NavSideBar({ user }: { user: UserType | null }) {
     );
 }
 
+// Updated NavLink component with active state
 const NavLink = ({
     href,
     icon,
@@ -169,6 +170,7 @@ const NavLink = ({
     </Link>
 );
 
+// Updated SidebarLink component with active state
 const SidebarLink = ({
     href,
     icon,

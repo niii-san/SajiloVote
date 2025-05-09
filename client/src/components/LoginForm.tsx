@@ -18,6 +18,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import api from "@/lib/api";
+import { AxiosError } from "axios";
 
 function LoginForm() {
     const formSchema = z.object({
@@ -46,8 +47,12 @@ function LoginForm() {
             if (res.status == 200) {
                 window.location.href = "/";
             }
-        } catch (error: any) {
-            setResErr(error?.response?.data?.message || "Something went wrong");
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                setResErr(
+                    error?.response?.data?.message || "Something went wrong",
+                );
+            }
         }
     };
 
@@ -173,7 +178,7 @@ function LoginForm() {
                 </Button>
 
                 <div className="mt-4 text-center text-sm">
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <Link
                         href="/signup"
                         className="font-medium underline underline-offset-4"

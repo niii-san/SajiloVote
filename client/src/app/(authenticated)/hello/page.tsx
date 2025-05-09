@@ -1,7 +1,5 @@
-import React from "react";
-
 function Page() {
-  return <div>can only view this if you're logged in</div>;
+    return <p>can only view this if youre logged in</p>;
 }
 
 export default Page;

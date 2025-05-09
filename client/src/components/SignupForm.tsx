@@ -5,6 +5,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Image from "next/image";
 import {
     Form,
     FormControl,
@@ -19,6 +20,7 @@ import api from "@/lib/api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 const formSchema = z
     .object({
@@ -70,8 +72,10 @@ function SignupForm() {
             toast.success("Account created! Continue to login.", {
                 duration: 4000,
             });
-        } catch (error: any) {
-            setResErr(error.response.data.message);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                setResErr(error?.response?.data?.message);
+            }
         }
     };
 
@@ -79,7 +83,7 @@ function SignupForm() {
         <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-2">
             {/* Image Section */}
             <div className="hidden bg-muted lg:block">
-                <img
+                <Image
                     src="/signup-image.jpg"
                     alt="Signup Illustration"
                     className="h-full w-full object-cover"

@@ -20,7 +20,7 @@ export const getCurrentUserData = async (): Promise<UserType | null> => {
             return res.data.data;
         }
         return null;
-    } catch (error: any) {
+    } catch {
         return null;
     }
 };

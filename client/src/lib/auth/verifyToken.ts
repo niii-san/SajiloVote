@@ -11,7 +11,7 @@ async function verifyToken() {
             },
         });
         return res.data;
-    } catch (error) {
+    } catch {
         return null;
     }
 }

@@ -1,9 +1,6 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 
 export default async function NotFound() {
-    const headersList = await headers();
-
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
             <div className="max-w-md w-full space-y-6 text-center">
@@ -13,8 +10,8 @@ export default async function NotFound() {
                         Page Not Found
                     </h2>
                     <p className="text-gray-600">
-                        The page you're looking for doesn't exist or has been
-                        moved.
+                        The page you&apos;re looking for doesn&apos;t exist or
+                        has been moved.
                     </p>
                 </div>
                 <Link

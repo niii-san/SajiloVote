@@ -20,7 +20,7 @@ export default async function RootLayout({
         <html lang="en" className="">
             <body className={`antialiased`}>
                 <NavBar user={user} />
-                <main className="lg:ml-64 p-4 min-h-screen">{children}</main>
+                {children}
                 <Toaster position="top-right" />
             </body>
         </html>
