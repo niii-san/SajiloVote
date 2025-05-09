@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-async function NavSideBar() {
+async function NavTopBar() {
     const navItems = [
         { title: "Home", href: "/" },
         { title: "Login", href: "/login" },
@@ -10,7 +10,7 @@ async function NavSideBar() {
     return (
         <div>
             {navItems.map((item) => (
-                <Link key={item.href} href={item.href} >
+                <Link key={item.href} href={item.href}>
                     {item.title}
                 </Link>
             ))}
@@ -18,4 +18,4 @@ async function NavSideBar() {
     );
 }
 
-export default NavSideBar;
+export default NavTopBar;
