@@ -35,7 +35,7 @@ app.get("/", async (req: Request, res: Response) => {
     res.status(200).json(requestData);
 });
 
-import { authRouter, eventsRouter, accountRouter } from "./routes/index.js";
+import { authRouter, eventsRouter, usersRouter } from "./routes/index.js";
 // Auth routing
 app.use("/api/v1/auth", authRouter);
 
@@ -43,7 +43,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/events", eventsRouter);
 
 // Account routing
-app.use("/api/v1/users", accountRouter);
+app.use("/api/v1/users", usersRouter);
 
 // Error handle middlewarer at last after all route
 app.use(errorHandler);

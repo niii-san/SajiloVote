@@ -21,13 +21,12 @@ export class ErrorResponse extends Error implements ApiResponse {
     public toJSON() {
         return {
             status_code: this.status_code,
+            error_code: this.error_code,
             success: this.success,
             message: this.message,
         };
     }
 }
-
-
 
 export const errorHandler = (
     err: Error,

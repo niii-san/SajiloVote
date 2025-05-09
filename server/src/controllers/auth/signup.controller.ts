@@ -37,11 +37,11 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
-    if (password.length > 20) {
+    if (password.length > 25) {
         throw new ErrorResponse(
             400,
             1000,
-            "Password cannot be longer than 20 characters",
+            "Password cannot be longer than 25 characters",
         );
     }
 
