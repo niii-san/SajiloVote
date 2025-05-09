@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "../../envConfig.ts";
-import { NavTopBar } from "@/components";
+import { NavBar } from "@/components";
 import { Toaster } from "react-hot-toast";
 import { getCurrentUserData } from "@/lib";
 
@@ -19,8 +19,8 @@ export default async function RootLayout({
     return (
         <html lang="en" className="">
             <body className={`antialiased`}>
-                <NavTopBar />
-                {children}
+                <NavBar user={user} />
+                <main className="lg:ml-64 p-4 min-h-screen">{children}</main>
                 <Toaster position="top-right" />
             </body>
         </html>

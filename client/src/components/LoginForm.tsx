@@ -18,7 +18,6 @@ import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import api from "@/lib/api";
-import { useRouter } from "next/navigation";
 
 function LoginForm() {
     const formSchema = z.object({
@@ -28,7 +27,6 @@ function LoginForm() {
 
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const [resErr, setResErr] = useState<string | null>(null);
-    const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -46,7 +44,7 @@ function LoginForm() {
                 password: values.password,
             });
             if (res.status == 200) {
-                router.push("/");
+                window.location.href = "/";
             }
         } catch (error: any) {
             setResErr(error?.response?.data?.message || "Something went wrong");

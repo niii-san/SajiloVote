@@ -1,7 +1,7 @@
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import NavTopBar from "./NavTopBar";
+import NavBar from "./NavBar";
 import {
     useFormField,
     Form,
@@ -16,7 +16,7 @@ import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
 export {
-    NavTopBar,
+    NavBar,
     Button,
     Input,
     Label,
