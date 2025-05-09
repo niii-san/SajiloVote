@@ -14,6 +14,7 @@ import {
 import { MdClose } from "react-icons/md";
 import { Button } from "./ui/button";
 import { capitalize } from "@/lib/utils";
+import { logout } from "@/lib/auth/logout";
 
 function NavSideBar({ user }: { user: UserType | null }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -29,9 +30,9 @@ function NavSideBar({ user }: { user: UserType | null }) {
                             className="text-2xl font-bold text-indigo-600 flex items-center"
                         >
                             <FiHome className="mr-2" />
-                            AppName
+                            SajiloVote
                         </Link>
-                        <div className="hidden sm:flex space-x-8">
+                        <div className="flex space-x-8">
                             <NavLink
                                 href="/login"
                                 icon={<FiLogIn />}
@@ -127,6 +128,7 @@ function NavSideBar({ user }: { user: UserType | null }) {
                         <Button
                             variant={"destructive"}
                             className="w-full cursor-pointer"
+                            onClick={() => logout()}
                         >
                             Logout
                         </Button>
