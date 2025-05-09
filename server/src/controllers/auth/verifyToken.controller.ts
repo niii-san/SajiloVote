@@ -8,8 +8,6 @@ export const verifyToken = asyncHandler(async (req: Request, res: Response) => {
         omit: {
             password: true,
             refresh_token: true,
-            created_at: true,
-            updated_at: true,
         },
     });
     return res

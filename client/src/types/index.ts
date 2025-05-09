@@ -1,2 +1,2 @@
-import type { User } from "./user.type";
-export { User };
+import type { UserType } from "./user.type";
+export { UserType };
