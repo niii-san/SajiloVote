@@ -39,6 +39,14 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
+
+    --color-m-background: var(--m_background);
+    --color-m-primary: var(--m_primary);
+    --color-m-secondary: var(--m_secondary);
+    --color-m-primary-foreground: var(--m_primary-foreground);
+    --color-m-secondary-foreground: var(--m_secondary-foreground);
+    --color-m-accent: var(--m_accent);
+    --color-m-accent-foreground: var(--m_accent-foreground);
 }
 
 :root {

@@ -22,12 +22,12 @@ function NavSideBar({ user }: { user: UserType | null }) {
 
     if (!user) {
         return (
-            <nav className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+            <nav className="bg-secondary shadow-sm z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <Link
                             href="/"
-                            className="text-2xl font-bold text-indigo-600 flex items-center"
+                            className="text-2xl font-bold text-primary flex items-center"
                         >
                             <FiHome className="mr-2" />
                             SajiloVote
@@ -63,10 +63,9 @@ function NavSideBar({ user }: { user: UserType | null }) {
                     <FiMenu size={24} />
                 </button>
             )}
-
             {/* Sidebar */}
             <aside
-                className={`fixed left-0 top-0 h-screen w-64 bg-white shadow-lg z-40 transition-all duration-300
+                className={`fixed left-0 top-0 h-screen w-64 bg-sidebar border-r border-sidebar-border shadow-lg z-40 transition-all duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
             >
                 <div className="h-full flex flex-col">
@@ -147,7 +146,6 @@ function NavSideBar({ user }: { user: UserType | null }) {
     );
 }
 
-// Updated NavLink component with active state
 const NavLink = ({
     href,
     icon,
@@ -163,8 +161,8 @@ const NavLink = ({
         href={href}
         className={`flex items-center transition-colors duration-200 ${
             isActive
-                ? "text-indigo-600 font-semibold"
-                : "text-gray-600 hover:text-indigo-600"
+                ? "text-primary font-extrabold"
+                : "text-secondary-foreground hover:text-accent-foreground"
         }`}
     >
         {icon}
@@ -172,7 +170,6 @@ const NavLink = ({
     </Link>
 );
 
-// Updated SidebarLink component with active state
 const SidebarLink = ({
     href,
     icon,
@@ -188,8 +185,8 @@ const SidebarLink = ({
         href={href}
         className={`flex items-center p-3 rounded-lg transition-all duration-200 ${
             isActive
-                ? "bg-indigo-50 text-indigo-600 font-semibold"
-                : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold"
+                : "text-gray-700 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         }`}
     >
         <span className="text-lg">{icon}</span>

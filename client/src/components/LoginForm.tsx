@@ -57,7 +57,7 @@ function LoginForm() {
     };
 
     return (
-        <div className="w-full max-w-md space-y-6 p-6">
+        <div className="w-full max-w-md bg-secondary space-y-6 p-10 rounded-lg">
             <div className="text-center">
                 <h1 className="text-3xl font-bold tracking-tight">
                     Welcome Back

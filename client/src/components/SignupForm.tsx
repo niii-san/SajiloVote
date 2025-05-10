@@ -84,6 +84,8 @@ function SignupForm() {
             {/* Image Section */}
             <div className="hidden bg-muted lg:block">
                 <Image
+                    width={500}
+                    height={500}
                     src="/signup-image.jpg"
                     alt="Signup Illustration"
                     className="h-full w-full object-cover"

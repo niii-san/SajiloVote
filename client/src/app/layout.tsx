@@ -18,7 +18,7 @@ export default async function RootLayout({
     const user = await getCurrentUserData();
     return (
         <html lang="en" className="">
-            <body className={`antialiased`}>
+            <body className={`antialiased bg-background`}>
                 <NavBar user={user} />
                 {children}
                 <Toaster position="top-right" />
