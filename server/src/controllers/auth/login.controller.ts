@@ -5,7 +5,7 @@ import {
 } from "../../utils/index.js";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { generateRefreshToken, generateAccessToken } from "./tokens.js";
+import { generateAccessToken } from "./tokens.js";
 import { cookieOptions } from "../../constants.js";
 import { prisma } from "../../db/index.js";
 
@@ -35,28 +35,20 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     }
 
     const accessToken = await generateAccessToken(user.id);
-    const refreshToken = await generateRefreshToken(user.id);
-
-    const userData = await prisma.user.update({
-        where: { id: user.id },
-        data: { refresh_token: refreshToken },
-    });
 
     return res
         .cookie("access_token", accessToken, cookieOptions)
-        .cookie("refresh_token", refreshToken, cookieOptions)
         .status(200)
         .json(
             new SuccessResponse(200, "login success", {
                 access_token: accessToken,
-                refresh_token: refreshToken,
                 userData: {
-                    id: userData.id,
-                    first_name: userData.first_name,
-                    last_name: userData.last_name,
-                    email_address: userData.email_address,
-                    created_at: userData.created_at,
-                    updated_at: userData.updated_at,
+                    id: user.id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email_address: user.email_address,
+                    created_at: user.created_at,
+                    updated_at: user.updated_at,
                 },
             }),
         );
