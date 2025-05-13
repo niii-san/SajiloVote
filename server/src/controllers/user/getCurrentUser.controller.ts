@@ -15,7 +15,7 @@ export const getCurrentUserData = asyncHandler(
         }
         const user = await prisma.user.findFirst({
             where: { id: userId },
-            omit: { password: true, refresh_token: true },
+            omit: { password: true, suspended: true, suspended_till: true },
         });
 
         return res

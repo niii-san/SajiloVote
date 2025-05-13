@@ -29,7 +29,6 @@ export const authenticate = asyncHandler(
                 where: { id: decoded.id },
                 omit: {
                     password: true,
-                    refresh_token: true,
                 },
             });
             if (!user) {

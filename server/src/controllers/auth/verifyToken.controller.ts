@@ -7,7 +7,8 @@ export const verifyToken = asyncHandler(async (req: Request, res: Response) => {
         where: { id: req.user?.id },
         omit: {
             password: true,
-            refresh_token: true,
+            suspended: true,
+            suspended_till: true
         },
     });
     return res

@@ -65,11 +65,12 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
             first_name: firstName,
             last_name: lastName,
             email_address: emailAddress,
+            suspended: false,
+            suspended_till: null,
             password: hashedPassword,
         },
         omit: {
             password: true,
-            refresh_token: true,
         },
     });
 

@@ -1,13 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-    provider        = "prisma-client-js"
-    output          = "../generated/prisma"
-    previewFeatures = ["prismaSchemaFolder"]
+    provider = "prisma-client-js"
+    output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,22 +8,38 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// User Schema
 model User {
-    id             Int      @id @default(autoincrement())
+    id             Int       @id @default(autoincrement())
     first_name     String
     last_name      String
-    email_address  String   @unique
+    suspended      Boolean   @default(false)
+    suspended_till DateTime? @db.Timestamptz()
+    email_address  String    @unique
     password       String
-    refresh_token  String?  @db.Text()
-    created_at     DateTime @default(now()) @db.Timestamptz(5)
-    updated_at      DateTime @updatedAt @db.Timestamptz
+    created_at     DateTime  @default(now()) @db.Timestamptz()
+    updated_at     DateTime  @updatedAt @db.Timestamptz()
     events_created Event[]
 
     @@map("users")
 }
 
-// Event Schema
+model Event {
+    id          Int        @id @default(autoincrement())
+    title       String
+    description String?
+    type        EVENT_TYPE
+    creator_id  Int
+    start_type  START_TYPE
+    start_at    DateTime?
+    end_type    END_TYPE
+    end_at      DateTime?
+    created_at  DateTime   @default(now()) @db.Timestamptz(6)
+    updated_at  DateTime   @updatedAt @db.Timestamptz(6)
+    creator     User       @relation(fields: [creator_id], references: [id])
+
+    @@map("events")
+}
+
 enum EVENT_TYPE {
     POLL
     VOTE
@@ -45,21 +54,4 @@ enum START_TYPE {
 enum END_TYPE {
     MANUL
     TIME
-}
-
-model Event {
-    id          Int        @id @default(autoincrement())
-    title       String
-    description String?    @db.Text()
-    type        EVENT_TYPE
-    creator     User       @relation(fields: [creator_id], references: [id])
-    creator_id  Int
-    start_type  START_TYPE
-    start_at    DateTime?
-    end_type    END_TYPE
-    end_at      DateTime?
-    created_at  DateTime   @default(now()) @db.Timestamptz()
-    updated_at  DateTime   @updatedAt @db.Timestamptz()
-
-    @@map("events")
 }

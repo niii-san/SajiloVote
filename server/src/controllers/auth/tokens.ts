@@ -6,7 +6,12 @@ import ms from "ms";
 export const generateAccessToken = async (userId: number): Promise<string> => {
     const user = await prisma.user.findFirst({
         where: { id: userId },
-        omit: { password: true, refresh_token: true, updated_at: true },
+        omit: {
+            password: true,
+            suspended: true,
+            suspended_till: true,
+            updated_at: true,
+        },
     });
     if (!user) {
         throw new ErrorResponse(404, 4000, "token generation failed");
@@ -23,4 +28,3 @@ export const generateAccessToken = async (userId: number): Promise<string> => {
 
     return token;
 };
-

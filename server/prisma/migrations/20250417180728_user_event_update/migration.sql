@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "events" ALTER COLUMN "updated_at" SET DATA TYPE TIMESTAMPTZ;

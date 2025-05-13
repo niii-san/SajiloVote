@@ -5,18 +5,19 @@ CREATE TYPE "EVENT_TYPE" AS ENUM ('POLL', 'VOTE');
 CREATE TYPE "START_TYPE" AS ENUM ('IMMEDIATE', 'MANUAL', 'TIME');
 
 -- CreateEnum
-CREATE TYPE "END_TYPE" AS ENUM ('MANUAL', 'TIME');
+CREATE TYPE "END_TYPE" AS ENUM ('MANUL', 'TIME');
 
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
+    "suspended" BOOLEAN NOT NULL DEFAULT false,
+    "suspended_till" TIMESTAMP(3) NOT NULL,
     "email_address" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "refresh_token" TEXT,
     "created_at" TIMESTAMPTZ(5) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "update_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -32,8 +33,8 @@ CREATE TABLE "events" (
     "start_at" TIMESTAMP(3),
     "end_type" "END_TYPE" NOT NULL,
     "end_at" TIMESTAMP(3),
-    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "events_pkey" PRIMARY KEY ("id")
 );
