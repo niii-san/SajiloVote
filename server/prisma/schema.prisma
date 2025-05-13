@@ -8,38 +8,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id             Int       @id @default(autoincrement())
-    first_name     String
-    last_name      String
-    suspended      Boolean   @default(false)
-    suspended_till DateTime? @db.Timestamptz()
-    email_address  String    @unique
-    password       String
-    created_at     DateTime  @default(now()) @db.Timestamptz()
-    updated_at     DateTime  @updatedAt @db.Timestamptz()
-    events_created Event[]
-
-    @@map("users")
-}
-
-model Event {
-    id          Int        @id @default(autoincrement())
-    title       String
-    description String?
-    type        EVENT_TYPE
-    creator_id  Int
-    start_type  START_TYPE
-    start_at    DateTime?
-    end_type    END_TYPE
-    end_at      DateTime?
-    created_at  DateTime   @default(now()) @db.Timestamptz(6)
-    updated_at  DateTime   @updatedAt @db.Timestamptz(6)
-    creator     User       @relation(fields: [creator_id], references: [id])
-
-    @@map("events")
-}
-
+// Enums
 enum EVENT_TYPE {
     POLL
     VOTE
@@ -54,4 +23,87 @@ enum START_TYPE {
 enum END_TYPE {
     MANUL
     TIME
+}
+
+// User model
+model User {
+    id             Int       @id @default(autoincrement())
+    first_name     String
+    last_name      String
+    suspended      Boolean   @default(false)
+    suspended_till DateTime? @db.Timestamptz()
+    email_address  String    @unique
+    password       String
+    created_at     DateTime  @default(now()) @db.Timestamptz()
+    updated_at     DateTime  @updatedAt @db.Timestamptz()
+
+    // relations
+    events_created Event[]
+    votes_voted    VoteRecord[]
+
+    @@map("users")
+}
+
+// Event Model
+model Event {
+    id             Int        @id @default(autoincrement())
+    title          String
+    description    String?
+    type           EVENT_TYPE
+    creator_id     Int
+    start_type     START_TYPE
+    start_at       DateTime?
+    end_type       END_TYPE
+    end_at         DateTime?
+    multi_vote     Boolean    @default(false)
+    anonymous_vote Boolean    @default(false)
+    created_at     DateTime   @default(now()) @db.Timestamptz(6)
+    updated_at     DateTime   @updatedAt @db.Timestamptz(6)
+    creator        User       @relation(fields: [creator_id], references: [id])
+
+    // relations
+    candidate_vote_options VoteEventCandidateOptions[]
+    poll_vote_options      PollEventVoteOptions[]
+    votes_records          VoteRecord[]
+
+    @@map("events")
+}
+
+// Event candidiate vote options model
+model VoteEventCandidateOptions {
+    id              Int     @id @default(autoincrement())
+    event_id        Int
+    candidate_name  String
+    candidate_email String?
+
+    // relations
+    event Event @relation(fields: [event_id], references: [id])
+
+    @@map("vote_event_candidate_options")
+}
+
+model PollEventVoteOptions {
+    id          Int    @id @default(autoincrement())
+    event_id    Int
+    option_text String
+
+    // relations
+    event Event @relation(fields: [event_id], references: [id])
+
+    @@map("poll_event_vote_options")
+}
+
+// Vote records model
+model VoteRecord {
+    id                        Int      @id @default(autoincrement())
+    event_id                  Int
+    voter_id                  Int
+    voted_candidate_option_id Int?
+    voted_poll_option_id      Int?
+    created_at                DateTime @default(now()) @db.Timestamptz()
+    updated_at                DateTime @updatedAt @db.Timestamptz()
+
+    // relations
+    event Event @relation(fields: [event_id], references: [id])
+    user  User  @relation(fields: [voter_id], references: [id])
 }
