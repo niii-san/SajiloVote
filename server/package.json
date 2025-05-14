@@ -15,7 +15,7 @@
     "author": "Nishan Bista",
     "main": "./src/server.js",
     "scripts": {
-        "dev": "npx tsc --watch & nodemon dist/server.js",
+        "dev": "npx concurrently \"tsc --watch\" \"nodemon dist/server.js\"",
         "start": "node dist/server.js",
         "build": "npx tsc"
     },
@@ -26,6 +26,7 @@
         "@types/express": "^5.0.0",
         "@types/jsonwebtoken": "^9.0.8",
         "@types/node": "^22.10.7",
+        "concurrently": "^9.1.2",
         "nodemon": "^3.1.9",
         "prettier": "^3.4.2",
         "typescript": "^5.7.3"

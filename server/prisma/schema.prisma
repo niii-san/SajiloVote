@@ -21,7 +21,7 @@ enum START_TYPE {
 }
 
 enum END_TYPE {
-    MANUL
+    MANUAL
     TIME
 }
 
@@ -61,7 +61,7 @@ model Event {
     updated_at     DateTime   @updatedAt @db.Timestamptz(6)
 
     // relations
-    creator        User       @relation(fields: [creator_id], references: [id])
+    creator                User                        @relation(fields: [creator_id], references: [id])
     candidate_vote_options VoteEventCandidateOptions[]
     poll_vote_options      PollEventVoteOptions[]
     votes_records          VoteRecord[]
