@@ -59,9 +59,9 @@ model Event {
     anonymous_vote Boolean    @default(false)
     created_at     DateTime   @default(now()) @db.Timestamptz(6)
     updated_at     DateTime   @updatedAt @db.Timestamptz(6)
-    creator        User       @relation(fields: [creator_id], references: [id])
 
     // relations
+    creator        User       @relation(fields: [creator_id], references: [id])
     candidate_vote_options VoteEventCandidateOptions[]
     poll_vote_options      PollEventVoteOptions[]
     votes_records          VoteRecord[]
