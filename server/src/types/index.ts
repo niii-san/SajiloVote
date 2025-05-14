@@ -1,2 +1,5 @@
 import type { ApiResponse } from "./ApiResponse.types.js";
-export type { ApiResponse };
+
+import { RequestWithContext } from "./RequestWithContext.js";
+
+export type { ApiResponse, RequestWithContext };

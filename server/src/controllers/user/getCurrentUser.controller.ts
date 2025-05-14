@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import {
     asyncHandler,
     ErrorResponse,
@@ -6,9 +6,11 @@ import {
 } from "../../utils/index.js";
 import prisma from "../../db/prisma.js";
 
+import { RequestWithContext } from "../../types/index.js";
+
 export const getCurrentUserData = asyncHandler(
-    async (req: Request, res: Response) => {
-        const userId = req.user?.id;
+    async (req: RequestWithContext, res: Response) => {
+        const userId = req.user.id;
 
         if (!userId) {
             throw new ErrorResponse(401, 2034, "Unauthorized access detected!");

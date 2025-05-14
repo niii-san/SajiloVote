@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
-import { NextFunction, Request } from "express";
+import { NextFunction } from "express";
 import { asyncHandler, ErrorResponse } from "../utils/index.js";
 import prisma from "../db/prisma.js";
+import { RequestWithContext } from "../types/index.js";
 
 /**
  * **Authentication middleware**
@@ -9,7 +10,7 @@ import prisma from "../db/prisma.js";
  * _access_token is provided and is valid_
  */
 export const authenticate = asyncHandler(
-    async (req: Request, _: Response, next: NextFunction) => {
+    async (req: RequestWithContext, _: Response, next: NextFunction) => {
         const token =
             req.cookies?.access_token ||
             req.header("Authorization")?.replace("Bearer ", "") ||
