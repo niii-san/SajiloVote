@@ -14,25 +14,25 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     const password = req.body?.password;
 
     if (!firstName) {
-        throw new ErrorResponse(400, 1000, "First name is required");
+        throw new ErrorResponse(400, "client", "First name is required");
     }
 
     if (!lastName) {
-        throw new ErrorResponse(400, 1000, "Last name is required");
+        throw new ErrorResponse(400, "client", "Last name is required");
     }
 
     if (!emailAddress) {
-        throw new ErrorResponse(400, 1000, "Email address is required");
+        throw new ErrorResponse(400, "client", "Email address is required");
     }
 
     if (!password) {
-        throw new ErrorResponse(400, 1000, "Password is required");
+        throw new ErrorResponse(400, "client", "Password is required");
     }
 
     if (password.length < 8) {
         throw new ErrorResponse(
             400,
-            1000,
+            "client",
             "Password must be 8 characters or longer",
         );
     }
@@ -40,7 +40,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     if (password.length > 25) {
         throw new ErrorResponse(
             400,
-            1000,
+            "client",
             "Password cannot be longer than 25 characters",
         );
     }
@@ -52,7 +52,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     if (userAlreadyExistingWithEmail) {
         throw new ErrorResponse(
             409,
-            900,
+            "client",
             "User with this email address already exists",
         );
     }

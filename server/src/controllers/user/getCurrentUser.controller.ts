@@ -13,7 +13,7 @@ export const getCurrentUserData = asyncHandler(
         const userId = req.user.id;
 
         if (!userId) {
-            throw new ErrorResponse(401, 2034, "Unauthorized access detected!");
+            throw new ErrorResponse(401, "auth", "Unauthorized access detected!");
         }
         const user = await prisma.user.findFirst({
             where: { id: userId },

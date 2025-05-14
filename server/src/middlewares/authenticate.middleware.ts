@@ -17,7 +17,7 @@ export const authenticate = asyncHandler(
             "";
 
         if (!token) {
-            throw new ErrorResponse(401, 9000, "Token is required");
+            throw new ErrorResponse(401, "auth", "Token is required");
         }
 
         try {
@@ -33,15 +33,15 @@ export const authenticate = asyncHandler(
                 },
             });
             if (!user) {
-                throw new ErrorResponse(401, 9000, "Invalid token");
+                throw new ErrorResponse(401, "auth", "Invalid token");
             }
             req.user = user;
             next();
         } catch (error: any) {
             if (error?.message == "jwt expired") {
-                throw new ErrorResponse(401, 9009, "Access token expired");
+                throw new ErrorResponse(401, "session_expired", "Access token expired");
             }
-            throw new ErrorResponse(401, 9000, "Invalid token");
+            throw new ErrorResponse(401, "auth", "Invalid token");
         }
     },
 );

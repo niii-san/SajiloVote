@@ -14,7 +14,7 @@ export const generateAccessToken = async (userId: number): Promise<string> => {
         },
     });
     if (!user) {
-        throw new ErrorResponse(404, 4000, "token generation failed");
+        throw new ErrorResponse(404, "client", "token generation failed");
     }
 
     const jwtAccessSecret = process.env.AUTH_ACCESS_TOKEN_SECRET_KEY;
