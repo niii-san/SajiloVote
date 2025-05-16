@@ -13,6 +13,8 @@ import DateTime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import moment from "moment";
 import { capitalize } from "@/lib/utils";
+import api from "@/lib/api";
+import toast from "react-hot-toast";
 
 interface FormState {
     submitting: boolean;
@@ -122,7 +124,37 @@ function CreateEvent() {
     };
 
     const handleSubmit = async () => {
-        console.log(validateForm());
+        clearAllErrors();
+        if (validateForm()) {
+            const payload = {
+                title: form.eventTitle.value,
+                type: form.eventType,
+                description: form.eventDescription,
+                start_type: form.startType,
+                start_at: form.startAt,
+                end_type: form.endType,
+                end_at: form.endAt,
+                multi_vote: form.multiVote,
+                anonymous_vote: form.anonymousVote,
+                poll_options:
+                    form.eventType === "poll"
+                        ? form.pollOptions.map((option) => option.text)
+                        : null,
+                candidate_options:
+                    form.eventType === "vote" ? form.candidateOptions : null,
+            };
+
+            try {
+                const res = await api.post("/api/v1/events", payload);
+
+                toast.success("Event created successfully!");
+            } catch (error: any) {
+                toast.error(
+                    error?.response?.data?.message ?? "Something went wrong!",
+                );
+                console.log(error);
+            }
+        }
     };
 
     return (
