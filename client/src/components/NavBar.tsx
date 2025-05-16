@@ -65,7 +65,7 @@ function NavSideBar({ user }: { user: UserType | null }) {
             )}
             {/* Sidebar */}
             <aside
-                className={`h-screen w-64 bg-sidebar border-r border-sidebar-border shadow-lg transition-all duration-300
+                className={`fixed lg:static left-0 top-0 z-40 lg:z-auto h-screen w-64 bg-sidebar border-r border-sidebar-border shadow-lg transition-all duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
             >
                 <div className="h-full flex flex-col">
@@ -102,18 +102,21 @@ function NavSideBar({ user }: { user: UserType | null }) {
                     <nav className="p-4 flex-1">
                         <div className="space-y-2">
                             <SidebarLink
+                                setIsOpen={setIsOpen}
                                 href="/"
                                 icon={<FiHome />}
                                 label="Home"
                                 isActive={pathname === "/"}
                             />
                             <SidebarLink
+                                setIsOpen={setIsOpen}
                                 href="/events"
                                 icon={<FiCalendar />}
                                 label="Events"
                                 isActive={pathname === "/events"}
                             />
                             <SidebarLink
+                                setIsOpen={setIsOpen}
                                 href="/settings"
                                 icon={<FiSettings />}
                                 label="Settings"
@@ -175,11 +178,14 @@ const SidebarLink = ({
     icon,
     label,
     isActive,
+    setIsOpen,
 }: {
     href: string;
     icon: React.ReactNode;
     label: string;
     isActive: boolean;
+    isOpen?: boolean;
+    setIsOpen: (isOpen: boolean) => void;
 }) => (
     <Link
         href={href}
@@ -188,6 +194,7 @@ const SidebarLink = ({
                 ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold"
                 : "text-gray-700 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         }`}
+        onClick={() => setIsOpen(false)}
     >
         <span className="text-lg">{icon}</span>
         <span className="ml-3 font-medium">{label}</span>

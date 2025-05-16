@@ -19,9 +19,9 @@ export default async function RootLayout({
     return (
         <html lang="en" className="">
             <body className={`antialiased bg-background`}>
-                <div className="flex">
-                <NavBar user={user} />
-                {children}
+                <div className={`${user ? "flex" : ""}`}>
+                    <NavBar user={user} />
+                    {children}
                 </div>
                 <Toaster position="top-right" />
             </body>
