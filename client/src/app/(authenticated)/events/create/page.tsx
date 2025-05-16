@@ -16,16 +16,19 @@ import { capitalize } from "@/lib/utils";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
 
+import { v4 as uuid } from "uuid";
+
 interface FormState {
     submitting: boolean;
     eventType: string;
     eventTitle: { value: string; error: string | null };
     eventDescription: string;
-    pollOptions: { text: string; error: string | null }[];
+    pollOptions: { text: string; error: string | null; id: string }[];
     candidateOptions: {
         candidate_name: string;
         candidate_email: string;
         error: string | null;
+        id: string;
     }[];
     startType: "immediate" | "manual" | "time";
     startAt: string | null;
@@ -42,12 +45,22 @@ function CreateEvent() {
         eventTitle: { value: "", error: null },
         eventDescription: "",
         pollOptions: [
-            { text: "", error: null },
-            { text: "", error: null },
+            { text: "", error: null, id: uuid() },
+            { text: "", error: null, id: uuid() },
         ],
         candidateOptions: [
-            { candidate_name: "", candidate_email: "", error: null },
-            { candidate_name: "", candidate_email: "", error: null },
+            {
+                candidate_name: "",
+                candidate_email: "",
+                error: null,
+                id: uuid(),
+            },
+            {
+                candidate_name: "",
+                candidate_email: "",
+                error: null,
+                id: uuid(),
+            },
         ],
         startType: "immediate",
         startAt: null,
@@ -250,7 +263,7 @@ function CreateEvent() {
                         {form.eventType === "poll" ? (
                             <>
                                 {form.pollOptions.map((option, index) => (
-                                    <div key={`${option.text}${index}`}>
+                                    <div key={option.id}>
                                         <div className="flex space-x-2">
                                             <Input
                                                 type="text"
@@ -299,7 +312,11 @@ function CreateEvent() {
                                             ...form,
                                             pollOptions: [
                                                 ...form.pollOptions,
-                                                { text: "", error: null },
+                                                {
+                                                    text: "",
+                                                    error: null,
+                                                    id: uuid(),
+                                                },
                                             ],
                                         });
                                     }}
@@ -315,12 +332,11 @@ function CreateEvent() {
                                             candidate_name,
                                             candidate_email,
                                             error,
+                                            id,
                                         },
                                         index,
                                     ) => (
-                                        <div
-                                            key={`${candidate_name},${candidate_email}${index}`}
-                                        >
+                                        <div key={id}>
                                             <div className="flex space-x-2">
                                                 <Input
                                                     type="text"
@@ -401,6 +417,7 @@ function CreateEvent() {
                                                     candidate_name: "",
                                                     candidate_email: "",
                                                     error: null,
+                                                    id: uuid(),
                                                 },
                                             ],
                                         });
