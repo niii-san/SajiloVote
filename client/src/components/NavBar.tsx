@@ -65,7 +65,7 @@ function NavSideBar({ user }: { user: UserType | null }) {
             )}
             {/* Sidebar */}
             <aside
-                className={`fixed left-0 top-0 h-screen w-64 bg-sidebar border-r border-sidebar-border shadow-lg z-40 transition-all duration-300
+                className={`h-screen w-64 bg-sidebar border-r border-sidebar-border shadow-lg transition-all duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
             >
                 <div className="h-full flex flex-col">
