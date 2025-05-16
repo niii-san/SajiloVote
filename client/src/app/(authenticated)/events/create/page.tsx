@@ -56,6 +56,7 @@ function CreateEvent() {
         multiVote: false,
         anonymousVote: false,
     });
+    console.log(form);
     const [addEventDescription, setAddEventDescription] =
         useState<boolean>(false);
     const [resError, setResError] = useState<string | null>(null);
@@ -149,7 +150,7 @@ function CreateEvent() {
 
                 toast.success("Event created successfully!");
             } catch (error: any) {
-                toast.error(
+                setResError(
                     error?.response?.data?.message ?? "Something went wrong!",
                 );
                 console.log(error);
@@ -160,6 +161,7 @@ function CreateEvent() {
     return (
         <div>
             <h1>Create {capitalize(form.eventType)} Event</h1>
+            {resError && <p className="text-destructive text-md">{resError}</p>}
 
             <div>
                 <Label>Event Type</Label>
@@ -504,7 +506,10 @@ function CreateEvent() {
                                 endAt:
                                     value === "manual"
                                         ? null
-                                        : (new Date() as unknown as string),
+                                        : (new Date(
+                                              new Date().getTime() +
+                                                  10 * 60 * 1000,
+                                          ) as unknown as string),
                             });
                         }}
                     >
@@ -537,12 +542,7 @@ function CreateEvent() {
                             }}
                             dateFormat="YYYY-MM-DD"
                             timeFormat="hh:mm A"
-                            value={
-                                new Date(
-                                    new Date(form.endAt || "").getTime() +
-                                        1200000,
-                                )
-                            }
+                            value={new Date(form.endAt || "")}
                             isValidDate={(currentDate) => {
                                 const today = moment().startOf("day");
                                 const fiveDaysLater = moment()
@@ -558,7 +558,7 @@ function CreateEvent() {
                             onChange={(date) => {
                                 setForm({
                                     ...form,
-                                    startAt: new Date(
+                                    endAt: new Date(
                                         date.toString(),
                                     ).toISOString(),
                                 });
