@@ -320,7 +320,7 @@ export const createEvent = asyncHandler(
         if (eventType === "POLL") {
             createdPollOptions = await Promise.all(
                 pollOptions.map((item: string) =>
-                    prisma.pollEventVoteOptions.create({
+                    prisma.pollEventVoteOption.create({
                         data: { event_id: event.id, option_text: item },
                     }),
                 ),
@@ -334,7 +334,7 @@ export const createEvent = asyncHandler(
                         candidate_name: string;
                         candidate_email?: string;
                     }) =>
-                        prisma.voteEventCandidateOptions.create({
+                        prisma.voteEventCandidateOption.create({
                             data: {
                                 event_id: event.id,
                                 candidate_name: item.candidate_name,

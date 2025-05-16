@@ -62,15 +62,15 @@ model Event {
 
     // relations
     creator                User                        @relation(fields: [creator_id], references: [id])
-    candidate_vote_options VoteEventCandidateOptions[]
-    poll_vote_options      PollEventVoteOptions[]
+    candidate_vote_options VoteEventCandidateOption[]
+    poll_vote_options      PollEventVoteOption[]
     votes_records          VoteRecord[]
 
     @@map("events")
 }
 
 // Event candidiate vote options model
-model VoteEventCandidateOptions {
+model VoteEventCandidateOption {
     id              Int     @id @default(autoincrement())
     event_id        Int
     candidate_name  String
@@ -82,7 +82,7 @@ model VoteEventCandidateOptions {
     @@map("vote_event_candidate_options")
 }
 
-model PollEventVoteOptions {
+model PollEventVoteOption {
     id          Int    @id @default(autoincrement())
     event_id    Int
     option_text String

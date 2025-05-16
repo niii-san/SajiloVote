@@ -1,6 +1,5 @@
 import {
     asyncHandler,
-    ErrorResponse,
     SuccessResponse,
 } from "../../utils/index.js";
 import { Response } from "express";
@@ -9,7 +8,7 @@ import prisma from "../../db/prisma.js";
 import _ from "lodash";
 
 /**
- * @desc    Get all events creataed by the context user
+ * @desc    Get all events created by the context user
  */
 export const getAllCreatedEvents = asyncHandler(
     async (req: RequestWithContext, res: Response) => {
