@@ -3,7 +3,7 @@ import {
     Button,
     Input,
     Label,
-    Checkbox,
+    Switch,
     Textarea,
     RadioGroup,
     RadioGroupItem,
@@ -12,11 +12,28 @@ import { useState } from "react";
 import DateTime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import moment from "moment";
-import { capitalize } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
-
 import { v4 as uuid } from "uuid";
+import { useRouter } from "next/navigation";
+
+import {
+    BarChart2,
+    Vote,
+    TextCursor,
+    AlertCircle,
+    Plus,
+    Trash2,
+    CalendarClock,
+    Loader2,
+    Info,
+    Settings2,
+    Calendar,
+    Clock,
+    List,
+} from "lucide-react";
+import { motion } from "motion/react";
 
 interface FormState {
     submitting: boolean;
@@ -39,6 +56,7 @@ interface FormState {
 }
 
 function CreateEvent() {
+    const router = useRouter();
     const [form, setForm] = useState<FormState>({
         submitting: false,
         eventType: "poll",
@@ -138,6 +156,7 @@ function CreateEvent() {
     };
 
     const handleSubmit = async () => {
+        setForm((prev) => ({ ...prev, submitting: true }));
         clearAllErrors();
         if (validateForm()) {
             const payload = {
@@ -155,13 +174,24 @@ function CreateEvent() {
                         ? form.pollOptions.map((option) => option.text)
                         : null,
                 candidate_options:
-                    form.eventType === "vote" ? form.candidateOptions : null,
+                    form.eventType === "vote"
+                        ? form.candidateOptions.map((candidate) => ({
+                              candidate_name: candidate.candidate_name,
+                              candidate_email: candidate.candidate_email,
+                          }))
+                        : null,
             };
 
             try {
-                const res = await api.post("/api/v1/events", payload);
+                await api.post("/api/v1/events", payload);
 
                 toast.success("Event created successfully!");
+                setForm({
+                    ...form,
+                    submitting: false,
+                });
+                //TODO: navigate to created event page
+                router.push(`/events`);
             } catch (error: any) {
                 setResError(
                     error?.response?.data?.message ?? "Something went wrong!",
@@ -172,449 +202,650 @@ function CreateEvent() {
     };
 
     return (
-        <div>
-            <h1>Create {capitalize(form.eventType)} Event</h1>
-            {resError && <p className="text-destructive text-md">{resError}</p>}
+        <div className="h-screen min-h-screen w-full p-8 bg-muted/40">
+            <div className="max-w-6xl mx-auto h-full flex flex-col">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-2 mb-8"
+                >
+                    <h1 className="text-4xl font-bold flex items-center gap-3 text-primary">
+                        <CalendarClock className="w-10 h-10" />
+                        Create {capitalize(form.eventType)} Event
+                    </h1>
 
-            <div>
-                <Label>Event Type</Label>
-                <div className="flex space-x-2 border-[3px] border-purple-400 rounded-xl select-none">
-                    <label className="radio flex flex-grow items-center justify-center rounded-lg p-1 cursor-pointer">
-                        <input
-                            type="radio"
-                            name="radio"
-                            value="poll"
-                            className="peer hidden"
-                            checked={form.eventType === "poll"}
-                            onChange={() =>
-                                setForm({ ...form, eventType: "poll" })
-                            }
-                        />
-                        <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
-                            Poll
-                        </span>
-                    </label>
-
-                    <label className="radio flex flex-grow items-center justify-center rounded-lg p-1 cursor-pointer">
-                        <input
-                            type="radio"
-                            name="radio"
-                            value="vote"
-                            className="peer hidden"
-                            onChange={() =>
-                                setForm({ ...form, eventType: "vote" })
-                            }
-                        />
-                        <span className="tracking-widest peer-checked:bg-gradient-to-r peer-checked:from-[blueviolet] peer-checked:to-[violet] peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out">
-                            Vote
-                        </span>
-                    </label>
-                </div>
-                <div>
-                    <Label>Event Title</Label>
-                    <Input
-                        type="text"
-                        placeholder="Enter event title"
-                        value={form.eventTitle.value}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                eventTitle: {
-                                    value: e.target.value,
-                                    error: null,
-                                },
-                            })
-                        }
-                    />
-                    {form.eventTitle.error && (
-                        <p className="text-destructive text-sm">
-                            {form.eventTitle.error}
-                        </p>
+                    {resError && (
+                        <div className="flex items-center gap-2 p-4 bg-destructive/10 text-destructive rounded-lg">
+                            <AlertCircle className="w-6 h-6" />
+                            <p className="text-lg font-medium">{resError}</p>
+                        </div>
                     )}
-                </div>
-                <div>
-                    <Label>Event Description</Label>
-                    <Checkbox
-                        checked={addEventDescription}
-                        onCheckedChange={() =>
-                            setAddEventDescription((p) => !p)
-                        }
-                    />
+                </motion.div>
 
-                    {addEventDescription && (
-                        <>
-                            <Textarea
-                                className="min-h-[150px] max-h-[300px]"
-                                placeholder="Enter event description"
-                                value={form.eventDescription}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        eventDescription: e.target.value,
-                                    })
-                                }
-                            />
-                        </>
-                    )}
-                </div>
-                <div>
-                    {form.eventType} Vote Options
-                    <div>
-                        {form.eventType === "poll" ? (
-                            <>
-                                {form.pollOptions.map((option, index) => (
-                                    <div key={option.id}>
-                                        <div className="flex space-x-2">
-                                            <Input
-                                                type="text"
-                                                placeholder={`Enter option ${index + 1}`}
-                                                value={option.text}
-                                                onChange={(e) => {
-                                                    const newOptions = [
-                                                        ...form.pollOptions,
-                                                    ];
-                                                    newOptions[index].text =
-                                                        e.target.value;
-                                                    setForm((prev) => ({
-                                                        ...prev,
-                                                        pollOptions: newOptions,
-                                                    }));
-                                                }}
-                                            />
-                                            <Button
-                                                disabled={
-                                                    form.pollOptions.length <= 2
-                                                }
-                                                onClick={() => {
-                                                    const newOptions = [
-                                                        ...form.pollOptions,
-                                                    ];
-                                                    newOptions.splice(index, 1);
-                                                    setForm({
-                                                        ...form,
-                                                        pollOptions: newOptions,
-                                                    });
-                                                }}
-                                            >
-                                                Remove
-                                            </Button>
-                                        </div>
-                                        {option.error && (
-                                            <p className="text-destructive text-sm">
-                                                {option.error}
-                                            </p>
-                                        )}
+                <div className="flex-1 overflow-auto pb-8">
+                    <div className="bg-background p-8 rounded-xl border space-y-10">
+                        {/* Event Type Selection */}
+                        <div className="space-y-6">
+                            <Label className="text-xl font-semibold flex items-center gap-3">
+                                <Settings2 className="w-6 h-6" />
+                                Event Type
+                            </Label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <label className="relative">
+                                    <input
+                                        type="radio"
+                                        name="radio"
+                                        value="poll"
+                                        className="peer hidden"
+                                        checked={form.eventType === "poll"}
+                                        onChange={() =>
+                                            setForm({
+                                                ...form,
+                                                eventType: "poll",
+                                            })
+                                        }
+                                    />
+                                    <div className="flex flex-col items-center p-6 border-2 rounded-xl cursor-pointer transition-all peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:ring-4 peer-checked:ring-primary/20">
+                                        <BarChart2 className="w-10 h-10 mb-3 text-primary" />
+                                        <span className="font-semibold text-lg">
+                                            Poll
+                                        </span>
                                     </div>
-                                ))}
-                                <Button
-                                    onClick={() => {
+                                </label>
+
+                                <label className="relative">
+                                    <input
+                                        type="radio"
+                                        name="radio"
+                                        value="vote"
+                                        className="peer hidden"
+                                        checked={form.eventType === "vote"}
+                                        onChange={() =>
+                                            setForm({
+                                                ...form,
+                                                eventType: "vote",
+                                            })
+                                        }
+                                    />
+                                    <div className="flex flex-col items-center p-6 border-2 rounded-xl cursor-pointer transition-all peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:ring-4 peer-checked:ring-primary/20">
+                                        <Vote className="w-10 h-10 mb-3 text-primary" />
+                                        <span className="font-semibold text-lg">
+                                            Vote
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* Event Details */}
+                        <div className="space-y-8">
+                            <div className="space-y-4">
+                                <Label className="text-xl font-semibold flex items-center gap-3">
+                                    <TextCursor className="w-6 h-6" />
+                                    Event Title
+                                </Label>
+                                <Input
+                                    type="text"
+                                    placeholder="Enter event title"
+                                    value={form.eventTitle.value}
+                                    className="h-14 text-lg"
+                                    onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            pollOptions: [
-                                                ...form.pollOptions,
-                                                {
-                                                    text: "",
-                                                    error: null,
-                                                    id: uuid(),
-                                                },
-                                            ],
-                                        });
-                                    }}
-                                >
-                                    Add Option
-                                </Button>
-                            </>
-                        ) : (
-                            <>
-                                {form.candidateOptions.map(
-                                    (
-                                        {
-                                            candidate_name,
-                                            candidate_email,
-                                            error,
-                                            id,
-                                        },
-                                        index,
-                                    ) => (
-                                        <div key={id}>
-                                            <div className="flex space-x-2">
+                                            eventTitle: {
+                                                value: e.target.value,
+                                                error: null,
+                                            },
+                                        })
+                                    }
+                                />
+                                {form.eventTitle.error && (
+                                    <div className="flex items-center gap-2 text-destructive">
+                                        <AlertCircle className="w-5 h-5" />
+                                        <p className="text-base">
+                                            {form.eventTitle.error}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <Label className="text-xl font-semibold flex items-center gap-3">
+                                        <Info className="w-6 h-6" />
+                                        Event Description
+                                    </Label>
+                                    <Switch
+                                        checked={addEventDescription}
+                                        onCheckedChange={() =>
+                                            setAddEventDescription((p) => !p)
+                                        }
+                                        className="h-6 w-12"
+                                    />
+                                </div>
+                                {addEventDescription && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                    >
+                                        <Textarea
+                                            className="min-h-[150px] text-lg"
+                                            placeholder="Describe your event..."
+                                            value={form.eventDescription}
+                                            onChange={(e) =>
+                                                setForm({
+                                                    ...form,
+                                                    eventDescription:
+                                                        e.target.value,
+                                                })
+                                            }
+                                        />
+                                    </motion.div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Options Section */}
+                        <div className="space-y-8">
+                            <h3 className="text-xl font-semibold flex items-center gap-3">
+                                <List className="w-6 h-6" />
+                                {form.eventType === "poll"
+                                    ? "Poll Options"
+                                    : "Candidate Details"}
+                            </h3>
+
+                            {form.eventType === "poll" ? (
+                                <div className="space-y-6">
+                                    {form.pollOptions.map((option, index) => (
+                                        <div
+                                            key={option.id}
+                                            className="space-y-3"
+                                        >
+                                            <div className="flex gap-3">
                                                 <Input
-                                                    type="text"
-                                                    placeholder={`Enter candidate ${index + 1} name`}
-                                                    value={candidate_name}
+                                                    placeholder={`Option ${index + 1}`}
+                                                    value={option.text}
+                                                    className="h-14 text-lg"
                                                     onChange={(e) => {
                                                         const newOptions = [
-                                                            ...form.candidateOptions,
+                                                            ...form.pollOptions,
                                                         ];
-                                                        newOptions[
-                                                            index
-                                                        ].candidate_name =
+                                                        newOptions[index].text =
                                                             e.target.value;
-                                                        setForm({
-                                                            ...form,
-                                                            candidateOptions:
+                                                        setForm((prev) => ({
+                                                            ...prev,
+                                                            pollOptions:
                                                                 newOptions,
-                                                        });
-                                                    }}
-                                                />
-                                                <Input
-                                                    type="text"
-                                                    placeholder={`Enter candidate ${index + 1} email`}
-                                                    value={candidate_email}
-                                                    onChange={(e) => {
-                                                        const newOptions = [
-                                                            ...form.candidateOptions,
-                                                        ];
-                                                        newOptions[
-                                                            index
-                                                        ].candidate_email =
-                                                            e.target.value;
-                                                        setForm({
-                                                            ...form,
-                                                            candidateOptions:
-                                                                newOptions,
-                                                        });
+                                                        }));
                                                     }}
                                                 />
                                                 <Button
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    className="w-14"
                                                     disabled={
-                                                        form.candidateOptions
+                                                        form.pollOptions
                                                             .length <= 2
                                                     }
                                                     onClick={() => {
-                                                        const newOptions = [
-                                                            ...form.candidateOptions,
-                                                        ];
-                                                        newOptions.splice(
-                                                            index,
-                                                            1,
-                                                        );
+                                                        const newOptions =
+                                                            form.pollOptions.filter(
+                                                                (_, i) =>
+                                                                    i !== index,
+                                                            );
                                                         setForm({
                                                             ...form,
-                                                            candidateOptions:
+                                                            pollOptions:
                                                                 newOptions,
                                                         });
                                                     }}
                                                 >
-                                                    Remove
+                                                    <Trash2 className="w-6 h-6" />
                                                 </Button>
                                             </div>
-                                            {error && (
-                                                <p className="text-destructive text-sm">
-                                                    {error}
-                                                </p>
+                                            {option.error && (
+                                                <div className="flex items-center gap-2 text-destructive">
+                                                    <AlertCircle className="w-5 h-5" />
+                                                    <p className="text-base">
+                                                        {option.error}
+                                                    </p>
+                                                </div>
                                             )}
                                         </div>
-                                    ),
-                                )}
-                                <Button
-                                    onClick={() => {
-                                        setForm({
-                                            ...form,
-                                            candidateOptions: [
-                                                ...form.candidateOptions,
+                                    ))}
+                                    <Button
+                                        onClick={() =>
+                                            setForm({
+                                                ...form,
+                                                pollOptions: [
+                                                    ...form.pollOptions,
+                                                    {
+                                                        text: "",
+                                                        error: null,
+                                                        id: uuid(),
+                                                    },
+                                                ],
+                                            })
+                                        }
+                                        className="h-14 text-lg gap-3"
+                                    >
+                                        <Plus className="w-6 h-6" />
+                                        Add Option
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {form.candidateOptions.map(
+                                            (candidate, index) => (
+                                                <div
+                                                    key={candidate.id}
+                                                    className="space-y-3"
+                                                >
+                                                    <div className="flex flex-col gap-3">
+                                                        <div className="flex gap-3">
+                                                            <Input
+                                                                placeholder={`Candidate ${index + 1} Name`}
+                                                                value={
+                                                                    candidate.candidate_name
+                                                                }
+                                                                className="h-14 text-lg flex-1"
+                                                                onChange={(
+                                                                    e,
+                                                                ) => {
+                                                                    const newOptions =
+                                                                        [
+                                                                            ...form.candidateOptions,
+                                                                        ];
+                                                                    newOptions[
+                                                                        index
+                                                                    ].candidate_name =
+                                                                        e.target.value;
+                                                                    setForm({
+                                                                        ...form,
+                                                                        candidateOptions:
+                                                                            newOptions,
+                                                                    });
+                                                                }}
+                                                            />
+                                                            <Input
+                                                                placeholder={`Candidate ${index + 1} Email`}
+                                                                value={
+                                                                    candidate.candidate_email
+                                                                }
+                                                                className="h-14 text-lg flex-1"
+                                                                onChange={(
+                                                                    e,
+                                                                ) => {
+                                                                    const newOptions =
+                                                                        [
+                                                                            ...form.candidateOptions,
+                                                                        ];
+                                                                    newOptions[
+                                                                        index
+                                                                    ].candidate_email =
+                                                                        e.target.value;
+                                                                    setForm({
+                                                                        ...form,
+                                                                        candidateOptions:
+                                                                            newOptions,
+                                                                    });
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <Button
+                                                            variant="destructive"
+                                                            className="w-full md:w-auto gap-3 h-14"
+                                                            disabled={
+                                                                form
+                                                                    .candidateOptions
+                                                                    .length <= 2
+                                                            }
+                                                            onClick={() => {
+                                                                const newOptions =
+                                                                    form.candidateOptions.filter(
+                                                                        (
+                                                                            _,
+                                                                            i,
+                                                                        ) =>
+                                                                            i !==
+                                                                            index,
+                                                                    );
+                                                                setForm({
+                                                                    ...form,
+                                                                    candidateOptions:
+                                                                        newOptions,
+                                                                });
+                                                            }}
+                                                        >
+                                                            <Trash2 className="w-5 h-5" />
+                                                            Remove Candidate
+                                                        </Button>
+                                                    </div>
+                                                    {candidate.error && (
+                                                        <div className="flex items-center gap-2 text-destructive">
+                                                            <AlertCircle className="w-5 h-5" />
+                                                            <p className="text-base">
+                                                                {
+                                                                    candidate.error
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ),
+                                        )}
+                                    </div>
+                                    <Button
+                                        onClick={() =>
+                                            setForm({
+                                                ...form,
+                                                candidateOptions: [
+                                                    ...form.candidateOptions,
+                                                    {
+                                                        candidate_name: "",
+                                                        candidate_email: "",
+                                                        error: null,
+                                                        id: uuid(),
+                                                    },
+                                                ],
+                                            })
+                                        }
+                                        className="h-14 text-lg gap-3"
+                                    >
+                                        <Plus className="w-6 h-6" />
+                                        Add Candidate
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Schedule Section */}
+                        <div className="space-y-8">
+                            <div className="space-y-6">
+                                <h3 className="text-xl font-semibold flex items-center gap-3">
+                                    <Clock className="w-6 h-6" />
+                                    Event Schedule
+                                </h3>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* Start Time */}
+                                    <div className="space-y-4">
+                                        <Label className="text-lg">
+                                            Start Event
+                                        </Label>
+                                        <RadioGroup
+                                            value={form.startType}
+                                            onValueChange={(value) => {
+                                                setForm({
+                                                    ...form,
+                                                    startType: value as
+                                                        | "immediate"
+                                                        | "manual"
+                                                        | "time",
+                                                    startAt:
+                                                        value === "immediate" ||
+                                                        value === "manual"
+                                                            ? null
+                                                            : new Date().toISOString(),
+                                                });
+                                            }}
+                                            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                                        >
+                                            {[
                                                 {
-                                                    candidate_name: "",
-                                                    candidate_email: "",
-                                                    error: null,
-                                                    id: uuid(),
+                                                    value: "immediate",
+                                                    label: "Immediately",
                                                 },
-                                            ],
-                                        });
-                                    }}
-                                >
-                                    Add Candidate
-                                </Button>
-                            </>
-                        )}
-                    </div>
-                </div>
-                <div>
-                    <Label>Start Event</Label>
+                                                {
+                                                    value: "manual",
+                                                    label: "Manually",
+                                                },
+                                                {
+                                                    value: "time",
+                                                    label: "Schedule",
+                                                },
+                                            ].map((option) => (
+                                                <Label
+                                                    key={option.value}
+                                                    className={cn(
+                                                        "flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer text-base",
+                                                        form.startType ===
+                                                            option.value
+                                                            ? "border-primary bg-primary/10 font-semibold"
+                                                            : "border-muted hover:bg-accent/50",
+                                                    )}
+                                                >
+                                                    <RadioGroupItem
+                                                        value={option.value}
+                                                        className="hidden"
+                                                    />
+                                                    {option.label}
+                                                </Label>
+                                            ))}
+                                        </RadioGroup>
 
-                    <RadioGroup
-                        defaultValue="immediate"
-                        value={form.startType}
-                        onValueChange={(value) => {
-                            setForm({
-                                ...form,
-                                startType: value as
-                                    | "immediate"
-                                    | "manual"
-                                    | "time",
-                                startAt:
-                                    value === "immediate" || value === "manual"
-                                        ? null
-                                        : (new Date() as unknown as string),
-                            });
-                        }}
-                    >
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                                value="immediate"
-                                id="start-event-option-one"
-                            />
-                            <Label htmlFor="start-event-option-one">
-                                Immediate
-                            </Label>
+                                        {form.startType === "time" && (
+                                            <div className="flex items-center gap-3 pl-2">
+                                                <Calendar className="w-6 h-6 text-muted-foreground" />
+                                                <DateTime
+                                                    inputProps={{
+                                                        className:
+                                                            "border-2 border-gray-300 rounded-lg p-3 w-full text-lg",
+                                                    }}
+                                                    dateFormat="YYYY-MM-DD"
+                                                    timeFormat="hh:mm A"
+                                                    value={
+                                                        new Date(
+                                                            form.startAt || "",
+                                                        )
+                                                    }
+                                                    isValidDate={(
+                                                        currentDate,
+                                                    ) => {
+                                                        const today =
+                                                            moment().startOf(
+                                                                "day",
+                                                            );
+                                                        const fiveDaysLater =
+                                                            moment()
+                                                                .add(5, "days")
+                                                                .endOf("day");
+                                                        return currentDate.isBetween(
+                                                            today,
+                                                            fiveDaysLater,
+                                                            null,
+                                                            "[]",
+                                                        );
+                                                    }}
+                                                    onChange={(date) => {
+                                                        setForm({
+                                                            ...form,
+                                                            startAt: new Date(
+                                                                date.toString(),
+                                                            ).toISOString(),
+                                                        });
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* End Time */}
+                                    <div className="space-y-4">
+                                        <Label className="text-lg">
+                                            End Event
+                                        </Label>
+                                        <RadioGroup
+                                            value={form.endType}
+                                            onValueChange={(value) => {
+                                                setForm({
+                                                    ...form,
+                                                    endType: value as
+                                                        | "manual"
+                                                        | "time",
+                                                    endAt:
+                                                        value === "manual"
+                                                            ? null
+                                                            : new Date(
+                                                                  new Date().getTime() +
+                                                                      10 *
+                                                                          60 *
+                                                                          1000,
+                                                              ).toISOString(),
+                                                });
+                                            }}
+                                            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                        >
+                                            {[
+                                                {
+                                                    value: "manual",
+                                                    label: "Manually",
+                                                },
+                                                {
+                                                    value: "time",
+                                                    label: "Schedule",
+                                                },
+                                            ].map((option) => (
+                                                <Label
+                                                    key={option.value}
+                                                    className={cn(
+                                                        "flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer text-base",
+                                                        form.endType ===
+                                                            option.value
+                                                            ? "border-primary bg-primary/10 font-semibold"
+                                                            : "border-muted hover:bg-accent/50",
+                                                    )}
+                                                >
+                                                    <RadioGroupItem
+                                                        value={option.value}
+                                                        className="hidden"
+                                                    />
+                                                    {option.label}
+                                                </Label>
+                                            ))}
+                                        </RadioGroup>
+
+                                        {form.endType === "time" && (
+                                            <div className="flex items-center gap-3 pl-2">
+                                                <Calendar className="w-6 h-6 text-muted-foreground" />
+                                                <DateTime
+                                                    inputProps={{
+                                                        className:
+                                                            "border-2 border-gray-300 rounded-lg p-3 w-full text-lg",
+                                                    }}
+                                                    dateFormat="YYYY-MM-DD"
+                                                    timeFormat="hh:mm A"
+                                                    value={
+                                                        new Date(
+                                                            form.endAt || "",
+                                                        )
+                                                    }
+                                                    isValidDate={(
+                                                        currentDate,
+                                                    ) => {
+                                                        const today =
+                                                            moment().startOf(
+                                                                "day",
+                                                            );
+                                                        const fiveDaysLater =
+                                                            moment()
+                                                                .add(5, "days")
+                                                                .endOf("day");
+                                                        return currentDate.isBetween(
+                                                            today,
+                                                            fiveDaysLater,
+                                                            null,
+                                                            "[]",
+                                                        );
+                                                    }}
+                                                    onChange={(date) => {
+                                                        setForm({
+                                                            ...form,
+                                                            endAt: new Date(
+                                                                date.toString(),
+                                                            ).toISOString(),
+                                                        });
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                                value="manual"
-                                id="start-event-option-two"
-                            />
-                            <Label htmlFor="start-event-option-two">
-                                Manually
-                            </Label>
+
+                        {/* Advanced Options */}
+                        <div className="space-y-8">
+                            <h3 className="text-xl font-semibold flex items-center gap-3">
+                                <Settings2 className="w-6 h-6" />
+                                Advanced Options
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30">
+                                    <div className="space-y-1">
+                                        <Label className="text-lg">
+                                            Allow Multiple Votes
+                                        </Label>
+                                        <p className="text-base text-muted-foreground">
+                                            Participants can vote for multiple
+                                            options
+                                        </p>
+                                    </div>
+                                    <Switch
+                                        checked={form.multiVote}
+                                        onCheckedChange={() =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                multiVote: !prev.multiVote,
+                                            }))
+                                        }
+                                        className="h-6 w-12"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30">
+                                    <div className="space-y-1">
+                                        <Label className="text-lg">
+                                            Anonymous Voting
+                                        </Label>
+                                        <p className="text-base text-muted-foreground">
+                                            Hide participant identities during
+                                            voting
+                                        </p>
+                                    </div>
+                                    <Switch
+                                        checked={form.anonymousVote}
+                                        onCheckedChange={() =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                anonymousVote:
+                                                    !prev.anonymousVote,
+                                            }))
+                                        }
+                                        className="h-6 w-12"
+                                    />
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                                value="time"
-                                id="start-event-option-three"
-                            />
-                            <Label htmlFor="start-event-option-three">
-                                Schedule
-                            </Label>
-                        </div>
-                    </RadioGroup>
-
-                    {form.startType === "time" && (
-                        <DateTime
-                            inputProps={{
-                                className:
-                                    "border-2 border-gray-300 rounded-md p-2",
-                            }}
-                            dateFormat="YYYY-MM-DD"
-                            timeFormat="hh:mm A"
-                            value={new Date(form.startAt || "")}
-                            isValidDate={(currentDate) => {
-                                const today = moment().startOf("day");
-                                const fiveDaysLater = moment()
-                                    .add(5, "days")
-                                    .endOf("day");
-                                return currentDate.isBetween(
-                                    today,
-                                    fiveDaysLater,
-                                    null,
-                                    "[]",
-                                );
-                            }}
-                            onChange={(date) => {
-                                setForm({
-                                    ...form,
-                                    startAt: new Date(
-                                        date.toString(),
-                                    ).toISOString(),
-                                });
-                            }}
-                        />
-                    )}
-                </div>
-                <div>
-                    <Label>End event</Label>
-
-                    <RadioGroup
-                        value={form.endType}
-                        onValueChange={(value) => {
-                            setForm({
-                                ...form,
-                                endType: value as "manual" | "time",
-                                endAt:
-                                    value === "manual"
-                                        ? null
-                                        : (new Date(
-                                              new Date().getTime() +
-                                                  10 * 60 * 1000,
-                                          ) as unknown as string),
-                            });
-                        }}
-                    >
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                                value="manual"
-                                id="end-event-option-one"
-                            />
-                            <Label htmlFor="end-event-option-one">
-                                Manually
-                            </Label>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                                value="time"
-                                id="end-event-option-two"
-                            />
-                            <Label htmlFor="end-event-option-two">
-                                Schedule
-                            </Label>
-                        </div>
-                    </RadioGroup>
-
-                    {form.endType === "time" && (
-                        <DateTime
-                            inputProps={{
-                                className:
-                                    "border-2 border-gray-300 rounded-md p-2",
-                            }}
-                            dateFormat="YYYY-MM-DD"
-                            timeFormat="hh:mm A"
-                            value={new Date(form.endAt || "")}
-                            isValidDate={(currentDate) => {
-                                const today = moment().startOf("day");
-                                const fiveDaysLater = moment()
-                                    .add(5, "days")
-                                    .endOf("day");
-                                return currentDate.isBetween(
-                                    today,
-                                    fiveDaysLater,
-                                    null,
-                                    "[]",
-                                );
-                            }}
-                            onChange={(date) => {
-                                setForm({
-                                    ...form,
-                                    endAt: new Date(
-                                        date.toString(),
-                                    ).toISOString(),
-                                });
-                            }}
-                        />
-                    )}
-                </div>
-
-                <div>
-                    <h2>Advance options</h2>
-                    <div>
-                        <Label>Allow multiple votes</Label>
-                        <Checkbox
-                            checked={form.multiVote}
-                            onCheckedChange={() =>
-                                setForm((prev) => ({
-                                    ...prev,
-                                    multiVote: !prev.multiVote,
-                                }))
-                            }
-                        />
-                    </div>
-                    <div>
-                        <Label>Anonymous voting</Label>
-                        <Checkbox
-                            checked={form.anonymousVote}
-                            onCheckedChange={() =>
-                                setForm((prev) => ({
-                                    ...prev,
-                                    anonymousVote: !prev.anonymousVote,
-                                }))
-                            }
-                        />
+                        {/* Submit Button */}
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={form.submitting}
+                            className="w-full h-14 text-xl gap-3 mt-10"
+                        >
+                            {form.submitting ? (
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                            ) : (
+                                <CalendarClock className="w-6 h-6" />
+                            )}
+                            {form.submitting
+                                ? "Creating Event..."
+                                : "Create Event"}
+                        </Button>
                     </div>
                 </div>
             </div>
-            <Button onClick={handleSubmit} disabled={form.submitting}>
-                Create Event
-            </Button>
         </div>
     );
 }
