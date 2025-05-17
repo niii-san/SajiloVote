@@ -3,7 +3,7 @@ import prisma from "../../db/prisma.js";
 import { ErrorResponse } from "../../utils/ErrorResponse.js";
 import ms from "ms";
 
-export const generateAccessToken = async (userId: number): Promise<string> => {
+export const generateAccessToken = async (userId: string): Promise<string> => {
     const user = await prisma.user.findFirst({
         where: { id: userId },
         omit: {

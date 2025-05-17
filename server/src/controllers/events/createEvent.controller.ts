@@ -4,6 +4,7 @@ import {
     SuccessResponse,
     isDateValid,
     isObject,
+    generateId,
 } from "../../utils/index.js";
 import { Response } from "express";
 import { RequestWithContext } from "../../types/index.js";
@@ -283,14 +284,15 @@ export const createEvent = asyncHandler(
             startType === "IMMEDIATE"
                 ? new Date().toISOString()
                 : startType == "MANUAL"
-                  ? null
-                  : new Date(startAt).toISOString();
+                    ? null
+                    : new Date(startAt).toISOString();
 
         const endTime =
             endType === "MANUAL" ? null : new Date(endAt).toISOString();
 
         const event = await prisma.event.create({
             data: {
+                id: generateId("EV"),
                 title: eventTitle,
                 description: eventDescription,
                 type: eventType,
@@ -305,13 +307,13 @@ export const createEvent = asyncHandler(
         });
 
         let createdPollOptions: {
-            id: number;
+            id: string;
             event_id: number;
             option_text: string;
         }[] = [];
 
         let createdCandidateOptions: {
-            id: number;
+            id: string;
             event_id: number;
             candidate_name: string;
             candidate_email: string | null;
@@ -321,7 +323,11 @@ export const createEvent = asyncHandler(
             createdPollOptions = await Promise.all(
                 pollOptions.map((item: string) =>
                     prisma.pollEventVoteOption.create({
-                        data: { event_id: event.id, option_text: item },
+                        data: {
+                            id: generateId("PO"),
+                            event_id: event.id,
+                            option_text: item,
+                        },
                     }),
                 ),
             );
@@ -336,6 +342,7 @@ export const createEvent = asyncHandler(
                     }) =>
                         prisma.voteEventCandidateOption.create({
                             data: {
+                                id: generateId("CO"),
                                 event_id: event.id,
                                 candidate_name: item.candidate_name,
                                 candidate_email: item.candidate_email ?? null,

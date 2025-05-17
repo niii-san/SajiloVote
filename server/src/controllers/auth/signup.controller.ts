@@ -1,6 +1,7 @@
 import {
     asyncHandler,
     ErrorResponse,
+    generateId,
     SuccessResponse,
 } from "../../utils/index.js";
 import { Request, Response } from "express";
@@ -62,6 +63,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
 
     const user = await prisma.user.create({
         data: {
+            id: generateId("US"),
             first_name: firstName,
             last_name: lastName,
             email_address: emailAddress,

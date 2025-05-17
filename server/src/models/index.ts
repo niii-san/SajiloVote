@@ -1,6 +1,6 @@
 import type {
-    VoteEventCandidateOptions,
-    PollEventVoteOptions,
+    VoteEventCandidateOption,
+    PollEventVoteOption,
     VoteRecord,
     User,
     Event,
@@ -9,7 +9,7 @@ import type {
 export {
     User,
     Event,
-    VoteEventCandidateOptions,
-    PollEventVoteOptions,
+    VoteEventCandidateOption,
+    PollEventVoteOption,
     VoteRecord,
 };

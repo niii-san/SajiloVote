@@ -27,7 +27,7 @@ enum END_TYPE {
 
 // User model
 model User {
-    id             Int       @id @default(autoincrement())
+    id             String    @id
     first_name     String
     last_name      String
     suspended      Boolean   @default(false)
@@ -46,11 +46,11 @@ model User {
 
 // Event Model
 model Event {
-    id             Int        @id @default(autoincrement())
+    id             String     @id
     title          String
     description    String?
     type           EVENT_TYPE
-    creator_id     Int
+    creator_id     String
     start_type     START_TYPE
     start_at       DateTime?
     end_type       END_TYPE
@@ -61,7 +61,7 @@ model Event {
     updated_at     DateTime   @updatedAt @db.Timestamptz(6)
 
     // relations
-    creator                User                        @relation(fields: [creator_id], references: [id])
+    creator                User                       @relation(fields: [creator_id], references: [id], onDelete: Cascade)
     candidate_vote_options VoteEventCandidateOption[]
     poll_vote_options      PollEventVoteOption[]
     votes_records          VoteRecord[]
@@ -71,39 +71,39 @@ model Event {
 
 // Event candidiate vote options model
 model VoteEventCandidateOption {
-    id              Int     @id @default(autoincrement())
-    event_id        Int
+    id              String  @id
+    event_id        String
     candidate_name  String
     candidate_email String?
 
     // relations
-    event Event @relation(fields: [event_id], references: [id])
+    event Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
 
     @@map("vote_event_candidate_options")
 }
 
 model PollEventVoteOption {
-    id          Int    @id @default(autoincrement())
-    event_id    Int
+    id          String @id
+    event_id    String
     option_text String
 
     // relations
-    event Event @relation(fields: [event_id], references: [id])
+    event Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
 
     @@map("poll_event_vote_options")
 }
 
 // Vote records model
 model VoteRecord {
-    id                        Int      @id @default(autoincrement())
-    event_id                  Int
-    voter_id                  Int
+    id                        String   @id
+    event_id                  String
+    voter_id                  String
     voted_candidate_option_id Int?
     voted_poll_option_id      Int?
     created_at                DateTime @default(now()) @db.Timestamptz()
     updated_at                DateTime @updatedAt @db.Timestamptz()
 
     // relations
-    event Event @relation(fields: [event_id], references: [id])
-    user  User  @relation(fields: [voter_id], references: [id])
+    event Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+    user  User  @relation(fields: [voter_id], references: [id], onDelete: Cascade)
 }

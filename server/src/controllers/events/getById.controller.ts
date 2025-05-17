@@ -13,22 +13,14 @@ import _ from "lodash";
  */
 export const getEventById = asyncHandler(
     async (req: RequestWithContext, res: Response) => {
-        const id = Number(req.params.id);
+        const id = req.params.id;
 
-        if (!_.isNumber(id)) {
-            return res
-                .status(400)
-                .json(
-                    new ErrorResponse(
-                        400,
-                        "client",
-                        `Event id must be a number.`,
-                    ),
-                );
+        if (typeof id !== "string") {
+            throw new ErrorResponse(400, "client", "Invalid event id!");
         }
 
         const event = await prisma.event.findFirst({
-            where: { id: id as unknown as number },
+            where: { id: id },
             include: {
                 creator: {
                     omit: {
