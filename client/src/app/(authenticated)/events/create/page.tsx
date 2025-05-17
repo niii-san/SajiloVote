@@ -176,9 +176,9 @@ function CreateEvent() {
                 candidate_options:
                     form.eventType === "vote"
                         ? form.candidateOptions.map((candidate) => ({
-                              candidate_name: candidate.candidate_name,
-                              candidate_email: candidate.candidate_email,
-                          }))
+                            candidate_name: candidate.candidate_name,
+                            candidate_email: candidate.candidate_email,
+                        }))
                         : null,
             };
 
@@ -193,10 +193,10 @@ function CreateEvent() {
                 //TODO: navigate to created event page
                 router.push(`/events`);
             } catch (error: any) {
+                setForm((p) => ({ ...p, submitting: false }));
                 setResError(
                     error?.response?.data?.message ?? "Something went wrong!",
                 );
-                console.log(error);
             }
         }
     };
@@ -585,7 +585,7 @@ function CreateEvent() {
                                                         | "time",
                                                     startAt:
                                                         value === "immediate" ||
-                                                        value === "manual"
+                                                            value === "manual"
                                                             ? null
                                                             : new Date().toISOString(),
                                                 });
@@ -688,11 +688,11 @@ function CreateEvent() {
                                                         value === "manual"
                                                             ? null
                                                             : new Date(
-                                                                  new Date().getTime() +
-                                                                      10 *
-                                                                          60 *
-                                                                          1000,
-                                                              ).toISOString(),
+                                                                new Date().getTime() +
+                                                                10 *
+                                                                60 *
+                                                                1000,
+                                                            ).toISOString(),
                                                 });
                                             }}
                                             className="grid grid-cols-1 md:grid-cols-2 gap-4"
