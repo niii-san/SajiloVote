@@ -15,6 +15,7 @@ export const createEvent = asyncHandler(
     async (req: RequestWithContext, res: Response) => {
         const eventTitle = req.body?.title ?? "";
         const eventDescription = req.body?.description ?? "";
+        const eventPassword = req.body?.password ?? "";
         const eventType = (req.body?.type ?? "").trim().toUpperCase();
         const creatorId = req.user.id;
         const startType = (req.body?.start_type ?? "").trim().toUpperCase();
@@ -35,6 +36,36 @@ export const createEvent = asyncHandler(
         if (!eventTitle) {
             throw new ErrorResponse(400, "client", "Event title is required!");
         }
+
+        if (!eventPassword) {
+            throw new ErrorResponse(
+                400,
+                "client",
+                "Event password is required!",
+            );
+        }
+        if (eventPassword.length < 6) {
+            throw new ErrorResponse(
+                400,
+                "client",
+                "Event password must be at least 6 characters long!",
+            );
+        }
+        if (eventPassword.length > 20) {
+            throw new ErrorResponse(
+                400,
+                "client",
+                "Event password must be at most 20 characters long!",
+            );
+        }
+        if (!eventPassword.trim()) {
+            throw new ErrorResponse(
+                400,
+                "client",
+                "Event password cannot be spaces only!",
+            );
+        }
+
         if (!eventType) {
             throw new ErrorResponse(400, "client", "Event type is required!");
         }
@@ -284,8 +315,8 @@ export const createEvent = asyncHandler(
             startType === "IMMEDIATE"
                 ? new Date().toISOString()
                 : startType == "MANUAL"
-                    ? null
-                    : new Date(startAt).toISOString();
+                  ? null
+                  : new Date(startAt).toISOString();
 
         const endTime =
             endType === "MANUAL" ? null : new Date(endAt).toISOString();
@@ -294,6 +325,7 @@ export const createEvent = asyncHandler(
             data: {
                 id: generateId("EV"),
                 title: eventTitle,
+                password: eventPassword,
                 description: eventDescription,
                 type: eventType,
                 creator_id: creatorId,
@@ -304,6 +336,7 @@ export const createEvent = asyncHandler(
                 multi_vote: multiVote,
                 anonymous_vote: anonymousVote,
             },
+            omit: { password: true },
         });
 
         let createdPollOptions: {

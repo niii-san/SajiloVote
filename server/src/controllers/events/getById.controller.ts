@@ -21,6 +21,7 @@ export const getEventById = asyncHandler(
 
         const event = await prisma.event.findFirst({
             where: { id: id },
+            omit: { password: true },
             include: {
                 creator: {
                     omit: {

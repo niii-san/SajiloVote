@@ -1,7 +1,4 @@
-import {
-    asyncHandler,
-    SuccessResponse,
-} from "../../utils/index.js";
+import { asyncHandler, SuccessResponse } from "../../utils/index.js";
 import { Response } from "express";
 import { RequestWithContext } from "../../types/index.js";
 import prisma from "../../db/prisma.js";
@@ -15,6 +12,9 @@ export const getAllCreatedEvents = asyncHandler(
         const user = req.user;
         const events = await prisma.event.findMany({
             where: { creator_id: user.id },
+            omit: {
+                password: true,
+            },
         });
 
         return res

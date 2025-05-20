@@ -49,6 +49,7 @@ model Event {
     id             String     @id
     title          String
     description    String?
+    password       String
     type           EVENT_TYPE
     creator_id     String
     start_type     START_TYPE

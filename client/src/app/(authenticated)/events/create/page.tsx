@@ -183,15 +183,14 @@ function CreateEvent() {
             };
 
             try {
-                await api.post("/api/v1/events", payload);
+                const res = await api.post("/api/v1/events", payload);
 
                 toast.success("Event created successfully!");
                 setForm({
                     ...form,
                     submitting: false,
                 });
-                //TODO: navigate to created event page
-                router.push(`/events`);
+                router.push(`/events/preview/${res.data?.data?.id}`);
             } catch (error: any) {
                 setForm((p) => ({ ...p, submitting: false }));
                 setResError(
