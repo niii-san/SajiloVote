@@ -32,6 +32,8 @@ import {
     Calendar,
     Clock,
     List,
+    Eye,
+    EyeOff,
 } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -39,6 +41,7 @@ interface FormState {
     submitting: boolean;
     eventType: string;
     eventTitle: { value: string; error: string | null };
+    password: { value: string; error: string | null };
     eventDescription: string;
     pollOptions: { text: string; error: string | null; id: string }[];
     candidateOptions: {
@@ -59,6 +62,7 @@ function CreateEvent() {
     const router = useRouter();
     const [form, setForm] = useState<FormState>({
         submitting: false,
+        password: { value: "", error: null },
         eventType: "poll",
         eventTitle: { value: "", error: null },
         eventDescription: "",
@@ -87,11 +91,12 @@ function CreateEvent() {
         multiVote: false,
         anonymousVote: false,
     });
-    console.log(form);
     const [addEventDescription, setAddEventDescription] =
         useState<boolean>(false);
+    const [showEventPassword, setShowEventPassword] = useState<boolean>(false);
     const [resError, setResError] = useState<string | null>(null);
 
+    // function that will clean all the errors or form state
     const clearAllErrors = () => {
         setForm((prev) => ({
             ...prev,
@@ -104,10 +109,15 @@ function CreateEvent() {
                 ...option,
                 error: null,
             })),
+            password: {
+                ...prev.password,
+                error: null,
+            },
         }));
         setResError(null);
     };
 
+    // function that will validate all the form fields
     const validateForm = () => {
         let isValid = true;
         if (!form.eventTitle.value.trim()) {
@@ -152,6 +162,38 @@ function CreateEvent() {
             }));
         }
 
+        if (!form.password.value.trim()) {
+            setForm((prev) => ({
+                ...prev,
+                password: {
+                    ...prev.password,
+                    error: "Event password is required!",
+                },
+            }));
+            isValid = false;
+        }
+        if (form.password.value.length < 6) {
+            setForm((prev) => ({
+                ...prev,
+                password: {
+                    ...prev.password,
+                    error: "Event password should be atleast 6 characters!",
+                },
+            }));
+            isValid = false;
+        }
+
+        if (form.password.value.length > 20) {
+            setForm((prev) => ({
+                ...prev,
+                password: {
+                    ...prev.password,
+                    error: "Event password cannot be longer than 20 characters!",
+                },
+            }));
+            isValid = false;
+        }
+
         return isValid;
     };
 
@@ -161,6 +203,7 @@ function CreateEvent() {
         if (validateForm()) {
             const payload = {
                 title: form.eventTitle.value,
+                password: form.password.value,
                 type: form.eventType,
                 description: form.eventDescription,
                 start_type: form.startType,
@@ -176,39 +219,34 @@ function CreateEvent() {
                 candidate_options:
                     form.eventType === "vote"
                         ? form.candidateOptions.map((candidate) => ({
-                            candidate_name: candidate.candidate_name,
-                            candidate_email: candidate.candidate_email,
-                        }))
+                              candidate_name: candidate.candidate_name,
+                              candidate_email: candidate.candidate_email,
+                          }))
                         : null,
             };
 
             try {
                 const res = await api.post("/api/v1/events", payload);
-
                 toast.success("Event created successfully!");
-                setForm({
-                    ...form,
-                    submitting: false,
-                });
-                router.push(`/events/preview/${res.data?.data?.id}`);
+                router.push(`/events/pre/${res.data?.data?.id}`);
             } catch (error: any) {
-                setForm((p) => ({ ...p, submitting: false }));
                 setResError(
                     error?.response?.data?.message ?? "Something went wrong!",
                 );
             }
         }
+        setForm((p) => ({ ...p, submitting: false }));
     };
 
     return (
-        <div className="h-screen min-h-screen w-full p-8 bg-muted/40">
+        <div className="h-screen min-h-screen w-full p-4 md:p-8 bg-muted/40">
             <div className="max-w-6xl mx-auto h-full flex flex-col">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="space-y-2 mb-8"
                 >
-                    <h1 className="text-4xl font-bold flex items-center gap-3 text-primary">
+                    <h1 className="text-2xl sm:text-4xl font-bold flex items-center gap-3 text-primary">
                         <CalendarClock className="w-10 h-10" />
                         Create {capitalize(form.eventType)} Event
                     </h1>
@@ -222,7 +260,7 @@ function CreateEvent() {
                 </motion.div>
 
                 <div className="flex-1 overflow-auto pb-8">
-                    <div className="bg-background p-8 rounded-xl border space-y-10">
+                    <div className="bg-background p-4 md:p-8 rounded-xl border space-y-10">
                         {/* Event Type Selection */}
                         <div className="space-y-6">
                             <Label className="text-xl font-semibold flex items-center gap-3">
@@ -237,12 +275,13 @@ function CreateEvent() {
                                         value="poll"
                                         className="peer hidden"
                                         checked={form.eventType === "poll"}
-                                        onChange={() =>
+                                        onChange={() => {
                                             setForm({
                                                 ...form,
                                                 eventType: "poll",
-                                            })
-                                        }
+                                            });
+                                            clearAllErrors();
+                                        }}
                                     />
                                     <div className="flex flex-col items-center p-6 border-2 rounded-xl cursor-pointer transition-all peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:ring-4 peer-checked:ring-primary/20">
                                         <BarChart2 className="w-10 h-10 mb-3 text-primary" />
@@ -259,12 +298,13 @@ function CreateEvent() {
                                         value="vote"
                                         className="peer hidden"
                                         checked={form.eventType === "vote"}
-                                        onChange={() =>
+                                        onChange={() => {
                                             setForm({
                                                 ...form,
                                                 eventType: "vote",
-                                            })
-                                        }
+                                            });
+                                            clearAllErrors();
+                                        }}
                                     />
                                     <div className="flex flex-col items-center p-6 border-2 rounded-xl cursor-pointer transition-all peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:ring-4 peer-checked:ring-primary/20">
                                         <Vote className="w-10 h-10 mb-3 text-primary" />
@@ -288,15 +328,16 @@ function CreateEvent() {
                                     placeholder="Enter event title"
                                     value={form.eventTitle.value}
                                     className="h-14 text-lg"
-                                    onChange={(e) =>
+                                    onChange={(e) => {
                                         setForm({
                                             ...form,
                                             eventTitle: {
                                                 value: e.target.value,
                                                 error: null,
                                             },
-                                        })
-                                    }
+                                        });
+                                        clearAllErrors();
+                                    }}
                                 />
                                 {form.eventTitle.error && (
                                     <div className="flex items-center gap-2 text-destructive">
@@ -331,13 +372,14 @@ function CreateEvent() {
                                             className="min-h-[150px] text-lg"
                                             placeholder="Describe your event..."
                                             value={form.eventDescription}
-                                            onChange={(e) =>
+                                            onChange={(e) => {
                                                 setForm({
                                                     ...form,
                                                     eventDescription:
                                                         e.target.value,
-                                                })
-                                            }
+                                                });
+                                                clearAllErrors();
+                                            }}
                                         />
                                     </motion.div>
                                 )}
@@ -376,6 +418,7 @@ function CreateEvent() {
                                                             pollOptions:
                                                                 newOptions,
                                                         }));
+                                                        clearAllErrors();
                                                     }}
                                                 />
                                                 <Button
@@ -465,6 +508,7 @@ function CreateEvent() {
                                                                         candidateOptions:
                                                                             newOptions,
                                                                     });
+                                                                    clearAllErrors();
                                                                 }}
                                                             />
                                                             <Input
@@ -489,6 +533,7 @@ function CreateEvent() {
                                                                         candidateOptions:
                                                                             newOptions,
                                                                     });
+                                                                    clearAllErrors();
                                                                 }}
                                                             />
                                                         </div>
@@ -584,7 +629,7 @@ function CreateEvent() {
                                                         | "time",
                                                     startAt:
                                                         value === "immediate" ||
-                                                            value === "manual"
+                                                        value === "manual"
                                                             ? null
                                                             : new Date().toISOString(),
                                                 });
@@ -664,6 +709,7 @@ function CreateEvent() {
                                                                 date.toString(),
                                                             ).toISOString(),
                                                         });
+                                                        clearAllErrors();
                                                     }}
                                                 />
                                             </div>
@@ -687,11 +733,11 @@ function CreateEvent() {
                                                         value === "manual"
                                                             ? null
                                                             : new Date(
-                                                                new Date().getTime() +
-                                                                10 *
-                                                                60 *
-                                                                1000,
-                                                            ).toISOString(),
+                                                                  new Date().getTime() +
+                                                                      10 *
+                                                                          60 *
+                                                                          1000,
+                                                              ).toISOString(),
                                                 });
                                             }}
                                             className="grid grid-cols-1 md:grid-cols-2 gap-4"
@@ -765,6 +811,7 @@ function CreateEvent() {
                                                                 date.toString(),
                                                             ).toISOString(),
                                                         });
+                                                        clearAllErrors();
                                                     }}
                                                 />
                                             </div>
@@ -826,7 +873,55 @@ function CreateEvent() {
                                 </div>
                             </div>
                         </div>
-
+                        {/* Password Field */}
+                        <div className="space-y-4">
+                            <Label className="text-xl font-semibold flex items-center gap-3">
+                                <Settings2 className="w-6 h-6" />
+                                Event Password
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    type={
+                                        showEventPassword ? "text" : "password"
+                                    }
+                                    placeholder="******"
+                                    value={form.password.value}
+                                    className="h-14 text-lg pr-12"
+                                    onChange={(e) => {
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            password: {
+                                                ...prev.password,
+                                                value: e.target.value,
+                                            },
+                                        }));
+                                        clearAllErrors();
+                                    }}
+                                />
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-2 top-2 hover:bg-transparent"
+                                    onClick={() =>
+                                        setShowEventPassword(!showEventPassword)
+                                    }
+                                >
+                                    {showEventPassword ? (
+                                        <EyeOff className="h-6 w-6 text-muted-foreground" />
+                                    ) : (
+                                        <Eye className="h-6 w-6 text-muted-foreground" />
+                                    )}
+                                </Button>
+                            </div>
+                            {form.password.error && (
+                                <div className="flex items-center gap-2 text-destructive">
+                                    <AlertCircle className="w-5 h-5" />
+                                    <p className="text-base">
+                                        {form.password.error}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                         {/* Submit Button */}
                         <Button
                             onClick={handleSubmit}
