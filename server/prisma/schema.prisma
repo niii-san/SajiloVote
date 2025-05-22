@@ -78,13 +78,13 @@ model EventParticipant {
     event_id          String
     user_id           String
     initial_joined_at DateTime @default(now()) @db.Timestamptz(6)
-    latest_rejoin     DateTime @updatedAt @db.Timestamptz(6)
+    latest_joined_at  DateTime @updatedAt @db.Timestamptz(6)
 
     // relations 
     event Event @relation(fields: [event_id], references: [id])
     user  User  @relation(fields: [user_id], references: [id])
 
-    @@map("joined_events")
+    @@map("event_participants")
 }
 
 // Event candidiate vote options model

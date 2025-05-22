@@ -321,6 +321,7 @@ export const createEvent = asyncHandler(
         const endTime =
             endType === "MANUAL" ? null : new Date(endAt).toISOString();
 
+        // TODO: use transaction
         const event = await prisma.event.create({
             data: {
                 id: generateId("EV"),
@@ -384,6 +385,17 @@ export const createEvent = asyncHandler(
                 ),
             );
         }
+
+        await prisma.eventParticipant.create({
+            data: {
+                id: generateId("EP"),
+                event_id: event.id,
+                user_id: event.creator_id,
+            },
+            include: {
+                user: true,
+            },
+        });
 
         return res.status(200).json(
             new SuccessResponse(200, "Event created successfully!", {
