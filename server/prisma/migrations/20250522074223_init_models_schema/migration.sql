@@ -27,6 +27,7 @@ CREATE TABLE "events" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
+    "password" TEXT NOT NULL,
     "type" "EVENT_TYPE" NOT NULL,
     "creator_id" TEXT NOT NULL,
     "start_type" "START_TYPE" NOT NULL,
@@ -39,6 +40,17 @@ CREATE TABLE "events" (
     "updated_at" TIMESTAMPTZ(6) NOT NULL,
 
     CONSTRAINT "events_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "joined_events" (
+    "id" TEXT NOT NULL,
+    "event_id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "initial_joined_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "latest_rejoin" TIMESTAMPTZ(6) NOT NULL,
+
+    CONSTRAINT "joined_events_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -78,6 +90,12 @@ CREATE UNIQUE INDEX "users_email_address_key" ON "users"("email_address");
 
 -- AddForeignKey
 ALTER TABLE "events" ADD CONSTRAINT "events_creator_id_fkey" FOREIGN KEY ("creator_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "joined_events" ADD CONSTRAINT "joined_events_event_id_fkey" FOREIGN KEY ("event_id") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "joined_events" ADD CONSTRAINT "joined_events_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "vote_event_candidate_options" ADD CONSTRAINT "vote_event_candidate_options_event_id_fkey" FOREIGN KEY ("event_id") REFERENCES "events"("id") ON DELETE CASCADE ON UPDATE CASCADE;

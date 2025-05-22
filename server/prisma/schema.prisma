@@ -38,8 +38,9 @@ model User {
     updated_at     DateTime  @updatedAt @db.Timestamptz()
 
     // relations
-    events_created Event[]
-    votes_voted    VoteRecord[]
+    events_created      Event[]
+    votes_voted         VoteRecord[]
+    events_participated EventParticipant[]
 
     @@map("users")
 }
@@ -66,8 +67,24 @@ model Event {
     candidate_vote_options VoteEventCandidateOption[]
     poll_vote_options      PollEventVoteOption[]
     votes_records          VoteRecord[]
+    event_participants     EventParticipant[]
 
     @@map("events")
+}
+
+// Table for tracking users joining events
+model EventParticipant {
+    id                String   @id
+    event_id          String
+    user_id           String
+    initial_joined_at DateTime @default(now()) @db.Timestamptz(6)
+    latest_rejoin     DateTime @updatedAt @db.Timestamptz(6)
+
+    // relations 
+    event Event @relation(fields: [event_id], references: [id])
+    user  User  @relation(fields: [user_id], references: [id])
+
+    @@map("joined_events")
 }
 
 // Event candidiate vote options model
