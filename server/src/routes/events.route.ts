@@ -5,6 +5,7 @@ import {
     getAllCreatedEvents,
     getEventById,
     getEventParticipants,
+    hasCurrentUserJoinedEvent,
 } from "../controllers/index.js";
 
 export const eventsRouter = Router();
@@ -13,3 +14,4 @@ eventsRouter.post("/", authenticate, createEvent);
 eventsRouter.get("/me", authenticate, getAllCreatedEvents);
 eventsRouter.get("/:id", authenticate, getEventById);
 eventsRouter.get("/:eventId/participants", authenticate, getEventParticipants);
+eventsRouter.get("/:eventId/joined", authenticate, hasCurrentUserJoinedEvent);
