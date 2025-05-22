@@ -6,57 +6,47 @@ import {
 import { Response } from "express";
 import { RequestWithContext } from "../../types/index.js";
 import prisma from "../../db/prisma.js";
-import _ from "lodash";
 
-/**
- * @desc    Get event by id
- */
-export const getEventById = asyncHandler(
+export const getEventParticipants = asyncHandler(
     async (req: RequestWithContext, res: Response) => {
-        const id = req.params.id;
-
-        if (typeof id !== "string") {
-            throw new ErrorResponse(400, "client", "Invalid event id!");
-        }
+        const eventId = req.params.eventId;
 
         const event = await prisma.event.findFirst({
-            where: { id: id },
-            omit: { password: true },
+            where: { id: eventId },
             include: {
-                creator: {
-                    omit: {
-                        password: true,
-                        email_address: true,
-                        created_at: true,
-                        updated_at: true,
-                        suspended: true,
-                        suspended_till: true,
-                    },
-                },
                 event_participants: {
                     include: {
                         user: {
                             omit: {
-                                created_at: true,
                                 password: true,
-                                suspended_till: true,
                                 suspended: true,
+                                suspended_till: true,
+                                created_at: true,
                                 updated_at: true,
                             },
                         },
                     },
                     omit: {
-                        event_id: true,
                         user_id: true,
                     },
                 },
             },
         });
 
+        if (!event) {
+            throw new ErrorResponse(404, "not_found", "Event not found");
+        }
+
+        const eventParticipants = event?.event_participants;
+
         return res
             .status(200)
             .json(
-                new SuccessResponse(200, `Event of id ${id} fetched.`, event),
+                new SuccessResponse(
+                    200,
+                    `Event participants of ${eventId} fetched.`,
+                    eventParticipants,
+                ),
             );
     },
 );
