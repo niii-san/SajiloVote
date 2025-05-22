@@ -7,6 +7,7 @@ import { hasCurrentUserJoinedEvent } from "./events/currentUserJoined.controller
 import { getAllCreatedEvents } from "./events/getAllCreatedEvents.controller.js";
 import { getEventById } from "./events/getById.controller.js";
 import { getEventParticipants } from "./events/getParticipants.controller.js";
+import { joinEvent } from "./events/joinEvent.controller.js";
 import { getCurrentUserData } from "./user/getCurrentUser.controller.js";
 
 export {
@@ -20,4 +21,5 @@ export {
     getEventById,
     getEventParticipants,
     hasCurrentUserJoinedEvent,
+    joinEvent,
 };
